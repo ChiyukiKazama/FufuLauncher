@@ -1,0 +1,27 @@
+<!doctype html>
+<html lang="zh-CN">
+<head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>芙芙 · 设备管理</title><link rel="stylesheet" href="admin.css"><script src="admin.js" defer></script></head>
+<body>
+<main>
+  <header><span class="brand">芙芙启动器</span><h1>设备管理</h1><p>按 UID 查找已上报的设备，由你选择需要限制插件的主板。</p></header>
+  <section class="card"><h2>查找设备</h2>
+    <form id="search-form">
+      <label>管理密钥<input id="admin-key" type="password" autocomplete="off" required placeholder="输入服务端管理密钥"></label>
+      <label>游戏 UID<input id="uid" inputmode="numeric" pattern="[0-9]{9,10}" maxlength="10" required placeholder="9 或 10 位 UID"></label>
+      <button id="search-button" type="submit">查询关联主板</button>
+    </form>
+    <p class="hint">仅展示接入服务后、保留期内的上报记录。记录来自客户端本地 UID 历史，不能独立证明真实登录或违规。</p>
+  </section>
+  <section class="card" id="results" hidden>
+    <div class="section-heading"><h2 id="result-title">关联设备</h2><label class="select-all"><input type="checkbox" id="select-all"> 全选</label></div>
+    <div id="devices"></div>
+    <div id="actions">
+      <label>限制原因<input id="reason" maxlength="256" placeholder="用户可看到的原因及申诉联系方式"></label>
+      <label>期限（天）<input id="days" type="number" min="1" max="90" value="30"></label>
+      <div class="buttons"><button id="ban" type="button">限制所选设备的插件</button><button id="unban" class="secondary" type="button">解除所选限制</button><button id="delete" class="secondary" type="button">删除所选记录</button></div>
+    </div>
+  </section>
+  <p id="status" role="status" aria-live="polite"></p>
+  <footer>限制只影响插件注入，游戏可正常启动。共用设备可能涉及其他账号，请核实后操作。</footer>
+</main>
+</body></html>

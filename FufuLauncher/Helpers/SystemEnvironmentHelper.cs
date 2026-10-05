@@ -113,6 +113,25 @@ namespace FufuLauncher.Helpers
             "N/A"
         };
 
+        public static string GetMotherboardId()
+        {
+            try
+            {
+                using var searcher = new ManagementObjectSearcher("SELECT SerialNumber FROM Win32_BaseBoard");
+                using var boards = searcher.Get();
+                var serials = new List<string?>();
+                foreach (ManagementObject board in boards)
+                {
+                    using (board) serials.Add(board["SerialNumber"]?.ToString());
+                }
+                return MotherboardIdentity.FromSerialNumbers(serials);
+            }
+            catch
+            {
+                return string.Empty;
+            }
+        }
+
         public static string GetHwid()
         {
             try

@@ -143,6 +143,8 @@ public partial class App
                 services.AddSingleton<PluginStoreService>();
                 services.AddSingleton<LightweightPluginService>();
                 services.AddSingleton<ConstraintService>();
+                services.Configure<DeviceBanOptions>(context.Configuration.GetSection("DeviceBan"));
+                services.AddSingleton<MotherboardBanService>();
                 services.AddSingleton<LuaPluginInstaller>();
                 services.AddSingleton<Services.PluginMirror.MirrorSiteProvider>();
                 services.AddSingleton<Services.PluginMirror.PluginMirrorDownloadService>();

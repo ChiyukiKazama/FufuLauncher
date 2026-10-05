@@ -71,12 +71,13 @@ namespace FufuLauncher.ViewModels
         {
             get
             {
-                return ResourceExtensions.CurrentCulture switch
+                var text = ResourceExtensions.CurrentCulture switch
                 {
                     "zh-CN" => AgreementTextSc,
                     "zh-TW" => AgreementTextTc,
                     _ => AgreementTextEn
                 };
+                return "DeviceBan_PrivacySupplement".GetLocalized() + "\n\n" + text;
             }
         }
 

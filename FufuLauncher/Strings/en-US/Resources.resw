@@ -6918,4 +6918,14 @@ Error: {0}</value>
   <data name="PluginDllConflict_Resolved" xml:space="preserve">
     <value>The duplicate DLL conflict has been resolved. You can restart the game now.</value>
   </data>
+  <data name="DeviceBan_Title" xml:space="preserve"><value>Plugin access restriction</value></data>
+  <data name="DeviceBan_PrivacySupplement" xml:space="preserve"><value>Device association supplement: this feature is not configured by default. When a device management service is configured, your separate consent and plugin use permit sending a motherboard hash and local UID history for manual review and plugin restrictions. This is an exception to the local-only/no-upload statements below. Details are shown before first use. Turning off injection stops future reports; contact the service administrator for deletion or review of server records.</value></data>
+  <data name="DeviceBan_Blocked" xml:space="preserve"><value>Plugins are restricted on this device. The game will start normally without injection. Contact the administrator to request a review.</value></data>
+  <data name="DeviceBan_NoConsent" xml:space="preserve"><value>Device association checks have not been accepted. The game will start normally without injection.</value></data>
+  <data name="DeviceBan_UnknownMotherboard" xml:space="preserve"><value>A valid motherboard identifier is unavailable. The game will start normally without injection.</value></data>
+  <data name="DeviceBan_Unavailable" xml:space="preserve"><value>The device check service is unavailable. The game will start normally without injection. Please try again later.</value></data>
+  <data name="DeviceBan_ConsentTitle" xml:space="preserve"><value>Device association check for plugins</value></data>
+  <data name="DeviceBan_ConsentMessage" xml:space="preserve"><value>Before loading injected plugins, the launcher sends a SHA-256 motherboard identifier and the UID history found in this computer's Genshin cache directories to:\n{0}\n\nThe service associates UIDs with devices for manual administrator review and plugin restrictions. Associations are retained for 90 days after the last report; restrictions last at most 90 days. Raw motherboard serials, passwords, Tokens and Cookies are not sent. This persistent identifier is not anonymous data.\n\nYou can start the game normally without agreeing. Contact the service administrator for deletion or review; do not post UIDs or device identifiers in public feedback.</value></data>
+  <data name="DeviceBan_ConsentAccept" xml:space="preserve"><value>Agree and enable checks</value></data>
+  <data name="DeviceBan_NormalLaunch" xml:space="preserve"><value>Start without injection</value></data>
 </root>

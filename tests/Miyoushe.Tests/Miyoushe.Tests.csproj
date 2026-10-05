@@ -1,0 +1,15 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <TargetFramework>net8.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+  </PropertyGroup>
+  <ItemGroup>
+    <Compile Include="../../FufuLauncher/Models/Miyoushe/CommunityModels.cs" Link="CommunityModels.cs" />
+    <Compile Include="../../FufuLauncher/Models/Miyoushe/CommunityCommentOptions.cs" Link="CommunityCommentOptions.cs" />
+    <Compile Include="../../FufuLauncher/Models/MiHoYo/Identity/AccountContext.cs" Link="AccountContext.cs" />
+    <Compile Include="../../FufuLauncher/Services/Miyoushe/*.cs" Link="%(Filename)%(Extension)" />
+    <PackageReference Include="HtmlAgilityPack" Version="1.12.4" />
+  </ItemGroup>
+</Project>

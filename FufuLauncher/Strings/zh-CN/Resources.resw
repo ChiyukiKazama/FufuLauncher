@@ -6916,4 +6916,14 @@ UIGF v4.x/3.0/2.x</value>
   <data name="PluginDllConflict_Resolved" xml:space="preserve">
     <value>同名 DLL 冲突已处理完毕，可以重新启动游戏了。</value>
   </data>
+  <data name="DeviceBan_Title" xml:space="preserve"><value>插件使用限制</value></data>
+  <data name="DeviceBan_PrivacySupplement" xml:space="preserve"><value>设备关联检查补充说明：本功能默认未配置。接入设备管理服务后，仅在您单独同意并启用插件时，上报主板哈希标识和本机 UID 历史，用于人工核实设备关联和插件使用限制。该数据处理属于下文“仅本地处理、不上传”说明的例外；详情会在首次启用前单独显示。关闭注入即可停止后续上报，服务器已有记录的删除或申诉请联系服务管理员。</value></data>
+  <data name="DeviceBan_Blocked" xml:space="preserve"><value>此设备的插件使用已被限制，本次将正常启动游戏，不加载注入插件。如有异议，请联系管理员复核。</value></data>
+  <data name="DeviceBan_NoConsent" xml:space="preserve"><value>尚未同意设备关联检查，本次将正常启动游戏，不加载注入插件。</value></data>
+  <data name="DeviceBan_UnknownMotherboard" xml:space="preserve"><value>无法取得有效的主板标识，本次将正常启动游戏，不加载注入插件。</value></data>
+  <data name="DeviceBan_Unavailable" xml:space="preserve"><value>设备检查服务暂时不可用，本次将正常启动游戏，不加载注入插件，请稍后重试。</value></data>
+  <data name="DeviceBan_ConsentTitle" xml:space="preserve"><value>启用插件前的设备关联检查</value></data>
+  <data name="DeviceBan_ConsentMessage" xml:space="preserve"><value>启用注入插件前，将向以下服务发送主板序列号的 SHA-256 标识，以及本机原神缓存目录中的 UID 历史：\n{0}\n\n服务用于建立 UID 与设备的关联，供管理员人工核实并限制违规设备的插件使用。关联记录在最近上报后保留 90 天；限制期限最长 90 天。不会发送主板原始序列号、密码、Token 或 Cookie。标识仍可用于关联设备，不属于匿名数据。\n\n不同意时仍可普通启动游戏。删除或申诉请联系服务管理员；请勿在公开反馈中提交 UID 或设备标识。</value></data>
+  <data name="DeviceBan_ConsentAccept" xml:space="preserve"><value>同意并启用插件检查</value></data>
+  <data name="DeviceBan_NormalLaunch" xml:space="preserve"><value>仅普通启动</value></data>
 </root>

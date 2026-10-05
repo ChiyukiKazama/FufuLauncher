@@ -47,6 +47,7 @@ namespace FufuLauncher.Services
         private readonly IPluginUpdateService _pluginUpdateService;
         private readonly LightweightPluginService _lightweightPluginService;
         private readonly ConstraintService _constraintService;
+        private readonly MotherboardBanService _motherboardBanService;
         private readonly IScreenshotService _screenshotService;
         private readonly IAuthTicketService _authTicketService;
         private readonly AccountManager _accountManager;
@@ -67,6 +68,7 @@ namespace FufuLauncher.Services
             GameServerConfigurationService gameServerConfigurationService,
             LightweightPluginService lightweightPluginService,
             ConstraintService constraintService,
+            MotherboardBanService motherboardBanService,
             CodeSigning.ModTrustGate modTrustGate)
         {
             _localSettingsService = localSettingsService;
@@ -79,6 +81,7 @@ namespace FufuLauncher.Services
             _gameServerConfigurationService = gameServerConfigurationService;
             _lightweightPluginService = lightweightPluginService;
             _constraintService = constraintService;
+            _motherboardBanService = motherboardBanService;
             _modTrustGate = modTrustGate;
         }
 
@@ -402,6 +405,27 @@ namespace FufuLauncher.Services
 
                 var useInjection = await GetUseInjectionAsync();
                 logBuilder.AppendLine($"[启动流程] 注入模式: {(useInjection ? "启用" : "禁用")}");
+
+                if (useInjection)
+                {
+                    var deviceCheck = await _motherboardBanService.CheckAsync(cancellationToken);
+                    if (!deviceCheck.CanInject)
+                    {
+                        useInjection = false;
+                        var messageKey = deviceCheck.State switch
+                        {
+                            Models.DeviceBanCheckState.Banned => "DeviceBan_Blocked",
+                            Models.DeviceBanCheckState.ConsentRequired => "DeviceBan_NoConsent",
+                            Models.DeviceBanCheckState.UnknownMotherboard => "DeviceBan_UnknownMotherboard",
+                            _ => "DeviceBan_Unavailable"
+                        };
+                        var message = messageKey.GetLocalized();
+                        if (!string.IsNullOrEmpty(deviceCheck.Reason)) message += "\n" + deviceCheck.Reason;
+                        logBuilder.AppendLine($"[启动流程] 设备检查: {deviceCheck.State}，本次使用普通启动");
+                        WeakReferenceMessenger.Default.Send(new NotificationMessage(
+                            "DeviceBan_Title".GetLocalized(), message, NotificationType.Warning, 10000));
+                    }
+                }
 
                 if (useInjection)
                 {

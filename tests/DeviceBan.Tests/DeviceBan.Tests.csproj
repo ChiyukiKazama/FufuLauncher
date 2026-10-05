@@ -1,0 +1,18 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <TargetFramework>net8.0-windows</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+  </PropertyGroup>
+  <ItemGroup>
+    <ProjectReference Include="../../tools/DeviceBanServer/DeviceBanServer.csproj" />
+    <Compile Include="../../FufuLauncher/Helpers/MotherboardIdentity.cs" Link="MotherboardIdentity.cs" />
+    <Compile Include="../../FufuLauncher/Helpers/SystemEnvironmentHelper.cs" Link="SystemEnvironmentHelper.cs" />
+    <Compile Include="../../FufuLauncher/Services/MotherboardBanService.cs" Link="MotherboardBanService.cs" />
+    <Compile Include="../../FufuLauncher/Services/UID/UidLookupService.cs" Link="UidLookupService.cs" />
+    <Compile Include="../../FufuLauncher/Contracts/Services/ILocalSettingsService.cs" Link="ILocalSettingsService.cs" />
+    <Compile Include="../../FufuLauncher/Contracts/Services/IUidLookupService.cs" Link="IUidLookupService.cs" />
+    <PackageReference Include="System.Management" Version="8.0.0" />
+  </ItemGroup>
+</Project>

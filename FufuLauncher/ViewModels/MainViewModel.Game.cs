@@ -126,6 +126,9 @@ public partial class MainViewModel
 
         try
         {
+            if (await _gameLauncherService.GetUseInjectionAsync())
+                await DeviceBanConsentDialog.ShowIfNeededAsync(App.GetService<FufuLauncher.Services.MotherboardBanService>());
+
             var result = await _gameLauncherService.LaunchGameAsync(_launchCts.Token);
 
             if (result.Cancelled)

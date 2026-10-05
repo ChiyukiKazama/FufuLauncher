@@ -32,6 +32,9 @@ public class UidLookupService : IUidLookupService
         return uids;
     }
 
+    public static IReadOnlyList<string> ReadLocalUids() =>
+        ReadUidsFromBeyondLocal().Select(entry => entry.Uid).ToArray();
+
     private static List<UidEntry> ReadUidsFromBeyondLocal()
     {
         var result = new List<UidEntry>();

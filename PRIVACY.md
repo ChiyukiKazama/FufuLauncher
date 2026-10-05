@@ -2,6 +2,8 @@
 
 **生效日期：** 2026年6月3日
 
+**2026年10月5日实验功能补充：** 默认配置不启用设备关联服务。配置该服务后，仅在用户单独同意并启用注入插件时，上报主板序列号的 SHA-256 标识和本机原神 UID 缓存历史，用于管理员人工核实关联与限制插件使用。这是下文“仅本地处理、不上传”表述的例外。原始主板序列号及账号凭证不在本功能的上报范围；主板哈希仍属于可关联标识，不应视为匿名数据。关联在最近上报 90 天后过期，后台每小时清理，限制最长 90 天。关闭注入即可停止后续上报；已有服务器记录的访问、删除或申诉需联系实际服务管理员。完整开发说明见 [设备管理服务](tools/DeviceBanServer/README.md)。此补充说明描述实验实现，不代替正式部署所需的运营者身份、联系方式及处理依据告知。
+
 欢迎您使用 FufuLauncher（以下简称“本软件”）。我们深知个人隐私对您的重要性，并致力于保护您的个人信息安全。本《隐私政策》旨在以专业、透明的方式向您详细说明我们在您使用本软件期间的数据处理规则，包括我们如何收集、使用、存储和保护您的数据。
 
 在使用本软件前，请您务必仔细阅读并理解本政策。
@@ -93,6 +95,8 @@
 # FufuLauncher Privacy Policy
 
 **Effective Date:** June 3, 2026
+
+**Experimental feature supplement, October 5, 2026:** Device association is unconfigured by default. When a service is configured, separate consent and injection use allow reporting a SHA-256 motherboard identifier and local Genshin UID cache history for manual administrator review and plugin restrictions. This is an exception to the local-only/no-upload statements below. Raw motherboard serials and credentials are excluded; the hash is a linkable identifier, not anonymous data. Associations expire 90 days after the last report, with hourly cleanup; restrictions last at most 90 days. Disable injection to stop future reports, and contact the actual service operator for access, deletion or review of server records. See the [device service documentation](tools/DeviceBanServer/README.md). This describes the prototype and does not replace deployment-specific operator identity, contact and lawful-processing notices.
 
 Welcome to FufuLauncher (hereinafter referred to as "the Software"). We deeply understand the importance of personal privacy to you and are committed to protecting the security of your personal information. This "Privacy Policy" aims to explain our data processing rules in a professional and transparent manner during your use of the Software, including how we collect, use, store, and protect your data.
 
