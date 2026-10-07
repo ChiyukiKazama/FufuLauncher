@@ -15,6 +15,7 @@ public class PluginSettingItem : ObservableObject
 {
     private readonly IniFile _iniFile;
     private readonly Action<string, string, string> _onValueChanged;
+    private readonly Func<bool>? _canChangeValue;
 
     public string SectionKey
     {
@@ -117,7 +118,7 @@ public class PluginSettingItem : ObservableObject
     }
 
     public PluginSettingItem(IniFile iniFile, string sectionKey, string displayName, string type, string value,
-        string helpUrl, Action<string, string, string> onValueChanged, bool useKeyListInput)
+        string helpUrl, Action<string, string, string> onValueChanged, bool useKeyListInput, Func<bool>? canChangeValue = null)
     {
         _iniFile = iniFile;
         SectionKey = sectionKey;
@@ -126,6 +127,7 @@ public class PluginSettingItem : ObservableObject
         _rawValue = value;
         HelpUrl = helpUrl;
         _onValueChanged = onValueChanged;
+        _canChangeValue = canChangeValue;
         _useKeyListInput = useKeyListInput;
         if (string.Equals(Type, "key", StringComparison.OrdinalIgnoreCase) &&
             int.TryParse(_rawValue, out var currentKey))
@@ -151,7 +153,7 @@ public class PluginSettingItem : ObservableObject
         get => int.TryParse(_rawValue, out var result) ? result : 0;
         set
         {
-            if (value == null) return;
+            if (value == null || _canChangeValue?.Invoke() == false || value == KeyValue) return;
 
             var targetValue = value.Value.ToString();
             if (_rawValue != targetValue)
@@ -197,7 +199,7 @@ public class PluginSettingItem : ObservableObject
     }
 
     public PluginSettingItem(IniFile iniFile, string sectionKey, string displayName, string type, string value,
-        Action<string, string, string> onValueChanged, bool useKeyListInput)
+        Action<string, string, string> onValueChanged, bool useKeyListInput, Func<bool>? canChangeValue = null)
     {
         _iniFile = iniFile;
         SectionKey = sectionKey;
@@ -205,6 +207,7 @@ public class PluginSettingItem : ObservableObject
         Type = type;
         _rawValue = value;
         _onValueChanged = onValueChanged;
+        _canChangeValue = canChangeValue;
         _useKeyListInput = useKeyListInput;
         if (string.Equals(Type, "key", StringComparison.OrdinalIgnoreCase) &&
             int.TryParse(_rawValue, out var currentKey))
@@ -237,7 +240,7 @@ public class PluginSettingItem : ObservableObject
         get => KeyValue ?? 0;
         set
         {
-            if (double.IsNaN(value)) return;
+            if (!double.IsFinite(value) || value < int.MinValue || value > int.MaxValue) return;
             KeyValue = (int)Math.Round(value);
         }
     }
@@ -252,6 +255,8 @@ public class PluginSettingItem : ObservableObject
         get => _rawValue == "1" || _rawValue.Equals("true", StringComparison.OrdinalIgnoreCase);
         set
         {
+            if (_canChangeValue?.Invoke() == false || value == BoolValue) return;
+
             var targetValue = value ? "1" : "0";
             if (_rawValue != targetValue)
             {
@@ -268,6 +273,8 @@ public class PluginSettingItem : ObservableObject
         get => double.TryParse(_rawValue, out var result) ? result : 0;
         set
         {
+            if (_canChangeValue?.Invoke() == false || !double.IsFinite(value) || value == FloatValue) return;
+
             var targetValue = value.ToString("G");
             if (_rawValue != targetValue)
             {
@@ -284,6 +291,8 @@ public class PluginSettingItem : ObservableObject
         get => _rawValue;
         set
         {
+            if (_canChangeValue?.Invoke() == false) return;
+
             if (_rawValue != value)
             {
                 var previousValue = _rawValue;

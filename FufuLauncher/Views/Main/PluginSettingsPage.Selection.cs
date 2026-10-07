@@ -87,6 +87,21 @@ public sealed partial class PluginSettingsPage
         EndMarquee();
     }
 
+    private void ResetSettingsSelection()
+    {
+        _isMarqueeActive = false;
+        _isMarqueeDragged = false;
+        _marqueeTargets.Clear();
+        SettingsContent.ReleasePointerCaptures();
+        SelectionRectFadeIn.Stop();
+        SelectionRectFadeOut.Stop();
+        SelectionRectangle.Visibility = Visibility.Collapsed;
+        BatchActionBarFadeIn.Stop();
+        BatchActionBarFadeOut.Stop();
+        BatchActionBar.Visibility = Visibility.Collapsed;
+        _isBatchBarShown = false;
+    }
+
     private void EndMarquee()
     {
         _isMarqueeActive = false;
@@ -128,16 +143,31 @@ public sealed partial class PluginSettingsPage
     {
         _marqueeTargets.Clear();
 
-        foreach (var item in ViewModel.PinnedSettings.Concat(ViewModel.Settings).ToList())
+        if (SettingsGrid.ItemsPanelRoot is not DependencyObject root)
         {
-            var container = FindItemContainer(item);
+            return;
+        }
 
-            if (container == null || container.ActualWidth <= 0 || container.ActualHeight <= 0) continue;
+        var elements = new Stack<DependencyObject>();
+        elements.Push(root);
+        while (elements.Count > 0)
+        {
+            var element = elements.Pop();
+            if (element is GridViewItem container && container.Content is PluginSettingItem item)
+            {
+                if (container.ActualWidth > 0 && container.ActualHeight > 0)
+                {
+                    var bounds = container.TransformToVisual(SelectionCanvas)
+                        .TransformBounds(new Rect(0, 0, container.ActualWidth, container.ActualHeight));
+                    _marqueeTargets.Add((item, bounds));
+                }
+                continue;
+            }
 
-            var bounds = container.TransformToVisual(SelectionCanvas)
-                .TransformBounds(new Rect(0, 0, container.ActualWidth, container.ActualHeight));
-
-            _marqueeTargets.Add((item, bounds));
+            for (var index = 0; index < VisualTreeHelper.GetChildrenCount(element); index++)
+            {
+                elements.Push(VisualTreeHelper.GetChild(element, index));
+            }
         }
     }
 
@@ -216,11 +246,6 @@ public sealed partial class PluginSettingsPage
                b.X < a.X + a.Width &&
                a.Y < b.Y + b.Height &&
                b.Y < a.Y + a.Height;
-    }
-
-    private FrameworkElement? FindItemContainer(PluginSettingItem item)
-    {
-        return (PinnedSettingsGrid.ContainerFromItem(item) ?? SettingsGrid.ContainerFromItem(item)) as FrameworkElement;
     }
 
     private static bool IsInteractiveElement(DependencyObject? source)

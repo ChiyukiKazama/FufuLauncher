@@ -63,8 +63,8 @@ public partial class PluginSettingsViewModel
             ? Microsoft.UI.Xaml.Visibility.Visible
             : Microsoft.UI.Xaml.Visibility.Collapsed;
 
-    public bool IsSettingsInteractable => (SelectedPluginIndex == 0 && _isMainPluginEnabled) ||
-                                          (SelectedPluginIndex == 1 && _isFpsPluginEnabled);
+    public bool IsSettingsInteractable => (!_deferConfigurationLoading || IsConfigurationReady) &&
+        ((SelectedPluginIndex == 0 && _isMainPluginEnabled) || (SelectedPluginIndex == 1 && _isFpsPluginEnabled));
 
     public string OverlayWarningText
     {

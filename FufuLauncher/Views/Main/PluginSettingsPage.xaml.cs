@@ -34,10 +34,11 @@ public sealed partial class PluginSettingsPage : Page
 
     public PluginSettingsPage()
     {
-        ViewModel = new PluginSettingsViewModel();
+        ViewModel = new PluginSettingsViewModel(deferConfigurationLoading: true);
         MainVM = App.GetService<MainViewModel>();
         ControlPanelVM = App.GetService<ControlPanelModel>();
         InitializeComponent();
+        SettingsViewSource.Source = ViewModel.SettingGroups;
         Loaded += PluginSettingsPage_Loaded;
         Unloaded += PluginSettingsPage_Unloaded;
 
@@ -55,7 +56,9 @@ public sealed partial class PluginSettingsPage : Page
 
     private async void PluginSettingsPage_Loaded(object sender, RoutedEventArgs e)
     {
+        _isInitializing = true;
         EntranceStoryboard.Begin();
+        ViewModel.ActivateConfigurationLoading();
         StartMainPluginWatcher();
         ShowMainPluginMissingWarningIfNeeded();
         if (ViewModel.IsPluginCorrupted())
@@ -70,11 +73,14 @@ public sealed partial class PluginSettingsPage : Page
             };
 
             await dialog.ShowAsync();
+            if (!IsLoaded) return;
         }
 
         await VerifyFpsPluginHashAsync();
+        if (!IsLoaded) return;
 
         await CheckAndShowFpsWarningAsync();
+        if (!IsLoaded) return;
 
         if (ViewModel.SettingsOverlayVisibility == Visibility.Visible)
         {
@@ -87,6 +93,8 @@ public sealed partial class PluginSettingsPage : Page
 
     private void PluginSettingsPage_Unloaded(object sender, RoutedEventArgs e)
     {
+        ViewModel.SuspendConfigurationLoading();
+        ResetSettingsSelection();
         _mainPluginWatcher?.Dispose();
         _mainPluginWatcher = null;
     }
@@ -110,9 +118,20 @@ public sealed partial class PluginSettingsPage : Page
         }
     }
 
+    protected override void OnNavigatedFrom(Microsoft.UI.Xaml.Navigation.NavigationEventArgs e)
+    {
+        ViewModel.SuspendConfigurationLoading();
+        base.OnNavigatedFrom(e);
+    }
+
     private async void ViewModel_PropertyChanged(object sender, System.ComponentModel.PropertyChangedEventArgs e)
     {
-        if (_isInitializing) return;
+        if (e.PropertyName == nameof(ViewModel.IsLoadingConfiguration) && ViewModel.IsLoadingConfiguration)
+        {
+            ResetSettingsSelection();
+        }
+
+        if (_isInitializing || !IsLoaded) return;
 
         if (e.PropertyName == nameof(ViewModel.SettingsOverlayVisibility))
         {
@@ -136,6 +155,7 @@ public sealed partial class PluginSettingsPage : Page
         else if (e.PropertyName == nameof(ViewModel.SelectedPluginIndex))
         {
             await CheckAndShowFpsWarningAsync();
+            if (!IsLoaded) return;
         }
         else if (e.PropertyName == nameof(ViewModel.IsFpsPluginEnabled))
         {
@@ -155,6 +175,14 @@ public sealed partial class PluginSettingsPage : Page
     }
 
     public bool InvertBool(bool value) => !value;
+
+    private void OnRetryConfigurationClick(object sender, RoutedEventArgs e)
+    {
+        if (IsLoaded)
+        {
+            ViewModel.LoadConfiguration();
+        }
+    }
 
     private void OnPinSettingClick(object sender, RoutedEventArgs e)
     {

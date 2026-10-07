@@ -92,6 +92,7 @@ public partial class PluginSettingsViewModel : ObservableObject
     private const string PinnedSettingsKey = "PluginSettingPinnedItems";
 
     private readonly List<string> _settingOrder = new();
+    private readonly Dictionary<string, int> _settingOrderIndexes = new(StringComparer.OrdinalIgnoreCase);
     private Dictionary<string, List<string>> _pinnedSections = new(StringComparer.OrdinalIgnoreCase);
 
 
@@ -104,8 +105,14 @@ public partial class PluginSettingsViewModel : ObservableObject
     }
 
 
-    public PluginSettingsViewModel()
+    public PluginSettingsViewModel(bool deferConfigurationLoading = false)
     {
+        _deferConfigurationLoading = deferConfigurationLoading;
+        SettingGroups = new()
+        {
+            new PluginSettingsGroup(PinnedSettings),
+            new PluginSettingsGroup(Settings, PinnedSettings)
+        };
         _lightweightPlugin = App.GetService<LightweightPluginService>();
         PinnedSettings.CollectionChanged += (_, _) => OnPropertyChanged(nameof(PinnedSettingsVisibility));
         CheckPluginStates();
@@ -122,6 +129,14 @@ public partial class PluginSettingsViewModel : ObservableObject
             : AppPaths.PluginPresetsDir;
 
         _iniFile = new IniFile(_iniPath);
+        if (_deferConfigurationLoading)
+        {
+            PluginName = SelectedPluginComboLabel;
+            PluginDescription = string.Empty;
+            PluginDeveloper = string.Empty;
+            LastModifiedDate = string.Empty;
+            return;
+        }
 
         try
         {
@@ -247,7 +262,7 @@ public partial class PluginSettingsViewModel : ObservableObject
 
     public void ToggleSettingPin(PluginSettingItem? item)
     {
-        if (item == null) return;
+        if (item == null || (!Settings.Contains(item) && !PinnedSettings.Contains(item))) return;
 
         ApplyPin(item, !item.IsPinned);
         SavePinnedSections();
@@ -358,26 +373,32 @@ public partial class PluginSettingsViewModel : ObservableObject
     }
 
     private int GetSettingOrderIndex(string sectionKey) =>
-        _settingOrder.FindIndex(key => string.Equals(key, sectionKey, StringComparison.OrdinalIgnoreCase));
+        _settingOrderIndexes.GetValueOrDefault(sectionKey, -1);
 
     private void InsertBySettingOrder(ObservableCollection<PluginSettingItem> target, PluginSettingItem item)
     {
-        int itemIndex = GetSettingOrderIndex(item.SectionKey);
-
-        if (itemIndex >= 0)
+        var itemIndex = GetSettingOrderIndex(item.SectionKey);
+        if (itemIndex < 0 || target.Count == 0 || GetSettingOrderIndex(target[^1].SectionKey) <= itemIndex)
         {
-            for (int i = 0; i < target.Count; i++)
-            {
-                int otherIndex = GetSettingOrderIndex(target[i].SectionKey);
-                if (otherIndex > itemIndex)
-                {
-                    target.Insert(i, item);
-                    return;
-                }
-            }
+            target.Add(item);
+            return;
         }
 
-        target.Add(item);
+        var left = 0;
+        var right = target.Count;
+        while (left < right)
+        {
+            var middle = left + (right - left) / 2;
+            if (GetSettingOrderIndex(target[middle].SectionKey) <= itemIndex)
+            {
+                left = middle + 1;
+            }
+            else
+            {
+                right = middle;
+            }
+        }
+        target.Insert(left, item);
     }
 
     private void SavePinnedSections()

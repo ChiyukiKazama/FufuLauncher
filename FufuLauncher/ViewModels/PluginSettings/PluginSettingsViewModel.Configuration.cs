@@ -15,9 +15,21 @@ public partial class PluginSettingsViewModel
 
     public void LoadConfiguration()
     {
+        if (_deferConfigurationLoading)
+        {
+            RequestConfigurationLoad();
+            return;
+        }
+
+        LoadConfigurationSynchronously();
+    }
+
+    private void LoadConfigurationSynchronously()
+    {
         Settings.Clear();
         PinnedSettings.Clear();
         _settingOrder.Clear();
+        _settingOrderIndexes.Clear();
         NotifySelectionChanged();
 
         if (!File.Exists(_iniPath))
@@ -91,6 +103,7 @@ public partial class PluginSettingsViewModel
                 var settingItem = new PluginSettingItem(_iniFile, section.Key, name, type, value, help,
                     OnSettingValueChanged, UseKeyListInput);
 
+                _settingOrderIndexes[section.Key] = _settingOrder.Count;
                 _settingOrder.Add(section.Key);
 
                 if (IsSettingPinned(section.Key))

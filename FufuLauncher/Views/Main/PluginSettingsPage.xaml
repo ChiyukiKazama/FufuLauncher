@@ -23,6 +23,8 @@
                 </ResourceDictionary>
             </ResourceDictionary.ThemeDictionaries>
 
+            <CollectionViewSource x:Name="SettingsViewSource" IsSourceGrouped="True" ItemsPath="Items" />
+
             <DataTemplate x:Key="BoolTemplate" x:DataType="viewmodels:PluginSettingItem">
                 <StackPanel Width="240" HorizontalAlignment="Left">
                     <StackPanel Orientation="Horizontal" Spacing="4" Margin="0,0,0,8">
@@ -33,7 +35,7 @@
                                 BorderThickness="0" Opacity="0.5" VerticalAlignment="Center"
                                 ToolTipService.ToolTip="{helpers:Loc Key=ViewHelpTooltip}">
                             <Button.Flyout>
-                                <Flyout Placement="Right">
+                                <Flyout Placement="Right" Opened="OnSettingHelpOpened" Closed="OnSettingHelpClosed">
                                     <Flyout.FlyoutPresenterStyle>
                                         <Style TargetType="FlyoutPresenter">
                                             <Setter Property="Padding" Value="4" />
@@ -42,14 +44,14 @@
                                             <Setter Property="MaxHeight" Value="480" />
                                         </Style>
                                     </Flyout.FlyoutPresenterStyle>
-                                    <Grid MinWidth="120" MinHeight="120">
-                                        <ProgressRing x:Name="LoadingRing" IsActive="True" Width="40" Height="40"
+                                    <Grid MinWidth="120" MinHeight="120" Tag="{x:Bind}">
+                                        <ProgressRing x:Name="LoadingRing" IsActive="False" Width="40" Height="40"
                                                       HorizontalAlignment="Center" VerticalAlignment="Center" />
                                         <TextBlock Text="{helpers:Loc Key=GifInvalidError}"
                                                    Visibility="{x:Bind GifErrorVisibility, Mode=OneWay}" Margin="12"
                                                    HorizontalAlignment="Center" VerticalAlignment="Center"
                                                    Foreground="{ThemeResource SystemFillColorCriticalBrush}" />
-                                        <Image Source="{x:Bind HelpImageSource, Mode=OneWay}"
+                                        <Image x:Name="HelpImage"
                                                Visibility="{x:Bind GifImageVisibility, Mode=OneWay}" Stretch="Uniform"
                                                ImageFailed="HelpImage_ImageFailed" ImageOpened="HelpImage_ImageOpened" />
                                         <TextBlock x:Name="ErrorText" Text="{helpers:Loc Key=GifLoadFailedError}"
@@ -91,7 +93,7 @@
                                 BorderThickness="0" Opacity="0.5" VerticalAlignment="Center"
                                 ToolTipService.ToolTip="{helpers:Loc Key=ViewHelpTooltip}">
                             <Button.Flyout>
-                                <Flyout Placement="Right">
+                                <Flyout Placement="Right" Opened="OnSettingHelpOpened" Closed="OnSettingHelpClosed">
                                     <Flyout.FlyoutPresenterStyle>
                                         <Style TargetType="FlyoutPresenter">
                                             <Setter Property="Padding" Value="4" />
@@ -100,14 +102,14 @@
                                             <Setter Property="MaxHeight" Value="480" />
                                         </Style>
                                     </Flyout.FlyoutPresenterStyle>
-                                    <Grid MinWidth="120" MinHeight="120">
-                                        <ProgressRing x:Name="LoadingRing" IsActive="True" Width="40" Height="40"
+                                    <Grid MinWidth="120" MinHeight="120" Tag="{x:Bind}">
+                                        <ProgressRing x:Name="LoadingRing" IsActive="False" Width="40" Height="40"
                                                       HorizontalAlignment="Center" VerticalAlignment="Center" />
                                         <TextBlock Text="{helpers:Loc Key=GifInvalidError}"
                                                    Visibility="{x:Bind GifErrorVisibility, Mode=OneWay}" Margin="12"
                                                    HorizontalAlignment="Center" VerticalAlignment="Center"
                                                    Foreground="{ThemeResource SystemFillColorCriticalBrush}" />
-                                        <Image Source="{x:Bind HelpImageSource, Mode=OneWay}"
+                                        <Image x:Name="HelpImage"
                                                Visibility="{x:Bind GifImageVisibility, Mode=OneWay}" Stretch="Uniform"
                                                ImageFailed="HelpImage_ImageFailed" ImageOpened="HelpImage_ImageOpened" />
                                         <TextBlock x:Name="ErrorText" Text="{helpers:Loc Key=GifLoadFailedError}"
@@ -161,7 +163,7 @@
                                 BorderThickness="0" Opacity="0.5" VerticalAlignment="Center"
                                 ToolTipService.ToolTip="{helpers:Loc Key=ViewHelpTooltip}">
                             <Button.Flyout>
-                                <Flyout Placement="Right">
+                                <Flyout Placement="Right" Opened="OnSettingHelpOpened" Closed="OnSettingHelpClosed">
                                     <Flyout.FlyoutPresenterStyle>
                                         <Style TargetType="FlyoutPresenter">
                                             <Setter Property="Padding" Value="4" />
@@ -170,14 +172,14 @@
                                             <Setter Property="MaxHeight" Value="480" />
                                         </Style>
                                     </Flyout.FlyoutPresenterStyle>
-                                    <Grid MinWidth="120" MinHeight="120">
-                                        <ProgressRing x:Name="LoadingRing" IsActive="True" Width="40" Height="40"
+                                    <Grid MinWidth="120" MinHeight="120" Tag="{x:Bind}">
+                                        <ProgressRing x:Name="LoadingRing" IsActive="False" Width="40" Height="40"
                                                       HorizontalAlignment="Center" VerticalAlignment="Center" />
                                         <TextBlock Text="{helpers:Loc Key=GifInvalidError}"
                                                    Visibility="{x:Bind GifErrorVisibility, Mode=OneWay}" Margin="12"
                                                    HorizontalAlignment="Center" VerticalAlignment="Center"
                                                    Foreground="{ThemeResource SystemFillColorCriticalBrush}" />
-                                        <Image Source="{x:Bind HelpImageSource, Mode=OneWay}"
+                                        <Image x:Name="HelpImage"
                                                Visibility="{x:Bind GifImageVisibility, Mode=OneWay}" Stretch="Uniform"
                                                ImageFailed="HelpImage_ImageFailed" ImageOpened="HelpImage_ImageOpened" />
                                         <TextBlock x:Name="ErrorText" Text="{helpers:Loc Key=GifLoadFailedError}"
@@ -219,7 +221,7 @@
                                 BorderThickness="0" Opacity="0.5" VerticalAlignment="Center"
                                 ToolTipService.ToolTip="{helpers:Loc Key=ViewHelpTooltip}">
                             <Button.Flyout>
-                                <Flyout Placement="Right">
+                                <Flyout Placement="Right" Opened="OnSettingHelpOpened" Closed="OnSettingHelpClosed">
                                     <Flyout.FlyoutPresenterStyle>
                                         <Style TargetType="FlyoutPresenter">
                                             <Setter Property="Padding" Value="4" />
@@ -228,14 +230,14 @@
                                             <Setter Property="MaxHeight" Value="480" />
                                         </Style>
                                     </Flyout.FlyoutPresenterStyle>
-                                    <Grid MinWidth="120" MinHeight="120">
-                                        <ProgressRing x:Name="LoadingRing" IsActive="True" Width="40" Height="40"
+                                    <Grid MinWidth="120" MinHeight="120" Tag="{x:Bind}">
+                                        <ProgressRing x:Name="LoadingRing" IsActive="False" Width="40" Height="40"
                                                       HorizontalAlignment="Center" VerticalAlignment="Center" />
                                         <TextBlock Text="{helpers:Loc Key=GifInvalidError}"
                                                    Visibility="{x:Bind GifErrorVisibility, Mode=OneWay}" Margin="12"
                                                    HorizontalAlignment="Center" VerticalAlignment="Center"
                                                    Foreground="{ThemeResource SystemFillColorCriticalBrush}" />
-                                        <Image Source="{x:Bind HelpImageSource, Mode=OneWay}"
+                                        <Image x:Name="HelpImage"
                                                Visibility="{x:Bind GifImageVisibility, Mode=OneWay}" Stretch="Uniform"
                                                ImageFailed="HelpImage_ImageFailed" ImageOpened="HelpImage_ImageOpened" />
                                         <TextBlock x:Name="ErrorText" Text="{helpers:Loc Key=GifLoadFailedError}"
@@ -426,7 +428,8 @@
                         </StackPanel>
                     </Border>
 
-                    <Button Content="{helpers:Loc Key=FunctionsMenuBtn}" VerticalAlignment="Center">
+                    <Button Content="{helpers:Loc Key=FunctionsMenuBtn}" VerticalAlignment="Center"
+                            IsEnabled="{x:Bind ViewModel.CanUseConfigurationFunctions, Mode=OneWay}">
                         <Button.Flyout>
                             <Flyout>
                                 <StackPanel Spacing="6" MinWidth="200">
@@ -532,8 +535,30 @@
         </StackPanel>
 
         <Grid Grid.Row="1">
-            <ScrollViewer VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled">
-                <ContentControl x:Name="SettingsContent"
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="*" />
+            </Grid.RowDefinitions>
+
+            <StackPanel Grid.Row="0" Spacing="8" Margin="0,0,0,16"
+                        Visibility="{x:Bind ViewModel.ConfigurationLoadingVisibility, Mode=OneWay}">
+                <ProgressBar IsIndeterminate="True" Height="2" />
+                <TextBlock Text="{x:Bind ViewModel.ConfigurationLoadingText, Mode=OneWay}" FontSize="12"
+                           Foreground="{ThemeResource TextFillColorSecondaryBrush}"
+                           AutomationProperties.LiveSetting="Polite" />
+            </StackPanel>
+
+            <InfoBar Grid.Row="1" IsOpen="{x:Bind ViewModel.HasConfigurationLoadError, Mode=TwoWay}"
+                     Title="{helpers:Loc Key=Settings_ConfigReadFailed}"
+                     Message="{x:Bind ViewModel.ConfigurationLoadError, Mode=OneWay}"
+                     Severity="Error" Margin="0,0,0,16">
+                <InfoBar.ActionButton>
+                    <Button Content="{helpers:Loc Key=PluginStoreRetry}" Click="OnRetryConfigurationClick" />
+                </InfoBar.ActionButton>
+            </InfoBar>
+
+            <ContentControl x:Name="SettingsContent" Grid.Row="2"
                                 IsEnabled="{x:Bind ViewModel.IsSettingsInteractable, Mode=OneWay}"
                                 HorizontalContentAlignment="Stretch"
                                 VerticalContentAlignment="Stretch"
@@ -542,7 +567,19 @@
                                 PointerReleased="OnSettingsPointerReleased"
                                 PointerCaptureLost="OnSettingsPointerCaptureLost"
                                 PointerCanceled="OnSettingsPointerCaptureLost">
-                    <StackPanel>
+                <GridView x:Name="SettingsGrid"
+                          ItemsSource="{Binding Source={StaticResource SettingsViewSource}}"
+                          ItemTemplateSelector="{StaticResource SettingSelector}"
+                          ItemContainerStyle="{StaticResource SettingGridViewItemStyle}"
+                          SelectionMode="None" IsItemClickEnabled="False" HorizontalAlignment="Stretch"
+                          ScrollViewer.VerticalScrollMode="Enabled" ScrollViewer.VerticalScrollBarVisibility="Auto"
+                          ScrollViewer.HorizontalScrollMode="Disabled" ScrollViewer.HorizontalScrollBarVisibility="Disabled">
+                    <GridView.ItemsPanel>
+                        <ItemsPanelTemplate>
+                            <ItemsWrapGrid Orientation="Horizontal" GroupHeaderPlacement="Top" GroupPadding="0" />
+                        </ItemsPanelTemplate>
+                    </GridView.ItemsPanel>
+                    <GridView.Header>
                         <Grid Margin="0,0,0,32">
                             <Grid.ColumnDefinitions>
                                 <ColumnDefinition Width="Auto" />
@@ -623,39 +660,38 @@
                                 <Button Content="{helpers:Loc Key=ResetAllBtn}" Click="OnResetAllPresetsClick" />
                             </StackPanel>
                         </Grid>
+                    </GridView.Header>
+                    <GridView.GroupStyle>
+                        <GroupStyle HidesIfEmpty="True">
+                            <GroupStyle.HeaderContainerStyle>
+                                <Style TargetType="GridViewHeaderItem">
+                                    <Setter Property="Padding" Value="0" />
+                                    <Setter Property="Margin" Value="0" />
+                                    <Setter Property="MinHeight" Value="0" />
+                                    <Setter Property="Template">
+                                        <Setter.Value>
+                                            <ControlTemplate TargetType="GridViewHeaderItem">
+                                                <ContentPresenter Content="{TemplateBinding Content}"
+                                                                  ContentTemplate="{TemplateBinding ContentTemplate}"
+                                                                  HorizontalAlignment="Stretch" />
+                                            </ControlTemplate>
+                                        </Setter.Value>
+                                    </Setter>
+                                </Style>
+                            </GroupStyle.HeaderContainerStyle>
+                            <GroupStyle.HeaderTemplate>
+                                <DataTemplate x:DataType="viewmodels:PluginSettingsGroup">
+                                    <Rectangle Height="1" Margin="0,0,0,24"
+                                               Fill="{ThemeResource DividerStrokeColorDefaultBrush}"
+                                               Visibility="{x:Bind SeparatorVisibility, Mode=OneWay}" />
+                                </DataTemplate>
+                            </GroupStyle.HeaderTemplate>
+                        </GroupStyle>
+                    </GridView.GroupStyle>
+                </GridView>
+            </ContentControl>
 
-                        <GridView x:Name="PinnedSettingsGrid"
-                                  ItemsSource="{x:Bind ViewModel.PinnedSettings, Mode=OneWay}"
-                                  Visibility="{x:Bind ViewModel.PinnedSettingsVisibility, Mode=OneWay}"
-                                  ItemTemplateSelector="{StaticResource SettingSelector}"
-                                  ItemContainerStyle="{StaticResource SettingGridViewItemStyle}"
-                                  ItemsPanel="{StaticResource SettingItemsPanel}"
-                                  SelectionMode="None"
-                                  IsItemClickEnabled="False"
-                                  HorizontalAlignment="Stretch"
-                                  ScrollViewer.VerticalScrollMode="Disabled" />
-
-                        <Rectangle Height="1"
-                                   Margin="0,0,0,24"
-                                   Fill="{ThemeResource DividerStrokeColorDefaultBrush}"
-                                   Visibility="{x:Bind ViewModel.PinnedSettingsVisibility, Mode=OneWay}" />
-
-                        <GridView x:Name="SettingsGrid"
-                                  ItemsSource="{x:Bind ViewModel.Settings, Mode=OneWay}"
-                                  ItemTemplateSelector="{StaticResource SettingSelector}"
-                                  ItemContainerStyle="{StaticResource SettingGridViewItemStyle}"
-                                  ItemsPanel="{StaticResource SettingItemsPanel}"
-                                  SelectionMode="None"
-                                  IsItemClickEnabled="False"
-                                  HorizontalAlignment="Stretch"
-                                  ScrollViewer.VerticalScrollMode="Disabled" />
-
-
-                    </StackPanel>
-                </ContentControl>
-            </ScrollViewer>
-
-            <Canvas x:Name="SelectionCanvas" IsHitTestVisible="False">
+            <Canvas x:Name="SelectionCanvas" Grid.Row="2" IsHitTestVisible="False">
                 <Rectangle x:Name="SelectionRectangle"
                            Visibility="Collapsed"
                            Opacity="0"
@@ -666,7 +702,7 @@
                            StrokeThickness="1" />
             </Canvas>
 
-            <Canvas x:Name="BatchActionHost">
+            <Canvas x:Name="BatchActionHost" Grid.Row="2">
                 <Border x:Name="BatchActionBar"
                         Visibility="Collapsed"
                         Opacity="0"
@@ -692,7 +728,7 @@
                 </Border>
             </Canvas>
 
-            <Grid x:Name="SettingsOverlay"
+            <Grid x:Name="SettingsOverlay" Grid.Row="2"
                   Visibility="Collapsed"
                   Opacity="0"
                   Margin="-16,-16,-16,0"
