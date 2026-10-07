@@ -189,11 +189,11 @@ public sealed partial class PluginSettingsPage : Page
         }
     }
 
-    private void OnPinSettingClick(object sender, RoutedEventArgs e)
+    private async void OnPinSettingClick(object sender, RoutedEventArgs e)
     {
         if (sender is Button button && button.Tag is PluginSettingItem item)
         {
-            ViewModel.ToggleSettingPin(item);
+            await AnimateSettingPinAsync(new[] { item }, !item.IsPinned);
         }
     }
 

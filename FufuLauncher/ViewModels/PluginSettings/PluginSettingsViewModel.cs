@@ -262,18 +262,63 @@ public partial class PluginSettingsViewModel : ObservableObject
 
     public void ToggleSettingPin(PluginSettingItem? item)
     {
-        if (item == null || (!Settings.Contains(item) && !PinnedSettings.Contains(item))) return;
+        if (item == null) return;
 
-        ApplyPin(item, !item.IsPinned);
-        SavePinnedSections();
+        PrepareSettingsPinChange(new[] { item }, !item.IsPinned)?.Invoke();
     }
 
-    private void ApplyPin(PluginSettingItem item, bool pinned)
+    public Action? PrepareSettingsPinChange(IReadOnlyCollection<PluginSettingItem> items, bool pinned,
+        bool clearSelection = false)
+    {
+        var available = items.Distinct().Where(ContainsPluginSetting).ToArray();
+        if (available.Length == 0) return null;
+
+        var target = GetSettingsTargetKey();
+        var changed = false;
+        foreach (var item in available)
+        {
+            if (item.IsPinned == pinned) continue;
+
+            UpdateSettingPinState(item, pinned, target);
+            changed = true;
+        }
+        if (changed)
+        {
+            SavePinnedSections();
+        }
+
+        var completed = false;
+        return () =>
+        {
+            if (completed) return;
+            completed = true;
+            if (!string.Equals(target, GetSettingsTargetKey(), StringComparison.OrdinalIgnoreCase)) return;
+
+            foreach (var item in available)
+            {
+                if (!ContainsPluginSetting(item)) continue;
+                if (item.IsPinned == pinned)
+                {
+                    MoveSettingToPinGroup(item, pinned);
+                }
+                if (clearSelection)
+                {
+                    item.IsSelected = false;
+                }
+            }
+            if (clearSelection)
+            {
+                NotifySelectionChanged();
+            }
+        };
+    }
+
+    private bool ContainsPluginSetting(PluginSettingItem item) =>
+        Settings.Contains(item) || PinnedSettings.Contains(item);
+
+    private void UpdateSettingPinState(PluginSettingItem item, bool pinned, string target)
     {
         item.IsPinned = pinned;
-
-        string target = GetSettingsTargetKey();
-
         if (!_pinnedSections.TryGetValue(target, out var sections))
         {
             sections = new List<string>();
@@ -286,15 +331,20 @@ public partial class PluginSettingsViewModel : ObservableObject
             {
                 sections.Add(item.SectionKey);
             }
-
-            Settings.Remove(item);
-            InsertBySettingOrder(PinnedSettings, item);
         }
         else
         {
             sections.RemoveAll(key => string.Equals(key, item.SectionKey, StringComparison.OrdinalIgnoreCase));
-            PinnedSettings.Remove(item);
-            InsertBySettingOrder(Settings, item);
+        }
+    }
+
+    private void MoveSettingToPinGroup(PluginSettingItem item, bool pinned)
+    {
+        var source = pinned ? Settings : PinnedSettings;
+        var destination = pinned ? PinnedSettings : Settings;
+        if (source.Remove(item) && !destination.Contains(item))
+        {
+            InsertBySettingOrder(destination, item);
         }
     }
 
@@ -342,21 +392,7 @@ public partial class PluginSettingsViewModel : ObservableObject
 
     public void BatchSetPinned(bool pinned)
     {
-        var selected = PinnedSettings.Concat(Settings).Where(item => item.IsSelected).ToList();
-        if (selected.Count == 0) return;
-
-        foreach (var item in selected)
-        {
-            if (item.IsPinned != pinned)
-            {
-                ApplyPin(item, pinned);
-            }
-
-            item.IsSelected = false;
-        }
-
-        SavePinnedSections();
-        NotifySelectionChanged();
+        PrepareSettingsPinChange(SelectedSettings.ToArray(), pinned, clearSelection: true)?.Invoke();
     }
 
     public bool IsSettingPinned(string sectionKey)

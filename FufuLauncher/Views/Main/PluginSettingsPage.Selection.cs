@@ -25,7 +25,7 @@ public sealed partial class PluginSettingsPage
 
     private void OnSettingsPointerPressed(object sender, PointerRoutedEventArgs e)
     {
-        if (!ViewModel.IsSettingsInteractable) return;
+        if (!ViewModel.IsSettingsInteractable || _settingPinAnimationCancellation != null) return;
 
         var source = e.OriginalSource as DependencyObject;
         if (IsInteractiveElement(source) || IsWithinElement(source, BatchActionBar)) return;
@@ -142,31 +142,13 @@ public sealed partial class PluginSettingsPage
     private void CacheMarqueeTargets()
     {
         _marqueeTargets.Clear();
-
-        if (SettingsGrid.ItemsPanelRoot is not DependencyObject root)
+        foreach (var container in EnumerateRealizedSettingContainers())
         {
-            return;
-        }
-
-        var elements = new Stack<DependencyObject>();
-        elements.Push(root);
-        while (elements.Count > 0)
-        {
-            var element = elements.Pop();
-            if (element is GridViewItem container && container.Content is PluginSettingItem item)
+            if (container.Content is PluginSettingItem item && container.ActualWidth > 0 && container.ActualHeight > 0)
             {
-                if (container.ActualWidth > 0 && container.ActualHeight > 0)
-                {
-                    var bounds = container.TransformToVisual(SelectionCanvas)
-                        .TransformBounds(new Rect(0, 0, container.ActualWidth, container.ActualHeight));
-                    _marqueeTargets.Add((item, bounds));
-                }
-                continue;
-            }
-
-            for (var index = 0; index < VisualTreeHelper.GetChildrenCount(element); index++)
-            {
-                elements.Push(VisualTreeHelper.GetChild(element, index));
+                var bounds = container.TransformToVisual(SelectionCanvas)
+                    .TransformBounds(new Rect(0, 0, container.ActualWidth, container.ActualHeight));
+                _marqueeTargets.Add((item, bounds));
             }
         }
     }
@@ -279,9 +261,11 @@ public sealed partial class PluginSettingsPage
 
     private void OnBatchDisableClick(object sender, RoutedEventArgs e) => ViewModel.BatchSetBoolValue(false);
 
-    private void OnBatchPinClick(object sender, RoutedEventArgs e) => ViewModel.BatchSetPinned(true);
+    private async void OnBatchPinClick(object sender, RoutedEventArgs e) =>
+        await AnimateSettingPinAsync(ViewModel.SelectedSettings.ToArray(), true, clearSelection: true);
 
-    private void OnBatchUnpinClick(object sender, RoutedEventArgs e) => ViewModel.BatchSetPinned(false);
+    private async void OnBatchUnpinClick(object sender, RoutedEventArgs e) =>
+        await AnimateSettingPinAsync(ViewModel.SelectedSettings.ToArray(), false, clearSelection: true);
 
     private void OnBatchClearSelectionClick(object sender, RoutedEventArgs e) => ViewModel.ClearSelection();
 }

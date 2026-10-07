@@ -12,14 +12,14 @@ namespace FufuLauncher.Views;
 
 public sealed partial class PluginSettingsPage
 {
-    private const string SettingEntranceTranslation = "Translation";
+    private const string SettingTranslationProperty = "Translation";
     private const int SettingEntranceStaggerMilliseconds = 24;
     private const int SettingEntranceMaximumDelayMilliseconds = 168;
     private const int SettingEntrancePresentationWindowMilliseconds = 250;
     private const float SettingEntranceVerticalOffset = 18;
     private UISettings? _settingAnimationPreferences;
     private readonly HashSet<PluginSettingItem> _presentedSettings = new();
-    private readonly Dictionary<UIElement, (PluginSettingItem Item, Visual Visual)> _settingEntranceVisuals = new();
+    private readonly Dictionary<UIElement, (PluginSettingItem Item, Visual Visual)> _settingTransitionVisuals = new();
     private ScalarKeyFrameAnimation? _settingEntranceFade;
     private Vector3KeyFrameAnimation? _settingEntranceSlide;
     private bool _settingEntrancePresentationActive;
@@ -47,21 +47,28 @@ public sealed partial class PluginSettingsPage
         }
 
         var container = args.ItemContainer;
-        if (!args.InRecycleQueue && _settingEntranceVisuals.TryGetValue(container, out var current) &&
+        if (!args.InRecycleQueue && _settingTransitionVisuals.TryGetValue(container, out var current) &&
             ReferenceEquals(current.Item, args.Item))
         {
             return;
         }
 
-        if (_settingEntranceVisuals.Remove(container, out var previous))
+        if (_settingTransitionVisuals.Remove(container, out var previous))
         {
-            RestoreSettingEntranceVisual(container, previous.Visual);
+            RestoreSettingTransitionVisual(container, previous.Visual);
         }
 
-        if (args.InRecycleQueue || args.Item is not PluginSettingItem item || !_presentedSettings.Add(item))
+        if (args.InRecycleQueue || args.Item is not PluginSettingItem item)
         {
             return;
         }
+        if (_settingPinAnimationCancellation != null)
+        {
+            _presentedSettings.Add(item);
+            HoldSettingPinContainer(container, item);
+            return;
+        }
+        if (!_presentedSettings.Add(item)) return;
 
         var now = Environment.TickCount64;
         if (!_settingEntrancePresentationActive || !_settingEntranceAnimationsEnabled ||
@@ -74,27 +81,25 @@ public sealed partial class PluginSettingsPage
         Visual? visual = null;
         try
         {
-            ElementCompositionPreview.SetIsTranslationEnabled(container, true);
-            visual = ElementCompositionPreview.GetElementVisual(container);
+            visual = GetSettingTransitionVisual(container, item);
             PrepareSettingEntranceAnimations(visual.Compositor);
             var delayMilliseconds = Math.Clamp(_nextSettingEntranceAt - now, 0, SettingEntranceMaximumDelayMilliseconds);
             _nextSettingEntranceAt = now + delayMilliseconds + SettingEntranceStaggerMilliseconds;
             var delay = TimeSpan.FromMilliseconds(delayMilliseconds);
             _settingEntranceFade!.DelayTime = delay;
             _settingEntranceSlide!.DelayTime = delay;
-            visual.Properties.InsertVector3(SettingEntranceTranslation, new Vector3(0, SettingEntranceVerticalOffset, 0));
+            visual.Properties.InsertVector3(SettingTranslationProperty, new Vector3(0, SettingEntranceVerticalOffset, 0));
             visual.Opacity = 0;
-            _settingEntranceVisuals[container] = (item, visual);
             visual.StartAnimation(nameof(Visual.Opacity), _settingEntranceFade);
-            visual.StartAnimation(SettingEntranceTranslation, _settingEntranceSlide);
+            visual.StartAnimation(SettingTranslationProperty, _settingEntranceSlide);
         }
         catch (Exception ex)
         {
             _settingEntranceAnimationsEnabled = false;
-            _settingEntranceVisuals.Remove(container);
+            _settingTransitionVisuals.Remove(container);
             if (visual != null)
             {
-                RestoreSettingEntranceVisual(container, visual);
+                RestoreSettingTransitionVisual(container, visual);
             }
             Debug.WriteLine($"[PluginSettings] Setting entrance animation failed: {ex}");
         }
@@ -127,12 +132,9 @@ public sealed partial class PluginSettingsPage
 
     private void ResetSettingEntranceAnimations(bool presentationActive)
     {
+        CancelSettingPinAnimations();
         _settingEntrancePresentationActive = presentationActive;
-        foreach (var entrance in _settingEntranceVisuals)
-        {
-            RestoreSettingEntranceVisual(entrance.Key, entrance.Value.Visual);
-        }
-        _settingEntranceVisuals.Clear();
+        RestoreSettingTransitionVisuals();
         _presentedSettings.Clear();
         _lastSettingInsertionAt = 0;
         _nextSettingEntranceAt = 0;
@@ -158,18 +160,42 @@ public sealed partial class PluginSettingsPage
         }
     }
 
-    private static void RestoreSettingEntranceVisual(UIElement container, Visual visual)
+    private Visual GetSettingTransitionVisual(UIElement container, PluginSettingItem item)
+    {
+        if (_settingTransitionVisuals.TryGetValue(container, out var current))
+        {
+            if (ReferenceEquals(current.Item, item)) return current.Visual;
+
+            RestoreSettingTransitionVisual(container, current.Visual);
+        }
+        ElementCompositionPreview.SetIsTranslationEnabled(container, true);
+        var visual = ElementCompositionPreview.GetElementVisual(container);
+        visual.Properties.InsertVector3(SettingTranslationProperty, Vector3.Zero);
+        _settingTransitionVisuals[container] = (item, visual);
+        return visual;
+    }
+
+    private void RestoreSettingTransitionVisuals()
+    {
+        foreach (var entrance in _settingTransitionVisuals)
+        {
+            RestoreSettingTransitionVisual(entrance.Key, entrance.Value.Visual);
+        }
+        _settingTransitionVisuals.Clear();
+    }
+
+    private static void RestoreSettingTransitionVisual(UIElement container, Visual visual)
     {
         try
         {
             visual.StopAnimation(nameof(Visual.Opacity));
-            visual.StopAnimation(SettingEntranceTranslation);
+            visual.StopAnimation(SettingTranslationProperty);
             visual.Opacity = (float)container.Opacity;
-            visual.Properties.InsertVector3(SettingEntranceTranslation, Vector3.Zero);
+            visual.Properties.InsertVector3(SettingTranslationProperty, Vector3.Zero);
         }
         catch (Exception ex)
         {
-            Debug.WriteLine($"[PluginSettings] Setting entrance animation reset failed: {ex}");
+            Debug.WriteLine($"[PluginSettings] Setting transition reset failed: {ex}");
         }
     }
 }
