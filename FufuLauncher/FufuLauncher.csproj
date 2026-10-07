@@ -46,10 +46,11 @@
 
     <ItemGroup>
         <PackageReference Include="CommunityToolkit.Mvvm" Version="8.4.2"/>
-        <PackageReference Include="CommunityToolkit.WinUI.UI.Controls.Markdown" Version="7.1.2"/>
         <PackageReference Include="Google.Protobuf" Version="3.35.1"/>
         <PackageReference Include="H.NotifyIcon.WinUI" Version="2.2.0"/>
         <PackageReference Include="HtmlAgilityPack" Version="1.12.4"/>
+        <PackageReference Include="Markdig" Version="1.3.2"/>
+        <PackageReference Include="Markdown.ColorCode" Version="3.0.1"/>
         <PackageReference Include="InputSimulatorPlus" Version="1.0.7"/>
         <PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite" Version="8.0.28"/>
         <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="8.0.28">
@@ -129,6 +130,9 @@
             <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
         </Content>
         <Content Include="Assets\Flags\**\*">
+            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+        </Content>
+        <Content Include="Assets\Web\**\*">
             <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
         </Content>
         <Content Include="Assets\mirrors.json">

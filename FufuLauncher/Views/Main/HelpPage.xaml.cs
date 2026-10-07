@@ -3,13 +3,15 @@ Copyright (c) FufuLauncher Dev Team. All rights reserved.
 Licensed under the MIT License.
 */
 
+using System.ComponentModel;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using FufuLauncher.ViewModels;
 using FufuLauncher.Models;
 using Windows.System;
-using CommunityToolkit.WinUI.UI.Controls;
 using FufuLauncher.Helpers;
+using FufuLauncher.Services.Help;
+using Microsoft.Web.WebView2.Core;
 
 namespace FufuLauncher.Views;
 
@@ -24,43 +26,141 @@ public sealed partial class HelpPage : Page
 
     private Microsoft.UI.Dispatching.DispatcherQueueTimer? _searchFlyoutDebounce;
 
+    private Microsoft.UI.Dispatching.DispatcherQueueTimer? _renderDebounce;
+
+    private Task? _webInitialization;
+
     public HelpPage()
     {
         this.InitializeComponent();
         this.Loaded += HelpPage_Loaded;
+        ViewModel.PropertyChanged += ViewModel_PropertyChanged;
+        ActualThemeChanged += (_, _) => RequestRender();
     }
 
-    private void HelpMarkdown_SizeChanged(object sender, SizeChangedEventArgs e)
+    private void ViewModel_PropertyChanged(object? sender, PropertyChangedEventArgs e)
     {
-        if (sender is not MarkdownTextBlock md)
+        if (e.PropertyName is nameof(HelpViewModel.MarkdownContent) or nameof(HelpViewModel.MarkdownUriPrefix)
+            or nameof(HelpViewModel.CurrentTitle) or nameof(HelpViewModel.CurrentCategory)
+            or nameof(HelpViewModel.CurrentAuthor) or nameof(HelpViewModel.CurrentDate))
+            RequestRender();
+    }
+
+    private void RequestRender()
+    {
+        if (_renderDebounce is null)
+        {
+            _ = RenderAsync();
+            return;
+        }
+
+        _renderDebounce.Stop();
+        _renderDebounce.Start();
+    }
+
+    private async void RenderDebounce_Tick()
+    {
+        await RenderAsync();
+    }
+
+    private async Task RenderAsync()
+    {
+        var core = await EnsureCoreWebViewAsync();
+        if (core is null)
             return;
 
-        var w = e.NewSize.Width;
-        if (double.IsInfinity(w) || double.IsNaN(w) || w <= 0)
-            return;
+        var dark = ActualTheme == ElementTheme.Dark;
+        var meta = new HelpDocumentMeta(ViewModel.CurrentTitle, ViewModel.CurrentCategory, ViewModel.CurrentAuthor, ViewModel.CurrentDate);
+        var html = HelpDocumentRenderer.Render(ViewModel.MarkdownContent, meta, ViewModel.MarkdownUriPrefix, dark, AccentColor);
 
-        var cap = Math.Max(160.0, Math.Floor(w - 2));
-        md.ImageMaxWidth = cap;
-        md.ImageMaxHeight = Math.Min(2400, cap * 3);
+        core.NavigateToString(html);
+    }
+
+    private string AccentColor
+    {
+        get
+        {
+            if (Application.Current.Resources.TryGetValue("SystemAccentColor", out var value) && value is Windows.UI.Color color)
+                return $"#{color.R:X2}{color.G:X2}{color.B:X2}";
+
+            return ActualTheme == ElementTheme.Dark ? "#4CC2FF" : "#005FB8";
+        }
+    }
+
+    private async Task<CoreWebView2?> EnsureCoreWebViewAsync()
+    {
+        try
+        {
+            _webInitialization ??= InitializeWebViewAsync();
+            await _webInitialization;
+            return HelpWebView.CoreWebView2;
+        }
+        catch
+        {
+            _webInitialization = null;
+            return null;
+        }
+    }
+
+    private async Task InitializeWebViewAsync()
+    {
+        await HelpWebView.EnsureCoreWebView2Async();
+
+        var core = HelpWebView.CoreWebView2;
+        var settings = core.Settings;
+        settings.IsWebMessageEnabled = false;
+        settings.AreHostObjectsAllowed = false;
+        settings.AreDevToolsEnabled = false;
+        settings.AreDefaultScriptDialogsEnabled = false;
+        settings.IsStatusBarEnabled = false;
+        HelpWebView.DefaultBackgroundColor = ActualTheme == ElementTheme.Dark
+            ? Windows.UI.Color.FromArgb(255, 28, 28, 30)
+            : Windows.UI.Color.FromArgb(255, 251, 251, 251);
+
+        if (HelpDocumentRenderer.HasCustomFont)
+            core.SetVirtualHostNameToFolderMapping("fufu.fonts", HelpDocumentRenderer.CustomFontDirectory, CoreWebView2HostResourceAccessKind.Allow);
+
+        core.NavigationStarting += (sender, e) =>
+        {
+            if (HelpDocumentRenderer.TryExternalUri(e.Uri, out var uri))
+            {
+                e.Cancel = true;
+                _ = Launcher.LaunchUriAsync(uri);
+            }
+        };
+
+        core.NewWindowRequested += (sender, e) =>
+        {
+            e.Handled = true;
+            if (HelpDocumentRenderer.TryExternalUri(e.Uri, out var uri))
+                _ = Launcher.LaunchUriAsync(uri);
+        };
+
+        core.PermissionRequested += (_, e) => e.State = CoreWebView2PermissionState.Deny;
     }
 
     private async void HelpPage_Loaded(object sender, RoutedEventArgs e)
     {
         EntranceStoryboard.Begin();
-        if (_searchFlyoutDebounce is null)
-        {
-            var dq = Microsoft.UI.Dispatching.DispatcherQueue.GetForCurrentThread();
-            if (dq is not null)
-            {
-                _searchFlyoutDebounce = dq.CreateTimer();
-                _searchFlyoutDebounce.Interval = TimeSpan.FromMilliseconds(320);
-                _searchFlyoutDebounce.IsRepeating = false;
-                _searchFlyoutDebounce.Tick += SearchFlyoutDebounce_Tick;
-            }
-        }
+        _searchFlyoutDebounce ??= CreateDebounceTimer(320, SearchFlyoutDebounce_Tick);
+        _renderDebounce ??= CreateDebounceTimer(180, RenderDebounce_Tick);
 
+        _ = RenderAsync();
         await ViewModel.InitializeAsync();
         BuildTree(string.Empty);
+    }
+
+    private static Microsoft.UI.Dispatching.DispatcherQueueTimer? CreateDebounceTimer(int intervalMs, Action onTick)
+    {
+        var dispatcher = Microsoft.UI.Dispatching.DispatcherQueue.GetForCurrentThread();
+        if (dispatcher is null)
+            return null;
+
+        var timer = dispatcher.CreateTimer();
+        timer.Interval = TimeSpan.FromMilliseconds(intervalMs);
+        timer.IsRepeating = false;
+        timer.Tick += (_, _) => onTick();
+        return timer;
     }
 
     private void BuildTree(string? filter)
@@ -119,7 +219,7 @@ public sealed partial class HelpPage : Page
         _searchFlyoutDebounce?.Start();
     }
 
-    private void SearchFlyoutDebounce_Tick(Microsoft.UI.Dispatching.DispatcherQueueTimer sender, object args)
+    private void SearchFlyoutDebounce_Tick()
     {
         var trimmed = (SearchBox.Text ?? string.Empty).Trim();
         if (string.IsNullOrEmpty(trimmed))
@@ -170,37 +270,5 @@ public sealed partial class HelpPage : Page
     {
         if (ViewModel.ToggleTranslationCommand.CanExecute(null))
             ViewModel.ToggleTranslationCommand.Execute(null);
-    }
-
-    private async void HelpMarkdown_LinkClicked(object sender, LinkClickedEventArgs e)
-    {
-        var link = e.Link?.Trim();
-        if (string.IsNullOrEmpty(link))
-            return;
-
-        Uri? target = null;
-        if (link.StartsWith("//", StringComparison.Ordinal))
-        {
-            if (Uri.TryCreate("https:" + link, UriKind.Absolute, out var protocolRelative))
-                target = protocolRelative;
-        }
-        else if (Uri.TryCreate(link, UriKind.Absolute, out var absolute))
-        {
-            target = absolute;
-        }
-        else if (!string.IsNullOrEmpty(ViewModel.MarkdownUriPrefix) &&
-                 Uri.TryCreate(new Uri(ViewModel.MarkdownUriPrefix, UriKind.Absolute), link, out var relative))
-        {
-            target = relative;
-        }
-
-        if (target is null)
-            return;
-
-        var scheme = target.Scheme.ToLowerInvariant();
-        if (scheme is not ("http" or "https" or "mailto"))
-            return;
-
-        _ = await Launcher.LaunchUriAsync(target);
     }
 }

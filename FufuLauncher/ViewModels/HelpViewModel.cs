@@ -132,9 +132,11 @@ public partial class HelpViewModel : ObservableObject
 
     [ObservableProperty] private string _currentTitle = "请选择文档";
 
-    [ObservableProperty] private string _currentAuthor = "";
+    [ObservableProperty] private string _currentCategory = string.Empty;
 
-    [ObservableProperty] private string _currentDate = "";
+    [ObservableProperty] private string _currentAuthor = string.Empty;
+
+    [ObservableProperty] private string _currentDate = string.Empty;
 
     [ObservableProperty] private bool _isLoading;
 
@@ -242,8 +244,9 @@ public partial class HelpViewModel : ObservableObject
         IsLoading = true;
         MarkdownUriPrefix = GetMarkdownDirectoryPrefix(item.File);
         CurrentTitle = item.Title;
-        CurrentAuthor = $"作者: {item.Author}";
-        CurrentDate = "获取日期中...";
+        CurrentCategory = item.Category;
+        CurrentAuthor = item.Author;
+        CurrentDate = string.Empty;
         MarkdownContent = "加载中...";
 
         try
@@ -262,11 +265,11 @@ public partial class HelpViewModel : ObservableObject
 
                 if (response.Content.Headers.LastModified.HasValue)
                 {
-                    CurrentDate = $"最后修改: {response.Content.Headers.LastModified.Value.LocalDateTime:yyyy-MM-dd HH:mm}";
+                    CurrentDate = response.Content.Headers.LastModified.Value.LocalDateTime.ToString("yyyy-MM-dd HH:mm");
                 }
                 else
                 {
-                    CurrentDate = "最后修改: 未知";
+                    CurrentDate = string.Empty;
                 }
 
                 UpdateTranslateButtonState();
@@ -279,14 +282,14 @@ public partial class HelpViewModel : ObservableObject
             else
             {
                 MarkdownContent = $"无法获取文档内容 (HTTP {response.StatusCode})";
-                CurrentDate = "";
+                CurrentDate = string.Empty;
                 _originalContent = string.Empty;
             }
         }
         catch (Exception ex)
         {
             MarkdownContent = $"文档加载发生异常: {ex.Message}";
-            CurrentDate = "";
+            CurrentDate = string.Empty;
             _originalContent = string.Empty;
         }
         finally
