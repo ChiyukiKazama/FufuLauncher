@@ -1631,7 +1631,7 @@ Por favor, confirma que seleccionaste el directorio de instalación que contiene
   <data name="Home_CheckinCard" xml:space="preserve">
     <value>Check-in de Genshin</value>
   </data>
-  <data name="Home_RefreshToken" xml:space="preserve">
+  <data name="Home_RefreshCookie" xml:space="preserve">
     <value>Actualizar token</value>
   </data>
   <data name="Home_GoToCheckinConfig" xml:space="preserve">
@@ -6213,4 +6213,6 @@ Puedes reintentar con otro nodo o usar la fuente oficial directa.</value>
   <data name="PluginConfigPage_FilteredOptionCount" xml:space="preserve"><value>{0} / {1} ajustes</value></data>
   <data name="PluginConfigPage_ConfigFile" xml:space="preserve"><value>Archivo de configuración</value></data>
   <data name="PluginConfigPage_ValuePlaceholder" xml:space="preserve"><value>Ingresa un valor…</value></data>
+  <data name="PluginSettings_CollapseHeader" xml:space="preserve"><value>Contraer encabezado</value></data>
+  <data name="PluginSettings_ExpandHeader" xml:space="preserve"><value>Expandir encabezado</value></data>
 </root>

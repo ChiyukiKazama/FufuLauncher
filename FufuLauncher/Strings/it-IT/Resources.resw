@@ -2428,7 +2428,7 @@ CaptureApp
   <data name="Home_RefreshNotes" xml:space="preserve">
     <value>Aggiorna Note</value>
   </data>
-  <data name="Home_RefreshToken" xml:space="preserve">
+  <data name="Home_RefreshCookie" xml:space="preserve">
     <value>Aggiorna Token</value>
   </data>
   <data name="Home_RemoveWidget" xml:space="preserve">
@@ -6219,4 +6219,6 @@ Puoi riprovare con un altro nodo o usare la fonte ufficiale diretta.</value>
   <data name="PluginConfigPage_FilteredOptionCount" xml:space="preserve"><value>{0} / {1} impostazioni</value></data>
   <data name="PluginConfigPage_ConfigFile" xml:space="preserve"><value>File di configurazione</value></data>
   <data name="PluginConfigPage_ValuePlaceholder" xml:space="preserve"><value>Inserisci un valore…</value></data>
+  <data name="PluginSettings_CollapseHeader" xml:space="preserve"><value>Comprimi intestazione</value></data>
+  <data name="PluginSettings_ExpandHeader" xml:space="preserve"><value>Espandi intestazione</value></data>
 </root>

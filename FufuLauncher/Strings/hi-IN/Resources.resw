@@ -1549,7 +1549,7 @@
   <data name="Home_CheckinCard" xml:space="preserve">
     <value>चेक-इन</value>
   </data>
-  <data name="Home_RefreshToken" xml:space="preserve">
+  <data name="Home_RefreshCookie" xml:space="preserve">
     <value>टोकन रीफ़्रेश करें</value>
   </data>
   <data name="Home_GoToCheckinConfig" xml:space="preserve">
@@ -6690,4 +6690,6 @@ UIGF v4.x/3.0/2.x</value>
   <data name="PluginConfigPage_FilteredOptionCount" xml:space="preserve"><value>{0} / {1} सेटिंग</value></data>
   <data name="PluginConfigPage_ConfigFile" xml:space="preserve"><value>कॉन्फ़िगरेशन फ़ाइल</value></data>
   <data name="PluginConfigPage_ValuePlaceholder" xml:space="preserve"><value>मान दर्ज करें…</value></data>
+  <data name="PluginSettings_CollapseHeader" xml:space="preserve"><value>शीर्ष पट्टी समेटें</value></data>
+  <data name="PluginSettings_ExpandHeader" xml:space="preserve"><value>शीर्ष पट्टी फैलाएँ</value></data>
 </root>

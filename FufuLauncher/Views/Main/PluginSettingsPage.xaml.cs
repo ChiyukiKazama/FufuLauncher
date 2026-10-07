@@ -61,6 +61,7 @@ public sealed partial class PluginSettingsPage : Page
         _isInitializing = true;
         EntranceStoryboard.Begin();
         ResetSettingEntranceAnimations(true);
+        InitializeConfigurationChrome();
         ViewModel.ActivateConfigurationLoading();
         StartMainPluginWatcher();
         ShowMainPluginMissingWarningIfNeeded();
@@ -96,6 +97,7 @@ public sealed partial class PluginSettingsPage : Page
 
     private void PluginSettingsPage_Unloaded(object sender, RoutedEventArgs e)
     {
+        StopConfigurationChrome();
         ViewModel.SuspendConfigurationLoading();
         ResetSettingEntranceAnimations(false);
         ResetSettingsSelection();
@@ -124,6 +126,7 @@ public sealed partial class PluginSettingsPage : Page
 
     protected override void OnNavigatedFrom(Microsoft.UI.Xaml.Navigation.NavigationEventArgs e)
     {
+        StopConfigurationChrome();
         ViewModel.SuspendConfigurationLoading();
         ResetSettingEntranceAnimations(false);
         base.OnNavigatedFrom(e);
@@ -131,9 +134,13 @@ public sealed partial class PluginSettingsPage : Page
 
     private async void ViewModel_PropertyChanged(object sender, System.ComponentModel.PropertyChangedEventArgs e)
     {
-        if (e.PropertyName == nameof(ViewModel.IsLoadingConfiguration) && ViewModel.IsLoadingConfiguration)
+        if (e.PropertyName == nameof(ViewModel.IsLoadingConfiguration))
         {
-            ResetSettingsSelection();
+            UpdateConfigurationLoadingPresentation();
+            if (ViewModel.IsLoadingConfiguration)
+            {
+                ResetSettingsSelection();
+            }
         }
 
         if (_isInitializing || !IsLoaded) return;

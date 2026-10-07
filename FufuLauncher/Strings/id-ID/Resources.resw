@@ -1631,7 +1631,7 @@ Buka situs web Microsoft untuk mengunduh dan menginstalnya?</value>
   <data name="Home_CheckinCard" xml:space="preserve">
     <value>Check-in Genshin</value>
   </data>
-  <data name="Home_RefreshToken" xml:space="preserve">
+  <data name="Home_RefreshCookie" xml:space="preserve">
     <value>Segarkan Token</value>
   </data>
   <data name="Home_GoToCheckinConfig" xml:space="preserve">
@@ -6213,4 +6213,6 @@ Anda dapat mencoba node lain atau menggunakan sumber resmi langsung.</value>
   <data name="PluginConfigPage_FilteredOptionCount" xml:space="preserve"><value>{0} / {1} pengaturan</value></data>
   <data name="PluginConfigPage_ConfigFile" xml:space="preserve"><value>File konfigurasi</value></data>
   <data name="PluginConfigPage_ValuePlaceholder" xml:space="preserve"><value>Masukkan nilai…</value></data>
+  <data name="PluginSettings_CollapseHeader" xml:space="preserve"><value>Ciutkan header</value></data>
+  <data name="PluginSettings_ExpandHeader" xml:space="preserve"><value>Perluas header</value></data>
 </root>

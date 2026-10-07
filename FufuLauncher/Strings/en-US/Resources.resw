@@ -1561,7 +1561,7 @@ Go to the Microsoft website to download and install it?</value>
   <data name="Home_CheckinCard" xml:space="preserve">
     <value>Check-in</value>
   </data>
-  <data name="Home_RefreshToken" xml:space="preserve">
+  <data name="Home_RefreshCookie" xml:space="preserve">
     <value>Refresh Token</value>
   </data>
   <data name="Home_GoToCheckinConfig" xml:space="preserve">
@@ -7038,4 +7038,6 @@ Error: {0}</value>
   <data name="PluginConfigPage_FilteredOptionCount" xml:space="preserve"><value>{0} / {1} settings</value></data>
   <data name="PluginConfigPage_ConfigFile" xml:space="preserve"><value>Configuration file</value></data>
   <data name="PluginConfigPage_ValuePlaceholder" xml:space="preserve"><value>Enter a value…</value></data>
+  <data name="PluginSettings_CollapseHeader" xml:space="preserve"><value>Collapse header</value></data>
+  <data name="PluginSettings_ExpandHeader" xml:space="preserve"><value>Expand header</value></data>
 </root>

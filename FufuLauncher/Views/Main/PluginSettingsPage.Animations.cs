@@ -91,7 +91,7 @@ public sealed partial class PluginSettingsPage
             visual.Properties.InsertVector3(SettingTranslationProperty, new Vector3(0, SettingEntranceVerticalOffset, 0));
             visual.Opacity = 0;
             visual.StartAnimation(nameof(Visual.Opacity), _settingEntranceFade);
-            visual.StartAnimation(SettingTranslationProperty, _settingEntranceSlide);
+            visual.Properties.StartAnimation(SettingTranslationProperty, _settingEntranceSlide);
         }
         catch (Exception ex)
         {
@@ -168,9 +168,7 @@ public sealed partial class PluginSettingsPage
 
             RestoreSettingTransitionVisual(container, current.Visual);
         }
-        ElementCompositionPreview.SetIsTranslationEnabled(container, true);
-        var visual = ElementCompositionPreview.GetElementVisual(container);
-        visual.Properties.InsertVector3(SettingTranslationProperty, Vector3.Zero);
+        var visual = GetInitializedTranslationVisual(container);
         _settingTransitionVisuals[container] = (item, visual);
         return visual;
     }
@@ -184,14 +182,36 @@ public sealed partial class PluginSettingsPage
         _settingTransitionVisuals.Clear();
     }
 
+    private static Visual GetInitializedTranslationVisual(UIElement element)
+    {
+        ElementCompositionPreview.SetIsTranslationEnabled(element, true);
+        var visual = ElementCompositionPreview.GetElementVisual(element);
+        EnsureSettingTranslationProperty(visual);
+        return visual;
+    }
+
+    private static void EnsureSettingTranslationProperty(Visual visual)
+    {
+        if (visual.Properties.TryGetVector3(SettingTranslationProperty, out _) != CompositionGetValueStatus.Succeeded)
+        {
+            visual.Properties.InsertVector3(SettingTranslationProperty, Vector3.Zero);
+        }
+    }
+
+    private static void ResetSettingTranslation(Visual visual)
+    {
+        EnsureSettingTranslationProperty(visual);
+        visual.Properties.StopAnimation(SettingTranslationProperty);
+        visual.Properties.InsertVector3(SettingTranslationProperty, Vector3.Zero);
+    }
+
     private static void RestoreSettingTransitionVisual(UIElement container, Visual visual)
     {
         try
         {
             visual.StopAnimation(nameof(Visual.Opacity));
-            visual.StopAnimation(SettingTranslationProperty);
+            ResetSettingTranslation(visual);
             visual.Opacity = (float)container.Opacity;
-            visual.Properties.InsertVector3(SettingTranslationProperty, Vector3.Zero);
         }
         catch (Exception ex)
         {

@@ -349,201 +349,221 @@
         </Grid.RowDefinitions>
 
         <StackPanel Grid.Row="0">
-            <StackPanel Orientation="Horizontal" Spacing="12" Margin="0,0,0,16">
-                <TextBlock Text="{helpers:Loc Key=ConfigTargetLabel}" VerticalAlignment="Center" FontWeight="SemiBold" />
-                <ComboBox SelectedIndex="{x:Bind ViewModel.SelectedPluginIndex, Mode=TwoWay}" Width="200">
-                    <ComboBoxItem>
-                        <TextBlock Text="{x:Bind ViewModel.SelectedPluginComboLabel, Mode=OneWay}" />
-                    </ComboBoxItem>
-                    <ComboBoxItem Content="{helpers:Loc Key=PluginFPS}" />
-                </ComboBox>
-            </StackPanel>
-
-            <Grid Margin="0,0,0,24">
+            <Grid Margin="0,0,0,16">
                 <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="Auto" />
                     <ColumnDefinition Width="*" />
                     <ColumnDefinition Width="Auto" />
-                    <ColumnDefinition Width="Auto" />
                 </Grid.ColumnDefinitions>
-
-                <Image Source="/Assets/WindowIcon.ico" Width="42" Height="42" VerticalAlignment="Center"
-                       Stretch="Uniform" />
-
-                <StackPanel Grid.Column="1" Margin="16,0,0,0" VerticalAlignment="Center">
-                    <TextBlock Text="{x:Bind ViewModel.PluginName, Mode=OneWay}" FontSize="18" FontWeight="SemiBold"
-                               Margin="0,0,0,4" />
-                    <TextBlock Text="{x:Bind ViewModel.PluginDescription, Mode=OneWay}" FontSize="12" Opacity="0.6"
-                               TextWrapping="Wrap" />
+                <StackPanel Orientation="Horizontal" Spacing="12">
+                    <TextBlock Text="{helpers:Loc Key=ConfigTargetLabel}" VerticalAlignment="Center" FontWeight="SemiBold" />
+                    <ComboBox SelectedIndex="{x:Bind ViewModel.SelectedPluginIndex, Mode=TwoWay}" Width="200">
+                        <ComboBoxItem>
+                            <TextBlock Text="{x:Bind ViewModel.SelectedPluginComboLabel, Mode=OneWay}" />
+                        </ComboBoxItem>
+                        <ComboBoxItem Content="{helpers:Loc Key=PluginFPS}" />
+                    </ComboBox>
                 </StackPanel>
+                <Button x:Name="SettingsFunctionsButton" Grid.Column="1"
+                        Content="{helpers:Loc Key=FunctionsMenuBtn}" VerticalAlignment="Center"
+                        HorizontalAlignment="Right">
+                    <Button.Flyout>
+                        <Flyout>
+                            <StackPanel Spacing="6" MinWidth="200">
+                                <Button x:Name="SettingsHeaderVisibilityButton"
+                                        Content="{helpers:Loc Key=PluginSettings_CollapseHeader}"
+                                        Click="OnToggleSettingsHeaderClick" HorizontalAlignment="Stretch" />
+                                <Border Height="1" Margin="0,4,0,4"
+                                        Background="{ThemeResource DividerStrokeColorDefaultBrush}" />
+                                <ContentControl HorizontalContentAlignment="Stretch"
+                                                IsEnabled="{x:Bind ViewModel.CanUseConfigurationFunctions, Mode=OneWay}">
+                                    <StackPanel Spacing="6">
+                                        <Button Content="{helpers:Loc Key=DownloadPluginBtn}"
+                                                Click="OnDownloadPluginClick"
+                                                HorizontalAlignment="Stretch"
+                                                IsEnabled="{x:Bind ViewModel.IsDownloadSupported, Mode=OneWay}" />
 
-                <StackPanel Grid.Column="2" Orientation="Horizontal" Spacing="12" VerticalAlignment="Center"
-                            HorizontalAlignment="Right" Margin="0,0,24,0">
-                    <StackPanel VerticalAlignment="Center" HorizontalAlignment="Right">
-                        <TextBlock Text="{x:Bind ViewModel.PluginDeveloper, Mode=OneWay}" FontSize="12"
-                                   FontWeight="SemiBold" HorizontalAlignment="Right" Margin="0,0,0,4" />
-                        <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
-                            <TextBlock Text="{helpers:Loc Key=ModifiedDateLabel}" FontSize="12" Opacity="0.6" />
-                            <TextBlock Text="{x:Bind ViewModel.LastModifiedDate, Mode=OneWay}" FontSize="12"
-                                       Opacity="0.6" />
-                        </StackPanel>
-                    </StackPanel>
-
-                    <Button x:Name="InstallSignatureButton"
-                            Padding="12,6" MinWidth="0"
-                            VerticalAlignment="Center"
-                            ToolTipService.ToolTip="安装平台代码签名证书（可随时在设置中卸载）"
-                            Click="OnInstallSignatureClick">
-                        <StackPanel Orientation="Horizontal" Spacing="6">
-                            <FontIcon Glyph="&#xE8D7;" FontSize="13" />
-                            <TextBlock Text="安装签名" FontSize="12" />
-                        </StackPanel>
-                    </Button>
-                </StackPanel>
-
-                <StackPanel Grid.Column="3" Orientation="Horizontal" Spacing="20" VerticalAlignment="Center">
-                    <Border CornerRadius="8" Padding="3"
-                            Background="{ThemeResource CardBackgroundFillColorDefaultBrush}"
-                            BorderBrush="{ThemeResource CardStrokeColorDefaultBrush}"
-                            BorderThickness="1"
-                            VerticalAlignment="Center"
-                            Visibility="{x:Bind ViewModel.ModeTabVisibility, Mode=OneWay}">
-                        <StackPanel Orientation="Horizontal" Spacing="2">
-                            <ToggleButton x:Name="StandardModeTabButton"
-                                          IsChecked="{x:Bind ViewModel.IsStandardModeTab, Mode=OneWay}"
-                                          Click="OnStandardModeTabClick"
-                                          Padding="8,4" MinWidth="0"
-                                          Background="Transparent" BorderThickness="0"
-                                          ToolTipService.ToolTip="{helpers:Loc Key=LightweightMode_StandardTooltip}">
-                                <FontIcon Glyph="&#xE7C3;" FontSize="15" />
-                            </ToggleButton>
-                            <ToggleButton x:Name="LightweightModeTabButton"
-                                          IsChecked="{x:Bind ViewModel.IsLightweightModeTab, Mode=OneWay}"
-                                          Click="OnLightweightModeTabClick"
-                                          Padding="8,4" MinWidth="0"
-                                          Background="Transparent" BorderThickness="0"
-                                          ToolTipService.ToolTip="{helpers:Loc Key=LightweightMode_LiteTooltip}">
-                                <FontIcon Glyph="&#xE945;" FontSize="15" />
-                            </ToggleButton>
-                        </StackPanel>
-                    </Border>
-
-                    <Button Content="{helpers:Loc Key=FunctionsMenuBtn}" VerticalAlignment="Center"
-                            IsEnabled="{x:Bind ViewModel.CanUseConfigurationFunctions, Mode=OneWay}">
-                        <Button.Flyout>
-                            <Flyout>
-                                <StackPanel Spacing="6" MinWidth="200">
-                                    <Button Content="{helpers:Loc Key=DownloadPluginBtn}"
-                                            Click="OnDownloadPluginClick"
-                                            HorizontalAlignment="Stretch"
-                                            IsEnabled="{x:Bind ViewModel.IsDownloadSupported, Mode=OneWay}" />
-
-                                    <Button Content="{helpers:Loc Key=LightweightMode_ReinstallBtn}"
-                                            Click="OnReinstallLightweightPluginClick"
-                                            HorizontalAlignment="Stretch"
-                                            IsEnabled="{x:Bind ViewModel.IsLitePluginInstallSupported, Mode=OneWay}" />
+                                        <Button Content="{helpers:Loc Key=LightweightMode_ReinstallBtn}"
+                                                Click="OnReinstallLightweightPluginClick"
+                                                HorizontalAlignment="Stretch"
+                                                IsEnabled="{x:Bind ViewModel.IsLitePluginInstallSupported, Mode=OneWay}" />
 
 
-                                    <Button Content="{helpers:Loc Key=RepairFpsPluginBtn}"
-                                            Click="OnRepairFpsPluginClick"
-                                            HorizontalAlignment="Stretch" />
+                                        <Button Content="{helpers:Loc Key=RepairFpsPluginBtn}"
+                                                Click="OnRepairFpsPluginClick"
+                                                HorizontalAlignment="Stretch" />
 
-                                    <Border Height="1" Background="{ThemeResource DividerStrokeColorDefaultBrush}"
-                                            Margin="0,4,0,4" />
+                                        <Border Height="1" Background="{ThemeResource DividerStrokeColorDefaultBrush}"
+                                                Margin="0,4,0,4" />
 
-                                    <StackPanel Orientation="Horizontal" Spacing="8">
-                                        <TextBlock Text="{x:Bind ViewModel.PluginToggleLabel, Mode=OneWay}"
-                                                   VerticalAlignment="Center" FontSize="12" FontWeight="SemiBold" />
-                                        <ToggleSwitch IsOn="{x:Bind ViewModel.IsMainPluginEnabled, Mode=OneWay}"
-                                                      Toggled="OnMainPluginToggled"
-                                                      OnContent="{helpers:Loc Key=OnLabel}"
-                                                      OffContent="{helpers:Loc Key=OffLabel}"
-                                                      CornerRadius="16"
-                                                      HorizontalAlignment="Right"
-                                                      MinWidth="0" Margin="0" />
+                                        <StackPanel Orientation="Horizontal" Spacing="8">
+                                            <TextBlock Text="{x:Bind ViewModel.PluginToggleLabel, Mode=OneWay}"
+                                                       VerticalAlignment="Center" FontSize="12" FontWeight="SemiBold" />
+                                            <ToggleSwitch IsOn="{x:Bind ViewModel.IsMainPluginEnabled, Mode=OneWay}"
+                                                          Toggled="OnMainPluginToggled"
+                                                          OnContent="{helpers:Loc Key=OnLabel}"
+                                                          OffContent="{helpers:Loc Key=OffLabel}"
+                                                          CornerRadius="16"
+                                                          HorizontalAlignment="Right"
+                                                          MinWidth="0" Margin="0" />
+                                        </StackPanel>
+                                        <StackPanel Orientation="Horizontal" Spacing="8">
+                                            <TextBlock Text="{helpers:Loc Key=FpsPluginEnabledLabel}"
+                                                       VerticalAlignment="Center" FontSize="12" FontWeight="SemiBold" />
+                                            <ToggleSwitch IsOn="{x:Bind ViewModel.IsFpsPluginEnabled, Mode=TwoWay}"
+                                                          OnContent="{helpers:Loc Key=OnLabel}"
+                                                          OffContent="{helpers:Loc Key=OffLabel}"
+                                                          CornerRadius="16"
+                                                          HorizontalAlignment="Right"
+                                                          MinWidth="0" Margin="0" />
+                                        </StackPanel>
+                                        <StackPanel Orientation="Horizontal" Spacing="8">
+                                            <TextBlock Text="{helpers:Loc Key=KeyInputModeLabel}"
+                                                       VerticalAlignment="Center" FontSize="12" FontWeight="SemiBold" />
+                                            <ToggleSwitch IsOn="{x:Bind ViewModel.UseKeyListInput, Mode=TwoWay}"
+                                                          OnContent="{helpers:Loc Key=ListLabel}"
+                                                          OffContent="{helpers:Loc Key=NumberLabel}"
+                                                          CornerRadius="16"
+                                                          HorizontalAlignment="Right"
+                                                          MinWidth="0" Margin="0" />
+                                        </StackPanel>
+                                        <StackPanel Orientation="Horizontal" Spacing="8">
+                                            <TextBlock Text="{helpers:Loc Key=AutoCreatePresetLabel}"
+                                                       VerticalAlignment="Center" FontSize="12" FontWeight="SemiBold" />
+                                            <ToggleSwitch IsOn="{x:Bind ViewModel.IsAutoCreatePresetEnabled, Mode=TwoWay}"
+                                                          OnContent="{helpers:Loc Key=OnLabel}"
+                                                          OffContent="{helpers:Loc Key=OffLabel}"
+                                                          CornerRadius="16"
+                                                          HorizontalAlignment="Right"
+                                                          MinWidth="0" Margin="0" />
+                                        </StackPanel>
+
+                                        <StackPanel Orientation="Horizontal" Spacing="8">
+                                            <TextBlock Text="{helpers:Loc Key=ShowDevFeaturesLabel}"
+                                                       VerticalAlignment="Center" FontSize="12" FontWeight="SemiBold" />
+                                            <ToggleSwitch IsOn="{x:Bind ViewModel.IsDevFeaturesEnabled, Mode=TwoWay}"
+                                                          OnContent="{helpers:Loc Key=OnLabel}"
+                                                          OffContent="{helpers:Loc Key=OffLabel}"
+                                                          CornerRadius="16"
+                                                          HorizontalAlignment="Right"
+                                                          MinWidth="0" Margin="0" />
+                                        </StackPanel>
+
+                                        <Border Height="1" Background="{ThemeResource DividerStrokeColorDefaultBrush}"
+                                                Margin="0,4,0,4" />
+                                        <Button Content="{helpers:Loc Key=FeedbackBtn}"
+                                                Click="OnFeedbackClick"
+                                                HorizontalAlignment="Stretch" />
+                                        <Button Content="{helpers:Loc Key=SubmitPRBtn}"
+                                                Click="OnPullRequestsClick"
+                                                HorizontalAlignment="Stretch" />
                                     </StackPanel>
-                                    <StackPanel Orientation="Horizontal" Spacing="8">
-                                        <TextBlock Text="{helpers:Loc Key=FpsPluginEnabledLabel}"
-                                                   VerticalAlignment="Center" FontSize="12" FontWeight="SemiBold" />
-                                        <ToggleSwitch IsOn="{x:Bind ViewModel.IsFpsPluginEnabled, Mode=TwoWay}"
-                                                      OnContent="{helpers:Loc Key=OnLabel}"
-                                                      OffContent="{helpers:Loc Key=OffLabel}"
-                                                      CornerRadius="16"
-                                                      HorizontalAlignment="Right"
-                                                      MinWidth="0" Margin="0" />
-                                    </StackPanel>
-                                    <StackPanel Orientation="Horizontal" Spacing="8">
-                                        <TextBlock Text="{helpers:Loc Key=KeyInputModeLabel}"
-                                                   VerticalAlignment="Center" FontSize="12" FontWeight="SemiBold" />
-                                        <ToggleSwitch IsOn="{x:Bind ViewModel.UseKeyListInput, Mode=TwoWay}"
-                                                      OnContent="{helpers:Loc Key=ListLabel}"
-                                                      OffContent="{helpers:Loc Key=NumberLabel}"
-                                                      CornerRadius="16"
-                                                      HorizontalAlignment="Right"
-                                                      MinWidth="0" Margin="0" />
-                                    </StackPanel>
-                                    <StackPanel Orientation="Horizontal" Spacing="8">
-                                        <TextBlock Text="{helpers:Loc Key=AutoCreatePresetLabel}"
-                                                   VerticalAlignment="Center" FontSize="12" FontWeight="SemiBold" />
-                                        <ToggleSwitch IsOn="{x:Bind ViewModel.IsAutoCreatePresetEnabled, Mode=TwoWay}"
-                                                      OnContent="{helpers:Loc Key=OnLabel}"
-                                                      OffContent="{helpers:Loc Key=OffLabel}"
-                                                      CornerRadius="16"
-                                                      HorizontalAlignment="Right"
-                                                      MinWidth="0" Margin="0" />
-                                    </StackPanel>
-
-                                    <StackPanel Orientation="Horizontal" Spacing="8">
-                                        <TextBlock Text="{helpers:Loc Key=ShowDevFeaturesLabel}"
-                                                   VerticalAlignment="Center" FontSize="12" FontWeight="SemiBold" />
-                                        <ToggleSwitch IsOn="{x:Bind ViewModel.IsDevFeaturesEnabled, Mode=TwoWay}"
-                                                      OnContent="{helpers:Loc Key=OnLabel}"
-                                                      OffContent="{helpers:Loc Key=OffLabel}"
-                                                      CornerRadius="16"
-                                                      HorizontalAlignment="Right"
-                                                      MinWidth="0" Margin="0" />
-                                    </StackPanel>
-
-                                    <Border Height="1" Background="{ThemeResource DividerStrokeColorDefaultBrush}"
-                                            Margin="0,4,0,4" />
-                                    <Button Content="{helpers:Loc Key=FeedbackBtn}"
-                                            Click="OnFeedbackClick"
-                                            HorizontalAlignment="Stretch" />
-                                    <Button Content="{helpers:Loc Key=SubmitPRBtn}"
-                                            Click="OnPullRequestsClick"
-                                            HorizontalAlignment="Stretch" />
-                                </StackPanel>
-                            </Flyout>
-                        </Button.Flyout>
-                    </Button>
-
-                    <StackPanel Orientation="Horizontal" Spacing="8" VerticalAlignment="Center">
-                        <StackPanel VerticalAlignment="Center">
-                            <TextBlock Text="{helpers:Loc Key=EnableInjectionParenLabel}" FontWeight="SemiBold"
-                                       HorizontalAlignment="Right" />
-                            <TextBlock Text="{helpers:Loc Key=InjectionLoadCaption}" FontSize="11" Opacity="0.6"
-                                       HorizontalAlignment="Right" />
-                        </StackPanel>
-                        <ToggleSwitch IsOn="{x:Bind MainVM.UseInjection, Mode=OneWay}"
-                                      Toggled="OnInjectionToggled"
-                                      OnContent="" OffContent="" MinWidth="0" VerticalAlignment="Center" />
-                    </StackPanel>
-                </StackPanel>
+                                </ContentControl>
+                            </StackPanel>
+                        </Flyout>
+                    </Button.Flyout>
+                </Button>
             </Grid>
 
-            <MenuFlyoutSeparator Margin="0,0,0,24" />
+            <StackPanel x:Name="SettingsHeaderDetails">
+                <Grid Margin="0,0,0,24">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="Auto" />
+                        <ColumnDefinition Width="*" />
+                        <ColumnDefinition Width="Auto" />
+                        <ColumnDefinition Width="Auto" />
+                    </Grid.ColumnDefinitions>
+
+                    <Image Source="/Assets/WindowIcon.ico" Width="42" Height="42" VerticalAlignment="Center"
+                           Stretch="Uniform" />
+
+                    <StackPanel Grid.Column="1" Margin="16,0,0,0" VerticalAlignment="Center">
+                        <TextBlock Text="{x:Bind ViewModel.PluginName, Mode=OneWay}" FontSize="18" FontWeight="SemiBold"
+                                   Margin="0,0,0,4" />
+                        <TextBlock Text="{x:Bind ViewModel.PluginDescription, Mode=OneWay}" FontSize="12" Opacity="0.6"
+                                   TextWrapping="Wrap" />
+                    </StackPanel>
+
+                    <StackPanel Grid.Column="2" Orientation="Horizontal" Spacing="12" VerticalAlignment="Center"
+                                HorizontalAlignment="Right" Margin="0,0,24,0">
+                        <StackPanel VerticalAlignment="Center" HorizontalAlignment="Right">
+                            <TextBlock Text="{x:Bind ViewModel.PluginDeveloper, Mode=OneWay}" FontSize="12"
+                                       FontWeight="SemiBold" HorizontalAlignment="Right" Margin="0,0,0,4" />
+                            <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
+                                <TextBlock Text="{helpers:Loc Key=ModifiedDateLabel}" FontSize="12" Opacity="0.6" />
+                                <TextBlock Text="{x:Bind ViewModel.LastModifiedDate, Mode=OneWay}" FontSize="12"
+                                           Opacity="0.6" />
+                            </StackPanel>
+                        </StackPanel>
+
+                        <Button x:Name="InstallSignatureButton"
+                                Padding="12,6" MinWidth="0"
+                                VerticalAlignment="Center"
+                                ToolTipService.ToolTip="安装平台代码签名证书（可随时在设置中卸载）"
+                                Click="OnInstallSignatureClick">
+                            <StackPanel Orientation="Horizontal" Spacing="6">
+                                <FontIcon Glyph="&#xE8D7;" FontSize="13" />
+                                <TextBlock Text="安装签名" FontSize="12" />
+                            </StackPanel>
+                        </Button>
+                    </StackPanel>
+
+                    <StackPanel Grid.Column="3" Orientation="Horizontal" Spacing="20" VerticalAlignment="Center">
+                        <Border CornerRadius="8" Padding="3"
+                                Background="{ThemeResource CardBackgroundFillColorDefaultBrush}"
+                                BorderBrush="{ThemeResource CardStrokeColorDefaultBrush}"
+                                BorderThickness="1"
+                                VerticalAlignment="Center"
+                                Visibility="{x:Bind ViewModel.ModeTabVisibility, Mode=OneWay}">
+                            <StackPanel Orientation="Horizontal" Spacing="2">
+                                <ToggleButton x:Name="StandardModeTabButton"
+                                              IsChecked="{x:Bind ViewModel.IsStandardModeTab, Mode=OneWay}"
+                                              Click="OnStandardModeTabClick"
+                                              Padding="8,4" MinWidth="0"
+                                              Background="Transparent" BorderThickness="0"
+                                              ToolTipService.ToolTip="{helpers:Loc Key=LightweightMode_StandardTooltip}">
+                                    <FontIcon Glyph="&#xE7C3;" FontSize="15" />
+                                </ToggleButton>
+                                <ToggleButton x:Name="LightweightModeTabButton"
+                                              IsChecked="{x:Bind ViewModel.IsLightweightModeTab, Mode=OneWay}"
+                                              Click="OnLightweightModeTabClick"
+                                              Padding="8,4" MinWidth="0"
+                                              Background="Transparent" BorderThickness="0"
+                                              ToolTipService.ToolTip="{helpers:Loc Key=LightweightMode_LiteTooltip}">
+                                    <FontIcon Glyph="&#xE945;" FontSize="15" />
+                                </ToggleButton>
+                            </StackPanel>
+                        </Border>
+
+
+
+                        <StackPanel Orientation="Horizontal" Spacing="8" VerticalAlignment="Center">
+                            <StackPanel VerticalAlignment="Center">
+                                <TextBlock Text="{helpers:Loc Key=EnableInjectionParenLabel}" FontWeight="SemiBold"
+                                           HorizontalAlignment="Right" />
+                                <TextBlock Text="{helpers:Loc Key=InjectionLoadCaption}" FontSize="11" Opacity="0.6"
+                                           HorizontalAlignment="Right" />
+                            </StackPanel>
+                            <ToggleSwitch IsOn="{x:Bind MainVM.UseInjection, Mode=OneWay}"
+                                          Toggled="OnInjectionToggled"
+                                          OnContent="" OffContent="" MinWidth="0" VerticalAlignment="Center" />
+                        </StackPanel>
+                    </StackPanel>
+                </Grid>
+
+                <MenuFlyoutSeparator Margin="0,0,0,24" />
+            </StackPanel>
         </StackPanel>
 
-        <Grid Grid.Row="1">
+        <Grid x:Name="SettingsBodyViewport" Grid.Row="1">
             <Grid.RowDefinitions>
                 <RowDefinition Height="Auto" />
                 <RowDefinition Height="Auto" />
                 <RowDefinition Height="*" />
             </Grid.RowDefinitions>
 
-            <StackPanel Grid.Row="0" Spacing="8" Margin="0,0,0,16"
-                        Visibility="{x:Bind ViewModel.ConfigurationLoadingVisibility, Mode=OneWay}">
-                <ProgressBar IsIndeterminate="True" Height="2" />
+            <StackPanel x:Name="ConfigurationLoadingHost" Grid.Row="0" Spacing="8" Margin="0,0,0,16"
+                        Visibility="Collapsed">
+                <ProgressBar x:Name="ConfigurationLoadingProgress" IsIndeterminate="False" Height="2" />
                 <TextBlock Text="{x:Bind ViewModel.ConfigurationLoadingText, Mode=OneWay}" FontSize="12"
                            Foreground="{ThemeResource TextFillColorSecondaryBrush}"
                            AutomationProperties.LiveSetting="Polite" />
@@ -558,214 +578,216 @@
                 </InfoBar.ActionButton>
             </InfoBar>
 
-            <ContentControl x:Name="SettingsContent" Grid.Row="2"
-                                IsEnabled="{x:Bind ViewModel.IsSettingsInteractable, Mode=OneWay}"
-                                HorizontalContentAlignment="Stretch"
-                                VerticalContentAlignment="Stretch"
-                                PointerPressed="OnSettingsPointerPressed"
-                                PointerMoved="OnSettingsPointerMoved"
-                                PointerReleased="OnSettingsPointerReleased"
-                                PointerCaptureLost="OnSettingsPointerCaptureLost"
-                                PointerCanceled="OnSettingsPointerCaptureLost">
-                <GridView x:Name="SettingsGrid"
-                          ContainerContentChanging="OnSettingContainerContentChanging"
-                          ItemsSource="{Binding Source={StaticResource SettingsViewSource}}"
-                          ItemTemplateSelector="{StaticResource SettingSelector}"
-                          ItemContainerStyle="{StaticResource SettingGridViewItemStyle}"
-                          SelectionMode="None" IsItemClickEnabled="False" HorizontalAlignment="Stretch"
-                          ScrollViewer.VerticalScrollMode="Enabled" ScrollViewer.VerticalScrollBarVisibility="Auto"
-                          ScrollViewer.HorizontalScrollMode="Disabled" ScrollViewer.HorizontalScrollBarVisibility="Disabled">
-                    <GridView.ItemContainerTransitions>
-                        <TransitionCollection />
-                    </GridView.ItemContainerTransitions>
-                    <GridView.ItemsPanel>
-                        <ItemsPanelTemplate>
-                            <ItemsWrapGrid Orientation="Horizontal" GroupHeaderPlacement="Top" GroupPadding="0" />
-                        </ItemsPanelTemplate>
-                    </GridView.ItemsPanel>
-                    <GridView.Header>
-                        <Grid Margin="0,0,0,32">
-                            <Grid.ColumnDefinitions>
-                                <ColumnDefinition Width="Auto" />
-                                <ColumnDefinition Width="*" />
-                                <ColumnDefinition Width="Auto" />
-                            </Grid.ColumnDefinitions>
+            <Grid x:Name="SettingsViewport" Grid.Row="2">
+                <ContentControl x:Name="SettingsContent"
+                                    IsEnabled="{x:Bind ViewModel.IsSettingsInteractable, Mode=OneWay}"
+                                    HorizontalContentAlignment="Stretch"
+                                    VerticalContentAlignment="Stretch"
+                                    PointerPressed="OnSettingsPointerPressed"
+                                    PointerMoved="OnSettingsPointerMoved"
+                                    PointerReleased="OnSettingsPointerReleased"
+                                    PointerCaptureLost="OnSettingsPointerCaptureLost"
+                                    PointerCanceled="OnSettingsPointerCaptureLost">
+                    <GridView x:Name="SettingsGrid"
+                              ContainerContentChanging="OnSettingContainerContentChanging"
+                              ItemsSource="{Binding Source={StaticResource SettingsViewSource}}"
+                              ItemTemplateSelector="{StaticResource SettingSelector}"
+                              ItemContainerStyle="{StaticResource SettingGridViewItemStyle}"
+                              SelectionMode="None" IsItemClickEnabled="False" HorizontalAlignment="Stretch"
+                              ScrollViewer.VerticalScrollMode="Enabled" ScrollViewer.VerticalScrollBarVisibility="Auto"
+                              ScrollViewer.HorizontalScrollMode="Disabled" ScrollViewer.HorizontalScrollBarVisibility="Disabled">
+                        <GridView.ItemContainerTransitions>
+                            <TransitionCollection />
+                        </GridView.ItemContainerTransitions>
+                        <GridView.ItemsPanel>
+                            <ItemsPanelTemplate>
+                                <ItemsWrapGrid Orientation="Horizontal" GroupHeaderPlacement="Top" GroupPadding="0" />
+                            </ItemsPanelTemplate>
+                        </GridView.ItemsPanel>
+                        <GridView.Header>
+                            <Grid Margin="0,0,0,32">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="Auto" />
+                                    <ColumnDefinition Width="*" />
+                                    <ColumnDefinition Width="Auto" />
+                                </Grid.ColumnDefinitions>
 
-                            <StackPanel Grid.Column="0" Orientation="Horizontal" VerticalAlignment="Center"
-                                        Margin="0,0,16,0">
-                                <TextBlock Text="{helpers:Loc Key=ConfigPresetLabel}" FontWeight="SemiBold"
-                                           VerticalAlignment="Center" Margin="0,0,8,0" />
-                                <TextBlock Text="{x:Bind ViewModel.CurrentPreset.Name, Mode=OneWay}" FontSize="12"
-                                           Opacity="0.8" VerticalAlignment="Center" />
-                            </StackPanel>
+                                <StackPanel Grid.Column="0" Orientation="Horizontal" VerticalAlignment="Center"
+                                            Margin="0,0,16,0">
+                                    <TextBlock Text="{helpers:Loc Key=ConfigPresetLabel}" FontWeight="SemiBold"
+                                               VerticalAlignment="Center" Margin="0,0,8,0" />
+                                    <TextBlock Text="{x:Bind ViewModel.CurrentPreset.Name, Mode=OneWay}" FontSize="12"
+                                               Opacity="0.8" VerticalAlignment="Center" />
+                                </StackPanel>
 
-                            <ScrollViewer Grid.Column="1" HorizontalScrollBarVisibility="Auto"
-                                          VerticalScrollBarVisibility="Disabled">
-                                <ItemsControl ItemsSource="{x:Bind ViewModel.AvailablePresets, Mode=OneWay}">
-                                    <ItemsControl.ItemsPanel>
-                                        <ItemsPanelTemplate>
-                                            <StackPanel Orientation="Horizontal" Spacing="8" />
-                                        </ItemsPanelTemplate>
-                                    </ItemsControl.ItemsPanel>
-                                    <ItemsControl.ItemTemplate>
-                                        <DataTemplate x:DataType="viewmodels:PresetModel">
-                                            <StackPanel Orientation="Horizontal" Spacing="0"
-                                                        Background="{ThemeResource CardBackgroundFillColorDefaultBrush}"
-                                                        CornerRadius="4"
-                                                        BorderBrush="{ThemeResource CardStrokeColorDefaultBrush}"
-                                                        BorderThickness="1">
-                                                <Button Content="{x:Bind Name, Mode=OneWay}"
-                                                        Click="OnSwitchPresetClick"
-                                                        Background="Transparent"
-                                                        BorderThickness="0"
-                                                        ToolTipService.ToolTip="{helpers:Loc Key=SwitchPresetTooltip}">
-                                                    <Button.ContextFlyout>
-                                                        <MenuFlyout>
-                                                            <MenuFlyoutItem Text="{helpers:Loc Key=Preset_Rename}"
-                                                                            Tag="{x:Bind}"
-                                                                            Click="OnRenamePresetClick" />
-                                                        </MenuFlyout>
-                                                    </Button.ContextFlyout>
-                                                </Button>
-                                                <TextBlock Text="{helpers:Loc Key=LockedTag}"
-                                                           Visibility="{x:Bind IsLocked, Mode=OneWay}"
-                                                           Foreground="Red"
-                                                           FontSize="12"
-                                                           VerticalAlignment="Center"
-                                                           Margin="4,0,0,0" />
-                                                <Button Content="&#xE74D;"
-                                                        FontFamily="Segoe Fluent Icons"
-                                                        Click="OnDeletePresetClick"
-                                                        Background="Transparent"
-                                                        Foreground="Red"
-                                                        BorderThickness="0"
-                                                        Width="32" Padding="0"
-                                                        ToolTipService.ToolTip="{helpers:Loc Key=DeletePresetTooltip}">
-                                                    <Button.Resources>
-                                                        <SolidColorBrush x:Key="ButtonForegroundPointerOver"
-                                                                         Color="Red" />
-                                                        <SolidColorBrush x:Key="ButtonBackgroundPointerOver"
-                                                                         Color="Transparent" />
-                                                        <SolidColorBrush x:Key="ButtonForegroundPressed"
-                                                                         Color="DarkRed" />
-                                                        <SolidColorBrush x:Key="ButtonBackgroundPressed"
-                                                                         Color="Transparent" />
-                                                    </Button.Resources>
-                                                </Button>
-                                            </StackPanel>
-                                        </DataTemplate>
-                                    </ItemsControl.ItemTemplate>
-                                </ItemsControl>
-                            </ScrollViewer>
+                                <ScrollViewer Grid.Column="1" HorizontalScrollBarVisibility="Auto"
+                                              VerticalScrollBarVisibility="Disabled">
+                                    <ItemsControl ItemsSource="{x:Bind ViewModel.AvailablePresets, Mode=OneWay}">
+                                        <ItemsControl.ItemsPanel>
+                                            <ItemsPanelTemplate>
+                                                <StackPanel Orientation="Horizontal" Spacing="8" />
+                                            </ItemsPanelTemplate>
+                                        </ItemsControl.ItemsPanel>
+                                        <ItemsControl.ItemTemplate>
+                                            <DataTemplate x:DataType="viewmodels:PresetModel">
+                                                <StackPanel Orientation="Horizontal" Spacing="0"
+                                                            Background="{ThemeResource CardBackgroundFillColorDefaultBrush}"
+                                                            CornerRadius="4"
+                                                            BorderBrush="{ThemeResource CardStrokeColorDefaultBrush}"
+                                                            BorderThickness="1">
+                                                    <Button Content="{x:Bind Name, Mode=OneWay}"
+                                                            Click="OnSwitchPresetClick"
+                                                            Background="Transparent"
+                                                            BorderThickness="0"
+                                                            ToolTipService.ToolTip="{helpers:Loc Key=SwitchPresetTooltip}">
+                                                        <Button.ContextFlyout>
+                                                            <MenuFlyout>
+                                                                <MenuFlyoutItem Text="{helpers:Loc Key=Preset_Rename}"
+                                                                                Tag="{x:Bind}"
+                                                                                Click="OnRenamePresetClick" />
+                                                            </MenuFlyout>
+                                                        </Button.ContextFlyout>
+                                                    </Button>
+                                                    <TextBlock Text="{helpers:Loc Key=LockedTag}"
+                                                               Visibility="{x:Bind IsLocked, Mode=OneWay}"
+                                                               Foreground="Red"
+                                                               FontSize="12"
+                                                               VerticalAlignment="Center"
+                                                               Margin="4,0,0,0" />
+                                                    <Button Content="&#xE74D;"
+                                                            FontFamily="Segoe Fluent Icons"
+                                                            Click="OnDeletePresetClick"
+                                                            Background="Transparent"
+                                                            Foreground="Red"
+                                                            BorderThickness="0"
+                                                            Width="32" Padding="0"
+                                                            ToolTipService.ToolTip="{helpers:Loc Key=DeletePresetTooltip}">
+                                                        <Button.Resources>
+                                                            <SolidColorBrush x:Key="ButtonForegroundPointerOver"
+                                                                             Color="Red" />
+                                                            <SolidColorBrush x:Key="ButtonBackgroundPointerOver"
+                                                                             Color="Transparent" />
+                                                            <SolidColorBrush x:Key="ButtonForegroundPressed"
+                                                                             Color="DarkRed" />
+                                                            <SolidColorBrush x:Key="ButtonBackgroundPressed"
+                                                                             Color="Transparent" />
+                                                        </Button.Resources>
+                                                    </Button>
+                                                </StackPanel>
+                                            </DataTemplate>
+                                        </ItemsControl.ItemTemplate>
+                                    </ItemsControl>
+                                </ScrollViewer>
 
-                            <StackPanel Grid.Column="2" Orientation="Horizontal" VerticalAlignment="Center"
-                                        Margin="16,0,0,0" Spacing="8">
-                                <Button Content="{helpers:Loc Key=NewPresetBtn}" Click="OnCreateNewPresetClick" />
-                                <Button Content="{helpers:Loc Key=ResetAllBtn}" Click="OnResetAllPresetsClick" />
-                            </StackPanel>
-                        </Grid>
-                    </GridView.Header>
-                    <GridView.GroupStyle>
-                        <GroupStyle HidesIfEmpty="True">
-                            <GroupStyle.HeaderContainerStyle>
-                                <Style TargetType="GridViewHeaderItem">
-                                    <Setter Property="Padding" Value="0" />
-                                    <Setter Property="Margin" Value="0" />
-                                    <Setter Property="MinHeight" Value="0" />
-                                    <Setter Property="Template">
-                                        <Setter.Value>
-                                            <ControlTemplate TargetType="GridViewHeaderItem">
-                                                <ContentPresenter Content="{TemplateBinding Content}"
-                                                                  ContentTemplate="{TemplateBinding ContentTemplate}"
-                                                                  HorizontalAlignment="Stretch" />
-                                            </ControlTemplate>
-                                        </Setter.Value>
-                                    </Setter>
-                                </Style>
-                            </GroupStyle.HeaderContainerStyle>
-                            <GroupStyle.HeaderTemplate>
-                                <DataTemplate x:DataType="viewmodels:PluginSettingsGroup">
-                                    <Rectangle Height="1" Margin="0,0,0,24"
-                                               Fill="{ThemeResource DividerStrokeColorDefaultBrush}"
-                                               Visibility="{x:Bind SeparatorVisibility, Mode=OneWay}" />
-                                </DataTemplate>
-                            </GroupStyle.HeaderTemplate>
-                        </GroupStyle>
-                    </GridView.GroupStyle>
-                </GridView>
-            </ContentControl>
+                                <StackPanel Grid.Column="2" Orientation="Horizontal" VerticalAlignment="Center"
+                                            Margin="16,0,0,0" Spacing="8">
+                                    <Button Content="{helpers:Loc Key=NewPresetBtn}" Click="OnCreateNewPresetClick" />
+                                    <Button Content="{helpers:Loc Key=ResetAllBtn}" Click="OnResetAllPresetsClick" />
+                                </StackPanel>
+                            </Grid>
+                        </GridView.Header>
+                        <GridView.GroupStyle>
+                            <GroupStyle HidesIfEmpty="True">
+                                <GroupStyle.HeaderContainerStyle>
+                                    <Style TargetType="GridViewHeaderItem">
+                                        <Setter Property="Padding" Value="0" />
+                                        <Setter Property="Margin" Value="0" />
+                                        <Setter Property="MinHeight" Value="0" />
+                                        <Setter Property="Template">
+                                            <Setter.Value>
+                                                <ControlTemplate TargetType="GridViewHeaderItem">
+                                                    <ContentPresenter Content="{TemplateBinding Content}"
+                                                                      ContentTemplate="{TemplateBinding ContentTemplate}"
+                                                                      HorizontalAlignment="Stretch" />
+                                                </ControlTemplate>
+                                            </Setter.Value>
+                                        </Setter>
+                                    </Style>
+                                </GroupStyle.HeaderContainerStyle>
+                                <GroupStyle.HeaderTemplate>
+                                    <DataTemplate x:DataType="viewmodels:PluginSettingsGroup">
+                                        <Rectangle Height="1" Margin="0,0,0,24"
+                                                   Fill="{ThemeResource DividerStrokeColorDefaultBrush}"
+                                                   Visibility="{x:Bind SeparatorVisibility, Mode=OneWay}" />
+                                    </DataTemplate>
+                                </GroupStyle.HeaderTemplate>
+                            </GroupStyle>
+                        </GridView.GroupStyle>
+                    </GridView>
+                </ContentControl>
 
-            <Canvas x:Name="SelectionCanvas" Grid.Row="2" IsHitTestVisible="False">
-                <Rectangle x:Name="SelectionRectangle"
-                           Visibility="Collapsed"
-                           Opacity="0"
-                           RadiusX="6"
-                           RadiusY="6"
-                           Fill="#33FFFFFF"
-                           Stroke="#CCFFFFFF"
-                           StrokeThickness="1" />
-            </Canvas>
+                <Canvas x:Name="SelectionCanvas" IsHitTestVisible="False">
+                    <Rectangle x:Name="SelectionRectangle"
+                               Visibility="Collapsed"
+                               Opacity="0"
+                               RadiusX="6"
+                               RadiusY="6"
+                               Fill="#33FFFFFF"
+                               Stroke="#CCFFFFFF"
+                               StrokeThickness="1" />
+                </Canvas>
 
-            <Canvas x:Name="BatchActionHost" Grid.Row="2">
-                <Border x:Name="BatchActionBar"
-                        Visibility="Collapsed"
-                        Opacity="0"
-                        Translation="0,0,16"
-                        Background="{ThemeResource BatchActionAcrylicBrush}"
-                        BorderBrush="{ThemeResource CardStrokeColorDefaultBrush}"
-                        BorderThickness="1"
-                        CornerRadius="8"
-                        Padding="12,8">
-                    <Border.Shadow>
-                        <ThemeShadow />
-                    </Border.Shadow>
-                    <StackPanel Orientation="Horizontal" Spacing="8" VerticalAlignment="Center">
-                        <TextBlock Text="{x:Bind ViewModel.SelectionSummary, Mode=OneWay}"
-                                   FontSize="12" Opacity="0.8" VerticalAlignment="Center" Margin="0,0,8,0" />
-                        <Button Content="{helpers:Loc Key=BatchActions_Enable}" Click="OnBatchEnableClick" />
-                        <Button Content="{helpers:Loc Key=BatchActions_Disable}" Click="OnBatchDisableClick" />
-                        <Button Content="{helpers:Loc Key=BatchActions_Pin}" Click="OnBatchPinClick" />
-                        <Button Content="{helpers:Loc Key=BatchActions_Unpin}" Click="OnBatchUnpinClick" />
-                        <Button Content="{helpers:Loc Key=BatchActions_ClearSelection}"
-                                Click="OnBatchClearSelectionClick" />
-                    </StackPanel>
-                </Border>
-            </Canvas>
+                <Canvas x:Name="BatchActionHost">
+                    <Border x:Name="BatchActionBar"
+                            Visibility="Collapsed"
+                            Opacity="0"
+                            Translation="0,0,16"
+                            Background="{ThemeResource BatchActionAcrylicBrush}"
+                            BorderBrush="{ThemeResource CardStrokeColorDefaultBrush}"
+                            BorderThickness="1"
+                            CornerRadius="8"
+                            Padding="12,8">
+                        <Border.Shadow>
+                            <ThemeShadow />
+                        </Border.Shadow>
+                        <StackPanel Orientation="Horizontal" Spacing="8" VerticalAlignment="Center">
+                            <TextBlock Text="{x:Bind ViewModel.SelectionSummary, Mode=OneWay}"
+                                       FontSize="12" Opacity="0.8" VerticalAlignment="Center" Margin="0,0,8,0" />
+                            <Button Content="{helpers:Loc Key=BatchActions_Enable}" Click="OnBatchEnableClick" />
+                            <Button Content="{helpers:Loc Key=BatchActions_Disable}" Click="OnBatchDisableClick" />
+                            <Button Content="{helpers:Loc Key=BatchActions_Pin}" Click="OnBatchPinClick" />
+                            <Button Content="{helpers:Loc Key=BatchActions_Unpin}" Click="OnBatchUnpinClick" />
+                            <Button Content="{helpers:Loc Key=BatchActions_ClearSelection}"
+                                    Click="OnBatchClearSelectionClick" />
+                        </StackPanel>
+                    </Border>
+                </Canvas>
 
-            <Grid x:Name="SettingsOverlay" Grid.Row="2"
-                  Visibility="Collapsed"
-                  Opacity="0"
-                  Margin="-16,-16,-16,0"
-                  CornerRadius="8">
+                <Grid x:Name="SettingsOverlay"
+                      Visibility="Collapsed"
+                      Opacity="0"
+                      Margin="-16,-16,-16,0"
+                      CornerRadius="8">
 
-                <Grid.Resources>
-                    <Storyboard x:Name="OverlayFadeIn">
-                        <DoubleAnimation Storyboard.TargetName="SettingsOverlay"
-                                         Storyboard.TargetProperty="Opacity"
-                                         To="1"
-                                         Duration="0:0:0.25" />
-                    </Storyboard>
-                    <Storyboard x:Name="OverlayFadeOut" Completed="OverlayFadeOut_Completed">
-                        <DoubleAnimation Storyboard.TargetName="SettingsOverlay"
-                                         Storyboard.TargetProperty="Opacity"
-                                         To="0"
-                                         Duration="0:0:0.25" />
-                    </Storyboard>
-                </Grid.Resources>
+                    <Grid.Resources>
+                        <Storyboard x:Name="OverlayFadeIn">
+                            <DoubleAnimation Storyboard.TargetName="SettingsOverlay"
+                                             Storyboard.TargetProperty="Opacity"
+                                             To="1"
+                                             Duration="0:0:0.25" />
+                        </Storyboard>
+                        <Storyboard x:Name="OverlayFadeOut" Completed="OverlayFadeOut_Completed">
+                            <DoubleAnimation Storyboard.TargetName="SettingsOverlay"
+                                             Storyboard.TargetProperty="Opacity"
+                                             To="0"
+                                             Duration="0:0:0.25" />
+                        </Storyboard>
+                    </Grid.Resources>
 
-                <Grid.Background>
-                    <AcrylicBrush TintColor="Transparent"
-                                  TintOpacity="0"
-                                  TintLuminosityOpacity="0"
-                                  FallbackColor="Transparent" />
-                </Grid.Background>
+                    <Grid.Background>
+                        <AcrylicBrush TintColor="Transparent"
+                                      TintOpacity="0"
+                                      TintLuminosityOpacity="0"
+                                      FallbackColor="Transparent" />
+                    </Grid.Background>
 
-                <TextBlock Text="{x:Bind ViewModel.OverlayWarningText, Mode=OneWay}"
-                           Foreground="{ThemeResource TextFillColorPrimaryBrush}"
-                           HorizontalAlignment="Center"
-                           VerticalAlignment="Center"
-                           FontSize="18"
-                           FontWeight="SemiBold" />
+                    <TextBlock Text="{x:Bind ViewModel.OverlayWarningText, Mode=OneWay}"
+                               Foreground="{ThemeResource TextFillColorPrimaryBrush}"
+                               HorizontalAlignment="Center"
+                               VerticalAlignment="Center"
+                               FontSize="18"
+                               FontWeight="SemiBold" />
+                </Grid>
             </Grid>
         </Grid>
 

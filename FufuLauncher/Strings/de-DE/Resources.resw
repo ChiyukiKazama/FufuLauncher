@@ -1631,7 +1631,7 @@ Jetzt zur Microsoft-Website gehen und herunterladen?</value>
   <data name="Home_CheckinCard" xml:space="preserve">
     <value>Check-in</value>
   </data>
-  <data name="Home_RefreshToken" xml:space="preserve">
+  <data name="Home_RefreshCookie" xml:space="preserve">
     <value>Token aktualisieren</value>
   </data>
   <data name="Home_GoToCheckinConfig" xml:space="preserve">
@@ -6213,4 +6213,6 @@ Versuchen Sie einen anderen Knoten oder die direkte offizielle Quelle.</value>
   <data name="PluginConfigPage_FilteredOptionCount" xml:space="preserve"><value>{0} / {1} Einstellungen</value></data>
   <data name="PluginConfigPage_ConfigFile" xml:space="preserve"><value>Konfigurationsdatei</value></data>
   <data name="PluginConfigPage_ValuePlaceholder" xml:space="preserve"><value>Wert eingeben…</value></data>
+  <data name="PluginSettings_CollapseHeader" xml:space="preserve"><value>Kopfbereich einklappen</value></data>
+  <data name="PluginSettings_ExpandHeader" xml:space="preserve"><value>Kopfbereich ausklappen</value></data>
 </root>

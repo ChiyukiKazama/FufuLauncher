@@ -1631,7 +1631,7 @@ Voulez-vous accéder au site officiel de Microsoft pour la télécharger et l'in
   <data name="Home_CheckinCard" xml:space="preserve">
     <value>Check-in Genshin</value>
   </data>
-  <data name="Home_RefreshToken" xml:space="preserve">
+  <data name="Home_RefreshCookie" xml:space="preserve">
     <value>Actualiser le Token</value>
   </data>
   <data name="Home_GoToCheckinConfig" xml:space="preserve">
@@ -6212,4 +6212,6 @@ Réessayez avec un autre nœud ou utilisez la source officielle directe.</value>
   <data name="PluginConfigPage_FilteredOptionCount" xml:space="preserve"><value>{0} / {1} paramètres</value></data>
   <data name="PluginConfigPage_ConfigFile" xml:space="preserve"><value>Fichier de configuration</value></data>
   <data name="PluginConfigPage_ValuePlaceholder" xml:space="preserve"><value>Saisissez une valeur…</value></data>
+  <data name="PluginSettings_CollapseHeader" xml:space="preserve"><value>Réduire l’en-tête</value></data>
+  <data name="PluginSettings_ExpandHeader" xml:space="preserve"><value>Développer l’en-tête</value></data>
 </root>

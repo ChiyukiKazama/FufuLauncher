@@ -1631,7 +1631,7 @@
   <data name="Home_CheckinCard" xml:space="preserve">
     <value>原神簽到</value>
   </data>
-  <data name="Home_RefreshToken" xml:space="preserve">
+  <data name="Home_RefreshCookie" xml:space="preserve">
     <value>重新整理 Token</value>
   </data>
   <data name="Home_GoToCheckinConfig" xml:space="preserve">
@@ -6213,4 +6213,6 @@ UIGF v4.x/3.0/2.x</value>
   <data name="PluginConfigPage_FilteredOptionCount" xml:space="preserve"><value>{0} / {1} 個設定項目</value></data>
   <data name="PluginConfigPage_ConfigFile" xml:space="preserve"><value>設定檔</value></data>
   <data name="PluginConfigPage_ValuePlaceholder" xml:space="preserve"><value>請輸入設定值…</value></data>
+  <data name="PluginSettings_CollapseHeader" xml:space="preserve"><value>收合頂欄</value></data>
+  <data name="PluginSettings_ExpandHeader" xml:space="preserve"><value>展開頂欄</value></data>
 </root>

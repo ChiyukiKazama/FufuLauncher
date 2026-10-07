@@ -64,7 +64,7 @@ public sealed partial class PluginSettingsPage
             RestoreSettingTransitionVisuals();
             var outgoing = CaptureSettingPinLayout();
             var compositor = ElementCompositionPreview.GetElementVisual(SettingsGrid).Compositor;
-            await RunSettingPinAnimationBatchAsync(compositor, () =>
+            await RunSettingsAnimationBatchAsync(compositor, () =>
             {
                 var started = 0;
                 foreach (var entry in outgoing)
@@ -85,7 +85,7 @@ public sealed partial class PluginSettingsPage
             token.ThrowIfCancellationRequested();
             _settingPinRevealStarted = true;
             var currentLayout = CaptureSettingPinLayout();
-            await RunSettingPinAnimationBatchAsync(compositor, () =>
+            await RunSettingsAnimationBatchAsync(compositor, () =>
             {
                 var started = 0;
                 foreach (var entry in currentLayout)
@@ -237,10 +237,10 @@ public sealed partial class PluginSettingsPage
         animation.Duration = TimeSpan.FromMilliseconds(SettingPinRepositionMilliseconds);
         animation.StopBehavior = AnimationStopBehavior.SetToFinalValue;
         visual.Properties.InsertVector3(SettingTranslationProperty, Vector3.Zero);
-        visual.StartAnimation(SettingTranslationProperty, animation);
+        visual.Properties.StartAnimation(SettingTranslationProperty, animation);
     }
 
-    private static async Task RunSettingPinAnimationBatchAsync(Compositor compositor, Func<int> animations,
+    private static async Task RunSettingsAnimationBatchAsync(Compositor compositor, Func<int> animations,
         CancellationToken token)
     {
         token.ThrowIfCancellationRequested();
@@ -260,7 +260,7 @@ public sealed partial class PluginSettingsPage
             }
             catch (TimeoutException)
             {
-                Debug.WriteLine("[PluginSettings] Setting pin animation completion timed out.");
+                Debug.WriteLine("[PluginSettings] Settings animation completion timed out.");
             }
         }
         finally

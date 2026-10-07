@@ -639,7 +639,7 @@
                                     BorderThickness="0"
                                     Click="RefreshTokenButton_Click"
                                     CornerRadius="4"
-                                    ToolTipService.ToolTip="{helpers:Loc Key=Home_RefreshToken}">
+                                    ToolTipService.ToolTip="{helpers:Loc Key=Home_RefreshCookie}">
                                     <FontIcon
                                         FontSize="11"
                                         Foreground="{ThemeResource TextFillColorPrimaryBrush}"
