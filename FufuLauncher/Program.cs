@@ -291,10 +291,15 @@ namespace FufuLauncher
         {
             try
             {
-                var presetsDir = AppPaths.PluginPresetsDir;
-                var presetFile = Path.Combine(presetsDir, $"{presetId}.json");
+                var folder = string.IsNullOrWhiteSpace(pluginDirectory)
+                    ? LightweightPluginService.MainPluginFolderName : Path.GetFileName(Path.TrimEndingDirectorySeparator(pluginDirectory));
+                var presetsDir = PluginPresetStorage.GetDirectory(folder);
+                var includeLegacyMain = folder.Equals(LightweightPluginService.MainPluginFolderName,
+                    StringComparison.OrdinalIgnoreCase);
+                var presetFile = PluginPresetStorage.ReadPresets(presetsDir, includeLegacyMain)
+                    .FirstOrDefault(preset => preset.Id == presetId)?.FilePath;
 
-                if (File.Exists(presetFile))
+                if (!string.IsNullOrEmpty(presetFile) && File.Exists(presetFile))
                 {
                     var content = File.ReadAllText(presetFile);
                     using var doc = JsonDocument.Parse(content);

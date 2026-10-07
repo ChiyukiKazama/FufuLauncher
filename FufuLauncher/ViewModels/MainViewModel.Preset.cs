@@ -8,6 +8,7 @@ using System.Text.Json;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using FufuLauncher.Activation;
+using FufuLauncher.Helpers;
 using FufuLauncher.Messages;
 using FufuLauncher.Views;
 using Microsoft.UI.Xaml;
@@ -50,27 +51,8 @@ public partial class MainViewModel
         }
     }
 
-    private string GetActivePresetIdFromFile()
-    {
-        string stateFile = Path.Combine(Helpers.AppPaths.PluginPresetsDir, "active_state.json");
-        if (File.Exists(stateFile))
-        {
-            try
-            {
-                var stateContent = File.ReadAllText(stateFile);
-                var stateDict = JsonSerializer.Deserialize<Dictionary<string, string>>(stateContent);
-                if (stateDict != null && stateDict.TryGetValue("ActiveId", out var id))
-                {
-                    return id;
-                }
-            }
-            catch
-            {
-            }
-        }
-
-        return string.Empty;
-    }
+    private string GetActivePresetIdFromFile() =>
+        PluginPresetStorage.ReadActivePresetId(AppPaths.PluginPresetsDir);
 
     public async Task LoadPinnedPresetsAsync()
     {
@@ -87,34 +69,19 @@ public partial class MainViewModel
             }
         }
 
-        string presetsDir = Helpers.AppPaths.PluginPresetsDir;
-        string activeId = GetActivePresetIdFromFile();
-
+        var presets = await Task.Run(() => PluginPresetStorage.ReadPresets(AppPaths.PluginPresetsDir));
+        var activeId = GetActivePresetIdFromFile();
+        var pinned = new HashSet<string>(pinnedIds, StringComparer.OrdinalIgnoreCase);
         await _dispatcherQueue.EnqueueAsync(() =>
         {
             PinnedPresets.Clear();
-            if (Directory.Exists(presetsDir))
+            foreach (var preset in presets)
             {
-                foreach (var file in Directory.GetFiles(presetsDir, "*.json"))
-                {
-                    if (file.EndsWith("active_state.json")) continue;
-                    try
-                    {
-                        var content = File.ReadAllText(file);
-                        var preset = JsonSerializer.Deserialize<PresetModel>(content);
-                        if (preset != null && pinnedIds.Contains(preset.Id))
-                        {
-                            preset.FilePath = file;
-                            preset.IsActive = (preset.Id == activeId);
-                            PinnedPresets.Add(preset);
-                        }
-                    }
-                    catch
-                    {
-                    }
-                }
-            }
+                if (!pinned.Contains(preset.Id)) continue;
 
+                preset.IsActive = preset.Id == activeId;
+                PinnedPresets.Add(preset);
+            }
             OnPropertyChanged(nameof(IsPinnedPresetsEmpty));
         });
     }

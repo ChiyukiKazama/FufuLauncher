@@ -117,18 +117,6 @@ public partial class PluginSettingsViewModel : ObservableObject
         PinnedSettings.CollectionChanged += (_, _) => OnPropertyChanged(nameof(PinnedSettingsVisibility));
         CheckPluginStates();
         UpdatePaths();
-        _pluginDir = GetMainPluginDirectory();
-        _iniPath = IsLightweightMode
-            ? LightweightPluginService.LitePluginConfigPath
-            : Path.Combine(_pluginDir, "config.ini");
-        _dllPath = IsLightweightMode
-            ? LightweightPluginService.FindLitePluginDisabledPath() ?? LightweightPluginService.LitePluginDllPath
-            : LightweightPluginService.MainPluginDllPath;
-        _presetsDir = IsLightweightMode
-            ? Path.Combine(AppPaths.PluginPresetsDir, LightweightPluginService.LitePluginFolderName)
-            : AppPaths.PluginPresetsDir;
-
-        _iniFile = new IniFile(_iniPath);
         if (_deferConfigurationLoading)
         {
             PluginName = SelectedPluginComboLabel;
@@ -147,7 +135,7 @@ public partial class PluginSettingsViewModel : ObservableObject
         }
         catch (UnauthorizedAccessException)
         {
-            _presetsDir = Path.Combine(AppPaths.RootDir, "Data", "PluginPresets");
+            _presetsDir = PluginPresetStorage.GetFallbackDirectory(GetMainPluginFolderName());
             try
             {
                 Directory.CreateDirectory(_presetsDir);

@@ -115,30 +115,17 @@ public sealed partial class PresetManagerWindow : Window
             }
         }
 
-        string presetsDir = AppPaths.PluginPresetsDir;
-        if (Directory.Exists(presetsDir))
+        var presets = await Task.Run(() => PluginPresetStorage.ReadPresets(AppPaths.PluginPresetsDir));
+        var pinned = new HashSet<string>(pinnedIds, StringComparer.OrdinalIgnoreCase);
+        AllPresets.Clear();
+        foreach (var preset in presets)
         {
-            foreach (var file in Directory.GetFiles(presetsDir, "*.json"))
+            AllPresets.Add(new PresetWrapper
             {
-                if (file.EndsWith("active_state.json")) continue;
-                try
-                {
-                    var content = File.ReadAllText(file);
-                    var preset = JsonSerializer.Deserialize<PresetModel>(content);
-                    if (preset != null)
-                    {
-                        AllPresets.Add(new PresetWrapper
-                        {
-                            Id = preset.Id,
-                            Name = preset.Name,
-                            IsPinned = pinnedIds.Contains(preset.Id)
-                        });
-                    }
-                }
-                catch
-                {
-                }
-            }
+                Id = preset.Id,
+                Name = preset.Name,
+                IsPinned = pinned.Contains(preset.Id)
+            });
         }
     }
 

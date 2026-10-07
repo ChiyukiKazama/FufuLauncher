@@ -58,24 +58,7 @@ public sealed partial class BlankPage
 
             var appPath = Environment.ProcessPath;
 
-            var presetsDir = AppPaths.PluginPresetsDir;
-            var presets = new List<PresetModel>();
-
-            if (Directory.Exists(presetsDir))
-            {
-                var files = Directory.GetFiles(presetsDir, "*.json").Where(f => !f.EndsWith("active_state.json"));
-                foreach (var file in files)
-                {
-                    try
-                    {
-                        var preset = JsonSerializer.Deserialize<PresetModel>(File.ReadAllText(file));
-                        if (preset != null) presets.Add(preset);
-                    }
-                    catch
-                    {
-                    }
-                }
-            }
+            var presets = await Task.Run(() => PluginPresetStorage.ReadPresets(AppPaths.PluginPresetsDir));
 
             var presetComboBox = new ComboBox
             {

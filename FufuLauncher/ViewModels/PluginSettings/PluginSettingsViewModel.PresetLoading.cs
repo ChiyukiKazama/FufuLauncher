@@ -1,6 +1,8 @@
 using System.Security.Cryptography;
 using System.Text.Json;
 using FufuLauncher.Messages;
+using FufuLauncher.Helpers;
+using FufuLauncher.Services;
 
 namespace FufuLauncher.ViewModels;
 
@@ -14,13 +16,16 @@ public partial class PluginSettingsViewModel
         var presets = new List<PresetModel>();
         var notifications = new List<NotificationMessage>();
         var directory = request.PresetsDirectory;
+        var includeLegacyMain = request.PluginIndex == 0 && !request.LightweightMode;
+        var pluginFolder = request.PluginIndex == 1 ? "FPS" : request.LightweightMode
+            ? LightweightPluginService.LitePluginFolderName : LightweightPluginService.MainPluginFolderName;
         try
         {
             Directory.CreateDirectory(directory);
         }
         catch (UnauthorizedAccessException)
         {
-            directory = Path.Combine(FufuLauncher.Helpers.AppPaths.RootDir, "Data", "PluginPresets");
+            directory = PluginPresetStorage.GetFallbackDirectory(pluginFolder);
             Directory.CreateDirectory(directory);
         }
 
@@ -52,21 +57,11 @@ public partial class PluginSettingsViewModel
         }
 
         var stateFile = Path.Combine(directory, "active_state.json");
-        var activeId = string.Empty;
-        if (File.Exists(stateFile))
-        {
-            try
-            {
-                var state = JsonSerializer.Deserialize<Dictionary<string, string>>(File.ReadAllText(stateFile));
-                activeId = state?.GetValueOrDefault("ActiveId", string.Empty) ?? string.Empty;
-            }
-            catch
-            {
-            }
-        }
+        var activeId = PluginPresetStorage.ReadActivePresetId(directory, includeLegacyMain);
+        var loadedIds = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
 
         PresetModel? active = null;
-        foreach (var file in Directory.EnumerateFiles(directory, "*.json"))
+        foreach (var file in PluginPresetStorage.EnumerateFiles(directory, includeLegacyMain))
         {
             cancellationToken.ThrowIfCancellationRequested();
             if (Path.GetFileName(file).Equals("active_state.json", StringComparison.OrdinalIgnoreCase))
@@ -77,7 +72,8 @@ public partial class PluginSettingsViewModel
             try
             {
                 var preset = JsonSerializer.Deserialize<PresetModel>(File.ReadAllText(file));
-                if (preset == null || string.IsNullOrWhiteSpace(preset.Id) || preset.ConfigData == null)
+                if (preset == null || string.IsNullOrWhiteSpace(preset.Id) || preset.ConfigData == null ||
+                    !loadedIds.Add(preset.Id))
                 {
                     continue;
                 }

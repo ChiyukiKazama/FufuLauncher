@@ -7,6 +7,7 @@ using System.Security.Cryptography;
 using System.Text.Json;
 using CommunityToolkit.Mvvm.Messaging;
 using FufuLauncher.Messages;
+using FufuLauncher.Helpers;
 
 namespace FufuLauncher.ViewModels;
 
@@ -63,12 +64,23 @@ public partial class PluginSettingsViewModel
     {
         try
         {
-            if (Directory.Exists(_presetsDir))
+            var includeLegacyMain = SelectedPluginIndex == 0 && !IsLightweightMode;
+            foreach (var file in PluginPresetStorage.EnumerateFiles(_presetsDir, includeLegacyMain).ToArray())
             {
-                var files = Directory.GetFiles(_presetsDir, "*.json");
-                foreach (var file in files)
+                File.Delete(file);
+            }
+            var stateFile = Path.Combine(_presetsDir, "active_state.json");
+            if (File.Exists(stateFile))
+            {
+                File.Delete(stateFile);
+            }
+            if (includeLegacyMain)
+            {
+                var legacyStateFile = Path.Combine(_presetsDir,
+                    FufuLauncher.Services.LightweightPluginService.MainPluginFolderName, "active_state.json");
+                if (File.Exists(legacyStateFile))
                 {
-                    File.Delete(file);
+                    File.Delete(legacyStateFile);
                 }
             }
 

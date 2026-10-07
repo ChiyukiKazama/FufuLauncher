@@ -307,7 +307,7 @@ public partial class PluginSettingsViewModel
             }
         }
 
-        _presetsDir = Path.Combine(AppPaths.PluginPresetsDir, subDir);
+        _presetsDir = PluginPresetStorage.GetDirectory(subDir);
 
         if (!string.IsNullOrEmpty(_iniPath))
         {
@@ -328,9 +328,7 @@ public partial class PluginSettingsViewModel
             {
                 // If the resolved path is not writable (e.g. under Program Files),
                 // fall back to the default AppData-based location.
-                _presetsDir = Path.Combine(
-                    Path.Combine(AppPaths.RootDir, "Data", "PluginPresets"),
-                    Path.GetFileName(_presetsDir));
+                _presetsDir = PluginPresetStorage.GetFallbackDirectory(subDir);
                 Directory.CreateDirectory(_presetsDir);
             }
         }
