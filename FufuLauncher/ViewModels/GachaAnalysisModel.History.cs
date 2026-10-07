@@ -7,6 +7,7 @@ using System.Collections.ObjectModel;
 using System.Text.RegularExpressions;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
+using FufuLauncher.Helpers;
 using FufuLauncher.Models;
 
 namespace FufuLauncher.ViewModels;
@@ -31,11 +32,11 @@ public partial class GachaAnalysisModel
     public bool ShowHistoryContent => IsHistorySelected && IsHistoryReady && SelectedHistoryPool != null;
     public bool ShowHistoryEmpty => IsHistorySelected && IsHistoryReady && HistoryPools.Count == 0;
     public string HistoryEmptyTitle => HideEmptyHistoryPools
-        ? "暂无包含抽卡物品的历史卡池"
-        : "暂无历史卡池元数据";
+        ? "GachaHistory_EmptyFilteredTitle".GetLocalized()
+        : "GachaHistory_EmptyTitle".GetLocalized();
     public string HistoryEmptyDescription => HideEmptyHistoryPools
-        ? "关闭“隐藏无物品卡池”后可查看完整历史。"
-        : "更新祈愿数据或物品元数据后将自动生成。";
+        ? "GachaHistory_EmptyFilteredDescription".GetLocalized()
+        : "GachaHistory_EmptyDescription".GetLocalized();
 
     public async Task ShowHistoryAsync()
     {
@@ -290,8 +291,8 @@ public partial class GachaAnalysisModel
                 Key = $"{source.PoolType}|{source.Pool.Version}|{startsAt:O}",
                 Version = NormalizeHistoryVersion(source.Pool.Version),
                 Name = poolName,
-                Period = $"{startsAt:yyyy-MM-dd HH:mm} 至 {endsAt:yyyy-MM-dd HH:mm}",
-                TotalPulls = $"{pulls.Count} 抽",
+                Period = string.Format("GachaHistory_PeriodFormat".GetLocalized(), startsAt, endsAt),
+                TotalPulls = string.Format("GachaHistory_TotalPullsFormat".GetLocalized(), pulls.Count),
                 BannerImageUrl = ResolveImageUrl(source.Pool.BannerImageUrl),
                 FeaturedItems = featuredItems,
                 FiveStarItems = obtainedItems.Where(item => item.Rank == 5).ToList(),
@@ -351,10 +352,10 @@ public partial class GachaAnalysisModel
 
         return poolType switch
         {
-            "301" or "400" => "角色活动祈愿",
-            "302" => "武器活动祈愿",
-            "500" => "集录祈愿",
-            _ => "限定祈愿"
+            "301" or "400" => "GachaHistory_CharacterEvent".GetLocalized(),
+            "302" => "GachaHistory_WeaponEvent".GetLocalized(),
+            "500" => "GachaHistory_Chronicled".GetLocalized(),
+            _ => "GachaHistory_Limited".GetLocalized()
         };
     }
 

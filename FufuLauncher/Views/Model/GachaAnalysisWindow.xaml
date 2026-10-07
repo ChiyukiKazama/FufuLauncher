@@ -1971,7 +1971,7 @@
                                 Visibility="{Binding ViewModel.ShowHistoryLoading, Converter={StaticResource BoolToVisibilityConverter}}">
                         <ProgressRing Width="36" Height="36"
                                       IsActive="{x:Bind ViewModel.IsHistoryLoading, Mode=OneWay}" />
-                        <TextBlock Text="正在整理历史卡池..."
+                        <TextBlock Text="{helpers:Loc Key=GachaHistory_Loading}"
                                    FontSize="12"
                                    Foreground="{ThemeResource TextFillColorSecondaryBrush}" />
                     </StackPanel>
@@ -2015,17 +2015,17 @@
                                         <ColumnDefinition Width="Auto" />
                                     </Grid.ColumnDefinitions>
                                     <StackPanel Spacing="3">
-                                        <TextBlock Text="历史卡池"
+                                        <TextBlock Text="{helpers:Loc Key=GachaAnalysis_WishHistory}"
                                                    FontSize="15"
                                                    FontWeight="SemiBold" />
-                                        <TextBlock Text="按版本分块加载，选择卡池查看该时段内的祈愿结果"
+                                        <TextBlock Text="{helpers:Loc Key=GachaHistory_Description}"
                                                    FontSize="11"
                                                    Foreground="{ThemeResource TextFillColorSecondaryBrush}" />
                                     </StackPanel>
                                     <ToggleButton Grid.Column="1"
                                                   VerticalAlignment="Center"
                                                   IsChecked="{x:Bind ViewModel.HideEmptyHistoryPools, Mode=TwoWay}"
-                                                  Content="隐藏无物品卡池" />
+                                                  Content="{helpers:Loc Key=GachaHistory_HideEmpty}" />
                                 </Grid>
                                 <ListView Grid.Row="1"
                                           Margin="8,0"
@@ -2100,7 +2100,7 @@
                                     <Button HorizontalAlignment="Left"
                                             Command="{x:Bind ViewModel.ShowNewerHistoryPageCommand}"
                                             IsEnabled="{x:Bind ViewModel.HasNewerHistoryPage, Mode=OneWay}"
-                                            Content="较新版本" />
+                                            Content="{helpers:Loc Key=GachaHistory_NewerVersion}" />
                                     <TextBlock Grid.Column="1"
                                                VerticalAlignment="Center"
                                                Text="{x:Bind ViewModel.HistoryPageSummary, Mode=OneWay}"
@@ -2110,7 +2110,7 @@
                                             HorizontalAlignment="Right"
                                             Command="{x:Bind ViewModel.ShowOlderHistoryPageCommand}"
                                             IsEnabled="{x:Bind ViewModel.HasOlderHistoryPage, Mode=OneWay}"
-                                            Content="较早版本" />
+                                            Content="{helpers:Loc Key=GachaHistory_OlderVersion}" />
                                 </Grid>
                             </Grid>
                         </Border>
@@ -2166,7 +2166,7 @@
                                     <StackPanel Spacing="8"
                                                 Visibility="{Binding ViewModel.SelectedHistoryPool.HasFiveStarItems, Converter={StaticResource BoolToVisibilityConverter}}">
                                         <TextBlock Margin="2,6,0,0"
-                                                   Text="五星物品"
+                                                   Text="{helpers:Loc Key=GachaHistory_FiveStarItems}"
                                                    FontSize="15"
                                                    FontWeight="SemiBold" />
                                         <GridView Padding="0"
@@ -2179,7 +2179,7 @@
                                     <StackPanel Spacing="8"
                                                 Visibility="{Binding ViewModel.SelectedHistoryPool.HasFourStarItems, Converter={StaticResource BoolToVisibilityConverter}}">
                                         <TextBlock Margin="2,6,0,0"
-                                                   Text="四星物品"
+                                                   Text="{helpers:Loc Key=GachaHistory_FourStarItems}"
                                                    FontSize="15"
                                                    FontWeight="SemiBold" />
                                         <GridView Padding="0"
@@ -2192,7 +2192,7 @@
                                     <StackPanel Spacing="8"
                                                 Visibility="{Binding ViewModel.SelectedHistoryPool.HasThreeStarItems, Converter={StaticResource BoolToVisibilityConverter}}">
                                         <TextBlock Margin="2,6,0,0"
-                                                   Text="三星物品"
+                                                   Text="{helpers:Loc Key=GachaHistory_ThreeStarItems}"
                                                    FontSize="15"
                                                    FontWeight="SemiBold" />
                                         <GridView Padding="0"

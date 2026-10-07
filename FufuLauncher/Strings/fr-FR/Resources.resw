@@ -3048,6 +3048,24 @@ Voulez-vous accéder au site officiel de Microsoft pour la télécharger et l'in
   <data name="GachaAnalysis_WishHistory" xml:space="preserve">
     <value>Historique des vœux</value>
   </data>
+  <data name="GachaHistory_Loading" xml:space="preserve"><value>Organisation de l’historique des vœux…</value></data>
+  <data name="GachaHistory_Description" xml:space="preserve"><value>Chargement par version. Sélectionnez une bannière pour voir les vœux effectués pendant sa période.</value></data>
+  <data name="GachaHistory_HideEmpty" xml:space="preserve"><value>Masquer les bannières sans objet obtenu</value></data>
+  <data name="GachaHistory_NewerVersion" xml:space="preserve"><value>Version plus récente</value></data>
+  <data name="GachaHistory_OlderVersion" xml:space="preserve"><value>Version plus ancienne</value></data>
+  <data name="GachaHistory_FiveStarItems" xml:space="preserve"><value>Objets 5 étoiles</value></data>
+  <data name="GachaHistory_FourStarItems" xml:space="preserve"><value>Objets 4 étoiles</value></data>
+  <data name="GachaHistory_ThreeStarItems" xml:space="preserve"><value>Objets 3 étoiles</value></data>
+  <data name="GachaHistory_EmptyFilteredTitle" xml:space="preserve"><value>Aucune bannière avec des objets obtenus</value></data>
+  <data name="GachaHistory_EmptyTitle" xml:space="preserve"><value>Aucune métadonnée de bannière historique</value></data>
+  <data name="GachaHistory_EmptyFilteredDescription" xml:space="preserve"><value>Désactivez « Masquer les bannières sans objet obtenu » pour afficher tout l’historique.</value></data>
+  <data name="GachaHistory_EmptyDescription" xml:space="preserve"><value>Mettez à jour les vœux ou les métadonnées des objets pour générer automatiquement l’historique.</value></data>
+  <data name="GachaHistory_PeriodFormat" xml:space="preserve"><value>{0:yyyy-MM-dd HH:mm} au {1:yyyy-MM-dd HH:mm}</value></data>
+  <data name="GachaHistory_TotalPullsFormat" xml:space="preserve"><value>{0} vœux</value></data>
+  <data name="GachaHistory_CharacterEvent" xml:space="preserve"><value>Vœux événement de personnage</value></data>
+  <data name="GachaHistory_WeaponEvent" xml:space="preserve"><value>Vœux événement d’arme</value></data>
+  <data name="GachaHistory_Chronicled" xml:space="preserve"><value>Vœux chroniqués</value></data>
+  <data name="GachaHistory_Limited" xml:space="preserve"><value>Vœux limités</value></data>
   <data name="GachaAnalysis_GetRecords" xml:space="preserve">
     <value>Obtenir l'historique des vœux</value>
   </data>

@@ -3185,6 +3185,24 @@
   <data name="GachaAnalysis_WishHistory" xml:space="preserve">
     <value>प्रार्थना इतिहास</value>
   </data>
+  <data name="GachaHistory_Loading" xml:space="preserve"><value>प्रार्थना इतिहास व्यवस्थित किया जा रहा है…</value></data>
+  <data name="GachaHistory_Description" xml:space="preserve"><value>वर्ज़न के अनुसार लोड किया गया है। उस अवधि की प्रार्थनाएँ देखने के लिए बैनर चुनें।</value></data>
+  <data name="GachaHistory_HideEmpty" xml:space="preserve"><value>बिना प्राप्त आइटम वाले बैनर छिपाएँ</value></data>
+  <data name="GachaHistory_NewerVersion" xml:space="preserve"><value>नया वर्ज़न</value></data>
+  <data name="GachaHistory_OlderVersion" xml:space="preserve"><value>पुराना वर्ज़न</value></data>
+  <data name="GachaHistory_FiveStarItems" xml:space="preserve"><value>5-सितारा आइटम</value></data>
+  <data name="GachaHistory_FourStarItems" xml:space="preserve"><value>4-सितारा आइटम</value></data>
+  <data name="GachaHistory_ThreeStarItems" xml:space="preserve"><value>3-सितारा आइटम</value></data>
+  <data name="GachaHistory_EmptyFilteredTitle" xml:space="preserve"><value>प्राप्त आइटम वाला कोई बैनर नहीं</value></data>
+  <data name="GachaHistory_EmptyTitle" xml:space="preserve"><value>ऐतिहासिक बैनर मेटाडेटा उपलब्ध नहीं है</value></data>
+  <data name="GachaHistory_EmptyFilteredDescription" xml:space="preserve"><value>पूरा इतिहास देखने के लिए “बिना प्राप्त आइटम वाले बैनर छिपाएँ” बंद करें।</value></data>
+  <data name="GachaHistory_EmptyDescription" xml:space="preserve"><value>इतिहास स्वतः बनाने के लिए प्रार्थना रिकॉर्ड या आइटम मेटाडेटा अपडेट करें।</value></data>
+  <data name="GachaHistory_PeriodFormat" xml:space="preserve"><value>{0:yyyy-MM-dd HH:mm} से {1:yyyy-MM-dd HH:mm}</value></data>
+  <data name="GachaHistory_TotalPullsFormat" xml:space="preserve"><value>{0} प्रार्थनाएँ</value></data>
+  <data name="GachaHistory_CharacterEvent" xml:space="preserve"><value>पात्र इवेंट प्रार्थना</value></data>
+  <data name="GachaHistory_WeaponEvent" xml:space="preserve"><value>हथियार इवेंट प्रार्थना</value></data>
+  <data name="GachaHistory_Chronicled" xml:space="preserve"><value>क्रॉनिकल्ड प्रार्थना</value></data>
+  <data name="GachaHistory_Limited" xml:space="preserve"><value>सीमित प्रार्थना</value></data>
   <data name="GachaAnalysis_GetRecords" xml:space="preserve">
     <value>गाचा रिकॉर्ड प्राप्त करें</value>
   </data>

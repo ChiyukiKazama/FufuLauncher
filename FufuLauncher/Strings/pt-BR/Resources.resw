@@ -3048,6 +3048,24 @@ Ir para o site da Microsoft para baixar e instalar?</value>
   <data name="GachaAnalysis_WishHistory" xml:space="preserve">
     <value>Histórico de Orações</value>
   </data>
+  <data name="GachaHistory_Loading" xml:space="preserve"><value>Organizando o histórico de Orações…</value></data>
+  <data name="GachaHistory_Description" xml:space="preserve"><value>Carregado por versão. Selecione uma Oração para ver os resultados do período.</value></data>
+  <data name="GachaHistory_HideEmpty" xml:space="preserve"><value>Ocultar Orações sem itens obtidos</value></data>
+  <data name="GachaHistory_NewerVersion" xml:space="preserve"><value>Versão mais recente</value></data>
+  <data name="GachaHistory_OlderVersion" xml:space="preserve"><value>Versão mais antiga</value></data>
+  <data name="GachaHistory_FiveStarItems" xml:space="preserve"><value>Itens de 5 estrelas</value></data>
+  <data name="GachaHistory_FourStarItems" xml:space="preserve"><value>Itens de 4 estrelas</value></data>
+  <data name="GachaHistory_ThreeStarItems" xml:space="preserve"><value>Itens de 3 estrelas</value></data>
+  <data name="GachaHistory_EmptyFilteredTitle" xml:space="preserve"><value>Nenhuma Oração com itens obtidos</value></data>
+  <data name="GachaHistory_EmptyTitle" xml:space="preserve"><value>Nenhum metadado de Orações históricas</value></data>
+  <data name="GachaHistory_EmptyFilteredDescription" xml:space="preserve"><value>Desative “Ocultar Orações sem itens obtidos” para ver o histórico completo.</value></data>
+  <data name="GachaHistory_EmptyDescription" xml:space="preserve"><value>Atualize os registros de Orações ou os metadados de itens para gerar o histórico automaticamente.</value></data>
+  <data name="GachaHistory_PeriodFormat" xml:space="preserve"><value>{0:yyyy-MM-dd HH:mm} a {1:yyyy-MM-dd HH:mm}</value></data>
+  <data name="GachaHistory_TotalPullsFormat" xml:space="preserve"><value>{0} Orações</value></data>
+  <data name="GachaHistory_CharacterEvent" xml:space="preserve"><value>Oração de Evento de Personagem</value></data>
+  <data name="GachaHistory_WeaponEvent" xml:space="preserve"><value>Oração de Evento de Arma</value></data>
+  <data name="GachaHistory_Chronicled" xml:space="preserve"><value>Oração Crônica</value></data>
+  <data name="GachaHistory_Limited" xml:space="preserve"><value>Oração Limitada</value></data>
   <data name="GachaAnalysis_GetRecords" xml:space="preserve">
     <value>Obter registros de gacha</value>
   </data>

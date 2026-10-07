@@ -3048,6 +3048,24 @@ Jetzt zur Microsoft-Website gehen und herunterladen?</value>
   <data name="GachaAnalysis_WishHistory" xml:space="preserve">
     <value>Gebetsverlauf</value>
   </data>
+  <data name="GachaHistory_Loading" xml:space="preserve"><value>Gebetsverlauf wird zusammengestellt…</value></data>
+  <data name="GachaHistory_Description" xml:space="preserve"><value>Nach Version geladen. Wähle ein Banner, um die Gebete in diesem Zeitraum anzuzeigen.</value></data>
+  <data name="GachaHistory_HideEmpty" xml:space="preserve"><value>Banner ohne erhaltene Gegenstände ausblenden</value></data>
+  <data name="GachaHistory_NewerVersion" xml:space="preserve"><value>Neuere Version</value></data>
+  <data name="GachaHistory_OlderVersion" xml:space="preserve"><value>Ältere Version</value></data>
+  <data name="GachaHistory_FiveStarItems" xml:space="preserve"><value>5-Sterne-Gegenstände</value></data>
+  <data name="GachaHistory_FourStarItems" xml:space="preserve"><value>4-Sterne-Gegenstände</value></data>
+  <data name="GachaHistory_ThreeStarItems" xml:space="preserve"><value>3-Sterne-Gegenstände</value></data>
+  <data name="GachaHistory_EmptyFilteredTitle" xml:space="preserve"><value>Keine Banner mit erhaltenen Gegenständen</value></data>
+  <data name="GachaHistory_EmptyTitle" xml:space="preserve"><value>Keine historischen Banner-Metadaten</value></data>
+  <data name="GachaHistory_EmptyFilteredDescription" xml:space="preserve"><value>Deaktiviere „Banner ohne erhaltene Gegenstände ausblenden“, um den vollständigen Verlauf anzuzeigen.</value></data>
+  <data name="GachaHistory_EmptyDescription" xml:space="preserve"><value>Aktualisiere Gebetsaufzeichnungen oder Gegenstandsmetadaten, um den Verlauf automatisch zu erstellen.</value></data>
+  <data name="GachaHistory_PeriodFormat" xml:space="preserve"><value>{0:yyyy-MM-dd HH:mm} bis {1:yyyy-MM-dd HH:mm}</value></data>
+  <data name="GachaHistory_TotalPullsFormat" xml:space="preserve"><value>{0} Gebete</value></data>
+  <data name="GachaHistory_CharacterEvent" xml:space="preserve"><value>Figurenaktionsgebet</value></data>
+  <data name="GachaHistory_WeaponEvent" xml:space="preserve"><value>Waffenaktionsgebet</value></data>
+  <data name="GachaHistory_Chronicled" xml:space="preserve"><value>Chronik-Gebet</value></data>
+  <data name="GachaHistory_Limited" xml:space="preserve"><value>Aktionsgebet</value></data>
   <data name="GachaAnalysis_GetRecords" xml:space="preserve">
     <value>Wunschverlauf abrufen</value>
   </data>
