@@ -3045,6 +3045,9 @@ MicrosoftのWebサイトからダウンロードしてインストールしま�
   <data name="GachaAnalysis_WishAnalysis" xml:space="preserve">
     <value>祈願分析</value>
   </data>
+  <data name="GachaAnalysis_WishHistory" xml:space="preserve">
+    <value>祈願履歴</value>
+  </data>
   <data name="GachaAnalysis_GetRecords" xml:space="preserve">
     <value>祈願記録を取得</value>
   </data>

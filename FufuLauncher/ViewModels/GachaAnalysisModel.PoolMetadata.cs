@@ -83,7 +83,8 @@ public partial class GachaAnalysisModel
             var count500 = allPools.Count(p => p.poolType == "500");
             CrawlerStatus = $"卡池元数据更新完成（共 {allPools.Count} 个历史卡池：角色 {count301}、武器 {count302}、集录 {count500}）";
 
-            if (!deferRefresh && _cachedCharacterLogs.Count + _cachedWeaponLogs.Count > 0)
+            if (!deferRefresh &&
+                _cachedCharacterLogs.Count + _cachedWeaponLogs.Count + _cachedChronicledLogs.Count > 0)
             {
                 App.MainWindow.DispatcherQueue.TryEnqueue(() => RefreshUIFromCache());
             }

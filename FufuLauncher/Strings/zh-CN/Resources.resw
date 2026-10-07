@@ -3361,6 +3361,9 @@
   <data name="GachaAnalysis_WishAnalysis" xml:space="preserve">
     <value>祈愿分析</value>
   </data>
+  <data name="GachaAnalysis_WishHistory" xml:space="preserve">
+    <value>历史卡池</value>
+  </data>
   <data name="GachaAnalysis_GetRecords" xml:space="preserve">
     <value>获取抽卡记录</value>
   </data>

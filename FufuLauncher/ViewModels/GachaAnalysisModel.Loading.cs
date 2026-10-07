@@ -207,6 +207,7 @@ public partial class GachaAnalysisModel
                     StandardFiveStars = standardFive;
                     StandardFourStars = standardFour;
                     InvalidateAnalysisDashboard();
+                    InvalidateHistory();
 
                     // 通知相关属性更新
                     OnPropertyChanged(nameof(ShowCharacterNoRecords));
@@ -220,6 +221,7 @@ public partial class GachaAnalysisModel
 
                     if (_savedMetadata != null && _savedMetadata.Count > 0) _ = ApplyMetadataToUIAsync(_savedMetadata);
                     if (IsAnalysisSelected) _ = EnsureAnalysisDashboardAsync();
+                    if (IsHistorySelected) _ = EnsureHistoryAsync();
                 });
             }
             catch (Exception ex)

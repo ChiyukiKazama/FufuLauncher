@@ -3045,6 +3045,9 @@ Microsoft 웹사이트로 이동하여 다운로드 및 설치하시겠습니까
   <data name="GachaAnalysis_WishAnalysis" xml:space="preserve">
     <value>기원 분석</value>
   </data>
+  <data name="GachaAnalysis_WishHistory" xml:space="preserve">
+    <value>기원 기록</value>
+  </data>
   <data name="GachaAnalysis_GetRecords" xml:space="preserve">
     <value>기원 기록 가져오기</value>
   </data>

@@ -1833,6 +1833,9 @@ Conferma di aver selezionato la directory di installazione contenente l'eseguibi
   <data name="GachaAnalysis_GeneratingAnalysis" xml:space="preserve">
     <value>Generazione analisi desideri...</value>
   </data>
+  <data name="GachaAnalysis_WishHistory" xml:space="preserve">
+    <value>Cronologia desideri</value>
+  </data>
   <data name="GachaAnalysis_GetRecords" xml:space="preserve">
     <value>Ottieni Record Desideri</value>
   </data>

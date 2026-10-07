@@ -3045,6 +3045,9 @@ Por favor, confirma que seleccionaste el directorio de instalación que contiene
   <data name="GachaAnalysis_WishAnalysis" xml:space="preserve">
     <value>Análisis de deseos</value>
   </data>
+  <data name="GachaAnalysis_WishHistory" xml:space="preserve">
+    <value>Historial de deseos</value>
+  </data>
   <data name="GachaAnalysis_GetRecords" xml:space="preserve">
     <value>Obtener registros de gachapón</value>
   </data>

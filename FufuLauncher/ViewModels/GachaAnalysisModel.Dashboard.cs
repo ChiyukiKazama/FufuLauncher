@@ -14,12 +14,14 @@ public partial class GachaAnalysisModel
 
     public async Task ShowOverviewAsync()
     {
+        IsHistorySelected = false;
         IsOverviewSelected = true;
         await Task.CompletedTask;
     }
 
     public async Task ShowAnalysisAsync()
     {
+        IsHistorySelected = false;
         IsOverviewSelected = false;
         await EnsureAnalysisDashboardAsync();
     }

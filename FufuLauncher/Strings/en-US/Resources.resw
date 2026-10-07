@@ -3217,6 +3217,9 @@ Go to the Microsoft website to download and install it?</value>
   <data name="GachaAnalysis_WishAnalysis" xml:space="preserve">
     <value>Wish Analysis</value>
   </data>
+  <data name="GachaAnalysis_WishHistory" xml:space="preserve">
+    <value>Wish History</value>
+  </data>
   <data name="GachaAnalysis_GetRecords" xml:space="preserve">
     <value>Get Gacha Records</value>
   </data>

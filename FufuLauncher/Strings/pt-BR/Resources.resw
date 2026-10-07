@@ -3045,6 +3045,9 @@ Ir para o site da Microsoft para baixar e instalar?</value>
   <data name="GachaAnalysis_WishAnalysis" xml:space="preserve">
     <value>Análise de desejos</value>
   </data>
+  <data name="GachaAnalysis_WishHistory" xml:space="preserve">
+    <value>Histórico de Orações</value>
+  </data>
   <data name="GachaAnalysis_GetRecords" xml:space="preserve">
     <value>Obter registros de gacha</value>
   </data>

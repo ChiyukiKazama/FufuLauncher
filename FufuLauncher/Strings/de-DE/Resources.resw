@@ -3045,6 +3045,9 @@ Jetzt zur Microsoft-Website gehen und herunterladen?</value>
   <data name="GachaAnalysis_WishAnalysis" xml:space="preserve">
     <value>Wunsch-Analyse</value>
   </data>
+  <data name="GachaAnalysis_WishHistory" xml:space="preserve">
+    <value>Gebetsverlauf</value>
+  </data>
   <data name="GachaAnalysis_GetRecords" xml:space="preserve">
     <value>Wunschverlauf abrufen</value>
   </data>

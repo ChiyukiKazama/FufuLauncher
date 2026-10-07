@@ -3045,6 +3045,9 @@ Voulez-vous accéder au site officiel de Microsoft pour la télécharger et l'in
   <data name="GachaAnalysis_WishAnalysis" xml:space="preserve">
     <value>Analyse des vœux</value>
   </data>
+  <data name="GachaAnalysis_WishHistory" xml:space="preserve">
+    <value>Historique des vœux</value>
+  </data>
   <data name="GachaAnalysis_GetRecords" xml:space="preserve">
     <value>Obtenir l'historique des vœux</value>
   </data>

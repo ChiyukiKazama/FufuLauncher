@@ -469,7 +469,8 @@ namespace FufuLauncher.Views
                                 ViewModel.HasGachaData ? Visibility.Collapsed : Visibility.Visible;
                     });
                 }
-                else if (e.PropertyName == nameof(ViewModel.IsOverviewSelected))
+                else if (e.PropertyName == nameof(ViewModel.IsOverviewSelected) ||
+                         e.PropertyName == nameof(ViewModel.IsHistorySelected))
                 {
                     DispatcherQueue.TryEnqueue(UpdateTabIndicator);
                 }
@@ -547,7 +548,9 @@ namespace FufuLauncher.Views
         {
             if (GachaTabPivot == null) return;
 
-            var selectedIndex = ViewModel.IsOverviewSelected ? 0 : 1;
+            var selectedIndex = ViewModel.IsHistorySelected
+                ? 2
+                : ViewModel.IsOverviewSelected ? 0 : 1;
             if (GachaTabPivot.SelectedIndex == selectedIndex) return;
 
             _updatingTabSelection = true;
@@ -569,10 +572,14 @@ namespace FufuLauncher.Views
             {
                 await ViewModel.ShowOverviewAsync();
             }
-            else
+            else if (GachaTabPivot.SelectedIndex == 1)
             {
                 await ViewModel.ShowAnalysisAsync();
                 DispatcherQueue.TryEnqueue(PlayAnalysisChartAnimations);
+            }
+            else
+            {
+                await ViewModel.ShowHistoryAsync();
             }
 
             UpdateTabIndicator();

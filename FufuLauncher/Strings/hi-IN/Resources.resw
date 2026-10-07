@@ -3182,6 +3182,9 @@
   <data name="GachaAnalysis_WishAnalysis" xml:space="preserve">
     <value>विश विश्लेषण</value>
   </data>
+  <data name="GachaAnalysis_WishHistory" xml:space="preserve">
+    <value>प्रार्थना इतिहास</value>
+  </data>
   <data name="GachaAnalysis_GetRecords" xml:space="preserve">
     <value>गाचा रिकॉर्ड प्राप्त करें</value>
   </data>
