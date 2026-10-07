@@ -23,6 +23,7 @@ public partial class GachaAnalysisModel
         StandardFiveStars = new();
         StandardFourStars = new();
         InvalidateAnalysisDashboard();
+        InvalidateHistory();
     }
 
     private ObservableCollection<GachaDisplayItem> BuildDisplayCollection(List<FiveStarRecord> records, string typeHint,

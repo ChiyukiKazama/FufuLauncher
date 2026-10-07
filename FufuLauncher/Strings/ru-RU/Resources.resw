@@ -3045,6 +3045,27 @@
   <data name="GachaAnalysis_WishAnalysis" xml:space="preserve">
     <value>Анализ молитв</value>
   </data>
+  <data name="GachaAnalysis_WishHistory" xml:space="preserve">
+    <value>История молитв</value>
+  </data>
+  <data name="GachaHistory_Loading" xml:space="preserve"><value>Подготовка истории молитв…</value></data>
+  <data name="GachaHistory_Description" xml:space="preserve"><value>Загрузка по версиям. Выберите баннер, чтобы посмотреть молитвы за его период.</value></data>
+  <data name="GachaHistory_HideEmpty" xml:space="preserve"><value>Скрыть баннеры без полученных предметов</value></data>
+  <data name="GachaHistory_NewerVersion" xml:space="preserve"><value>Более новая версия</value></data>
+  <data name="GachaHistory_OlderVersion" xml:space="preserve"><value>Более старая версия</value></data>
+  <data name="GachaHistory_FiveStarItems" xml:space="preserve"><value>Предметы 5★</value></data>
+  <data name="GachaHistory_FourStarItems" xml:space="preserve"><value>Предметы 4★</value></data>
+  <data name="GachaHistory_ThreeStarItems" xml:space="preserve"><value>Предметы 3★</value></data>
+  <data name="GachaHistory_EmptyFilteredTitle" xml:space="preserve"><value>Нет баннеров с полученными предметами</value></data>
+  <data name="GachaHistory_EmptyTitle" xml:space="preserve"><value>Нет метаданных истории баннеров</value></data>
+  <data name="GachaHistory_EmptyFilteredDescription" xml:space="preserve"><value>Отключите «Скрыть баннеры без полученных предметов», чтобы посмотреть всю историю.</value></data>
+  <data name="GachaHistory_EmptyDescription" xml:space="preserve"><value>Обновите историю молитв или метаданные предметов, чтобы создать историю автоматически.</value></data>
+  <data name="GachaHistory_PeriodFormat" xml:space="preserve"><value>{0:yyyy-MM-dd HH:mm} — {1:yyyy-MM-dd HH:mm}</value></data>
+  <data name="GachaHistory_TotalPullsFormat" xml:space="preserve"><value>{0} молитв</value></data>
+  <data name="GachaHistory_CharacterEvent" xml:space="preserve"><value>Молитва события персонажа</value></data>
+  <data name="GachaHistory_WeaponEvent" xml:space="preserve"><value>Молитва события оружия</value></data>
+  <data name="GachaHistory_Chronicled" xml:space="preserve"><value>Хроники молитв</value></data>
+  <data name="GachaHistory_Limited" xml:space="preserve"><value>Ограниченная молитва</value></data>
   <data name="GachaAnalysis_GetRecords" xml:space="preserve">
     <value>Получить записи молитв</value>
   </data>

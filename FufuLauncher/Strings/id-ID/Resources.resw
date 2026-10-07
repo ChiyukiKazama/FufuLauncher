@@ -3045,6 +3045,27 @@ Buka situs web Microsoft untuk mengunduh dan menginstalnya?</value>
   <data name="GachaAnalysis_WishAnalysis" xml:space="preserve">
     <value>Analisis Wish</value>
   </data>
+  <data name="GachaAnalysis_WishHistory" xml:space="preserve">
+    <value>Riwayat Permohonan</value>
+  </data>
+  <data name="GachaHistory_Loading" xml:space="preserve"><value>Menyusun riwayat Permohonan…</value></data>
+  <data name="GachaHistory_Description" xml:space="preserve"><value>Dimuat per versi. Pilih banner untuk melihat hasil Permohonan selama periodenya.</value></data>
+  <data name="GachaHistory_HideEmpty" xml:space="preserve"><value>Sembunyikan banner tanpa item yang diperoleh</value></data>
+  <data name="GachaHistory_NewerVersion" xml:space="preserve"><value>Versi lebih baru</value></data>
+  <data name="GachaHistory_OlderVersion" xml:space="preserve"><value>Versi lebih lama</value></data>
+  <data name="GachaHistory_FiveStarItems" xml:space="preserve"><value>Item 5 bintang</value></data>
+  <data name="GachaHistory_FourStarItems" xml:space="preserve"><value>Item 4 bintang</value></data>
+  <data name="GachaHistory_ThreeStarItems" xml:space="preserve"><value>Item 3 bintang</value></data>
+  <data name="GachaHistory_EmptyFilteredTitle" xml:space="preserve"><value>Tidak ada banner dengan item yang diperoleh</value></data>
+  <data name="GachaHistory_EmptyTitle" xml:space="preserve"><value>Tidak ada metadata banner historis</value></data>
+  <data name="GachaHistory_EmptyFilteredDescription" xml:space="preserve"><value>Nonaktifkan “Sembunyikan banner tanpa item yang diperoleh” untuk melihat seluruh riwayat.</value></data>
+  <data name="GachaHistory_EmptyDescription" xml:space="preserve"><value>Perbarui catatan Permohonan atau metadata item untuk membuat riwayat secara otomatis.</value></data>
+  <data name="GachaHistory_PeriodFormat" xml:space="preserve"><value>{0:yyyy-MM-dd HH:mm} hingga {1:yyyy-MM-dd HH:mm}</value></data>
+  <data name="GachaHistory_TotalPullsFormat" xml:space="preserve"><value>{0} Permohonan</value></data>
+  <data name="GachaHistory_CharacterEvent" xml:space="preserve"><value>Permohonan Event Karakter</value></data>
+  <data name="GachaHistory_WeaponEvent" xml:space="preserve"><value>Permohonan Event Senjata</value></data>
+  <data name="GachaHistory_Chronicled" xml:space="preserve"><value>Permohonan Kronik</value></data>
+  <data name="GachaHistory_Limited" xml:space="preserve"><value>Permohonan Terbatas</value></data>
   <data name="GachaAnalysis_GetRecords" xml:space="preserve">
     <value>Dapatkan Catatan Gacha</value>
   </data>

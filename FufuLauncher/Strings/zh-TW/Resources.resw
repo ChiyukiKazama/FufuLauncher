@@ -3045,6 +3045,27 @@
   <data name="GachaAnalysis_WishAnalysis" xml:space="preserve">
     <value>祈願分析</value>
   </data>
+  <data name="GachaAnalysis_WishHistory" xml:space="preserve">
+    <value>歷史卡池</value>
+  </data>
+  <data name="GachaHistory_Loading" xml:space="preserve"><value>正在整理歷史卡池…</value></data>
+  <data name="GachaHistory_Description" xml:space="preserve"><value>按版本分塊載入，選擇卡池以查看該期間的祈願結果</value></data>
+  <data name="GachaHistory_HideEmpty" xml:space="preserve"><value>隱藏無物品卡池</value></data>
+  <data name="GachaHistory_NewerVersion" xml:space="preserve"><value>較新版本</value></data>
+  <data name="GachaHistory_OlderVersion" xml:space="preserve"><value>較舊版本</value></data>
+  <data name="GachaHistory_FiveStarItems" xml:space="preserve"><value>五星物品</value></data>
+  <data name="GachaHistory_FourStarItems" xml:space="preserve"><value>四星物品</value></data>
+  <data name="GachaHistory_ThreeStarItems" xml:space="preserve"><value>三星物品</value></data>
+  <data name="GachaHistory_EmptyFilteredTitle" xml:space="preserve"><value>暫無包含祈願物品的歷史卡池</value></data>
+  <data name="GachaHistory_EmptyTitle" xml:space="preserve"><value>暫無歷史卡池中繼資料</value></data>
+  <data name="GachaHistory_EmptyFilteredDescription" xml:space="preserve"><value>關閉「隱藏無物品卡池」後可查看完整歷史。</value></data>
+  <data name="GachaHistory_EmptyDescription" xml:space="preserve"><value>更新祈願記錄或物品中繼資料後將自動產生。</value></data>
+  <data name="GachaHistory_PeriodFormat" xml:space="preserve"><value>{0:yyyy-MM-dd HH:mm} 至 {1:yyyy-MM-dd HH:mm}</value></data>
+  <data name="GachaHistory_TotalPullsFormat" xml:space="preserve"><value>{0} 抽</value></data>
+  <data name="GachaHistory_CharacterEvent" xml:space="preserve"><value>角色活動祈願</value></data>
+  <data name="GachaHistory_WeaponEvent" xml:space="preserve"><value>武器活動祈願</value></data>
+  <data name="GachaHistory_Chronicled" xml:space="preserve"><value>集錄祈願</value></data>
+  <data name="GachaHistory_Limited" xml:space="preserve"><value>限定祈願</value></data>
   <data name="GachaAnalysis_GetRecords" xml:space="preserve">
     <value>取得祈願記錄</value>
   </data>

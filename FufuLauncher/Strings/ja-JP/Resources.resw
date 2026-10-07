@@ -3045,6 +3045,27 @@ MicrosoftのWebサイトからダウンロードしてインストールしま�
   <data name="GachaAnalysis_WishAnalysis" xml:space="preserve">
     <value>祈願分析</value>
   </data>
+  <data name="GachaAnalysis_WishHistory" xml:space="preserve">
+    <value>祈願履歴</value>
+  </data>
+  <data name="GachaHistory_Loading" xml:space="preserve"><value>祈願履歴を整理しています…</value></data>
+  <data name="GachaHistory_Description" xml:space="preserve"><value>バージョンごとに読み込みます。祈願期間の結果を表示する祈願を選択してください。</value></data>
+  <data name="GachaHistory_HideEmpty" xml:space="preserve"><value>アイテムなしの祈願を非表示</value></data>
+  <data name="GachaHistory_NewerVersion" xml:space="preserve"><value>新しいバージョン</value></data>
+  <data name="GachaHistory_OlderVersion" xml:space="preserve"><value>古いバージョン</value></data>
+  <data name="GachaHistory_FiveStarItems" xml:space="preserve"><value>★5アイテム</value></data>
+  <data name="GachaHistory_FourStarItems" xml:space="preserve"><value>★4アイテム</value></data>
+  <data name="GachaHistory_ThreeStarItems" xml:space="preserve"><value>★3アイテム</value></data>
+  <data name="GachaHistory_EmptyFilteredTitle" xml:space="preserve"><value>獲得アイテムのある祈願履歴はありません</value></data>
+  <data name="GachaHistory_EmptyTitle" xml:space="preserve"><value>祈願履歴のメタデータがありません</value></data>
+  <data name="GachaHistory_EmptyFilteredDescription" xml:space="preserve"><value>「アイテムなしの祈願を非表示」をオフにすると、すべての履歴を表示できます。</value></data>
+  <data name="GachaHistory_EmptyDescription" xml:space="preserve"><value>祈願記録またはアイテムメタデータを更新すると自動的に生成されます。</value></data>
+  <data name="GachaHistory_PeriodFormat" xml:space="preserve"><value>{0:yyyy-MM-dd HH:mm} ～ {1:yyyy-MM-dd HH:mm}</value></data>
+  <data name="GachaHistory_TotalPullsFormat" xml:space="preserve"><value>{0} 回</value></data>
+  <data name="GachaHistory_CharacterEvent" xml:space="preserve"><value>キャラクターイベント祈願</value></data>
+  <data name="GachaHistory_WeaponEvent" xml:space="preserve"><value>武器イベント祈願</value></data>
+  <data name="GachaHistory_Chronicled" xml:space="preserve"><value>集録祈願</value></data>
+  <data name="GachaHistory_Limited" xml:space="preserve"><value>限定祈願</value></data>
   <data name="GachaAnalysis_GetRecords" xml:space="preserve">
     <value>祈願記録を取得</value>
   </data>

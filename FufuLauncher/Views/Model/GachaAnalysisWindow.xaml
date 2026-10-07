@@ -135,6 +135,53 @@
                     </Border>
                 </DataTemplate>
 
+                <DataTemplate x:Key="GachaHistoryUpItemTemplate" x:DataType="models:GachaHistoryItemDisplayItem">
+                    <Grid Width="44" Height="44">
+                        <Border CornerRadius="6" Background="{x:Bind RarityBackground}">
+                            <Image Source="{x:Bind ImageUrl}" Stretch="UniformToFill" />
+                        </Border>
+                        <Border HorizontalAlignment="Right"
+                                VerticalAlignment="Top"
+                                CornerRadius="0,6,0,6"
+                                Padding="5,1"
+                                Background="#B3000000">
+                            <TextBlock Text="{x:Bind CountText}"
+                                       FontSize="10"
+                                       FontWeight="SemiBold"
+                                       Foreground="White" />
+                        </Border>
+                    </Grid>
+                </DataTemplate>
+
+                <DataTemplate x:Key="GachaHistoryObtainedItemTemplate" x:DataType="models:GachaHistoryItemDisplayItem">
+                    <Grid Width="88" Height="112">
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="82" />
+                            <RowDefinition Height="*" />
+                        </Grid.RowDefinitions>
+                        <Border CornerRadius="8" Background="{x:Bind RarityBackground}">
+                            <Image Source="{x:Bind ImageUrl}" Stretch="UniformToFill" />
+                        </Border>
+                        <Border HorizontalAlignment="Right"
+                                VerticalAlignment="Top"
+                                CornerRadius="0,8,0,8"
+                                Padding="6,2"
+                                Background="#B3000000">
+                            <TextBlock Text="{x:Bind CountText}"
+                                       FontSize="10"
+                                       FontWeight="SemiBold"
+                                       Foreground="White" />
+                        </Border>
+                        <TextBlock Grid.Row="1"
+                                   Margin="2,5,2,0"
+                                   Text="{x:Bind Name}"
+                                   FontSize="10"
+                                   TextAlignment="Center"
+                                   TextTrimming="CharacterEllipsis"
+                                   MaxLines="1" />
+                    </Grid>
+                </DataTemplate>
+
                 <DataTemplate x:Key="GachaBarTemplate" x:DataType="models:GachaChartPoint">
                     <Grid MinWidth="72" MinHeight="174" Padding="4,0">
                         <Grid.RowDefinitions>
@@ -274,7 +321,7 @@
 
             <Pivot Grid.Column="1"
                    x:Name="GachaTabPivot"
-                   Width="288"
+                   Width="432"
                    HorizontalAlignment="Center"
                    VerticalAlignment="Bottom"
                    Height="56"
@@ -303,6 +350,14 @@
                         <StackPanel Orientation="Horizontal" Spacing="8">
                             <FontIcon Glyph="&#xE9D9;" FontSize="15" />
                             <TextBlock Text="{helpers:Loc Key=GachaAnalysis_WishAnalysis}" />
+                        </StackPanel>
+                    </PivotItem.Header>
+                </PivotItem>
+                <PivotItem>
+                    <PivotItem.Header>
+                        <StackPanel Orientation="Horizontal" Spacing="8">
+                            <FontIcon Glyph="&#xE81C;" FontSize="15" />
+                            <TextBlock Text="{helpers:Loc Key=GachaAnalysis_WishHistory}" />
                         </StackPanel>
                     </PivotItem.Header>
                 </PivotItem>
@@ -1900,6 +1955,256 @@
                             </StackPanel>
                         </Border>
                     </ScrollViewer>
+                </Grid>
+
+                <Grid Grid.Row="1"
+                      Visibility="{Binding ViewModel.IsHistorySelected, Converter={StaticResource BoolToVisibilityConverter}}">
+                    <Grid.Transitions>
+                        <TransitionCollection>
+                            <EntranceThemeTransition FromVerticalOffset="12" />
+                        </TransitionCollection>
+                    </Grid.Transitions>
+
+                    <StackPanel HorizontalAlignment="Center"
+                                VerticalAlignment="Center"
+                                Spacing="12"
+                                Visibility="{Binding ViewModel.ShowHistoryLoading, Converter={StaticResource BoolToVisibilityConverter}}">
+                        <ProgressRing Width="36" Height="36"
+                                      IsActive="{x:Bind ViewModel.IsHistoryLoading, Mode=OneWay}" />
+                        <TextBlock Text="{helpers:Loc Key=GachaHistory_Loading}"
+                                   FontSize="12"
+                                   Foreground="{ThemeResource TextFillColorSecondaryBrush}" />
+                    </StackPanel>
+
+                    <StackPanel HorizontalAlignment="Center"
+                                VerticalAlignment="Center"
+                                Spacing="10"
+                                Visibility="{Binding ViewModel.ShowHistoryEmpty, Converter={StaticResource BoolToVisibilityConverter}}">
+                        <FontIcon Glyph="&#xE81C;"
+                                  FontSize="36"
+                                  Foreground="{ThemeResource TextFillColorTertiaryBrush}" />
+                        <TextBlock Text="{x:Bind ViewModel.HistoryEmptyTitle, Mode=OneWay}"
+                                   FontSize="15"
+                                   FontWeight="SemiBold" />
+                        <TextBlock Text="{x:Bind ViewModel.HistoryEmptyDescription, Mode=OneWay}"
+                                   FontSize="12"
+                                   Foreground="{ThemeResource TextFillColorSecondaryBrush}" />
+                    </StackPanel>
+
+                    <Grid Visibility="{Binding ViewModel.ShowHistoryContent, Converter={StaticResource BoolToVisibilityConverter}}">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="420" />
+                            <ColumnDefinition Width="16" />
+                            <ColumnDefinition Width="*" />
+                        </Grid.ColumnDefinitions>
+
+                        <Border Grid.Column="0"
+                                CornerRadius="10"
+                                Background="{ThemeResource CardBackgroundFillColorDefaultBrush}"
+                                BorderBrush="{ThemeResource CardStrokeColorDefaultBrush}"
+                                BorderThickness="1">
+                            <Grid>
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="Auto" />
+                                    <RowDefinition Height="*" />
+                                    <RowDefinition Height="Auto" />
+                                </Grid.RowDefinitions>
+                                <Grid Margin="16,14,16,10" ColumnSpacing="10">
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="*" />
+                                        <ColumnDefinition Width="Auto" />
+                                    </Grid.ColumnDefinitions>
+                                    <StackPanel Spacing="3">
+                                        <TextBlock Text="{helpers:Loc Key=GachaAnalysis_WishHistory}"
+                                                   FontSize="15"
+                                                   FontWeight="SemiBold" />
+                                        <TextBlock Text="{helpers:Loc Key=GachaHistory_Description}"
+                                                   FontSize="11"
+                                                   Foreground="{ThemeResource TextFillColorSecondaryBrush}" />
+                                    </StackPanel>
+                                    <ToggleButton Grid.Column="1"
+                                                  VerticalAlignment="Center"
+                                                  IsChecked="{x:Bind ViewModel.HideEmptyHistoryPools, Mode=TwoWay}"
+                                                  Content="{helpers:Loc Key=GachaHistory_HideEmpty}" />
+                                </Grid>
+                                <ListView Grid.Row="1"
+                                          Margin="8,0"
+                                          ItemsSource="{x:Bind ViewModel.HistoryPools, Mode=OneWay}"
+                                          SelectedItem="{x:Bind ViewModel.SelectedHistoryPool, Mode=TwoWay}"
+                                          ScrollViewer.HorizontalScrollBarVisibility="Disabled"
+                                          ScrollViewer.HorizontalScrollMode="Disabled"
+                                          ScrollViewer.VerticalScrollBarVisibility="Auto"
+                                          ScrollViewer.VerticalScrollMode="Enabled"
+                                          SelectionMode="Single">
+                                    <ListView.ItemsPanel>
+                                        <ItemsPanelTemplate>
+                                            <StackPanel Orientation="Vertical" />
+                                        </ItemsPanelTemplate>
+                                    </ListView.ItemsPanel>
+                                    <ListView.ItemContainerStyle>
+                                        <Style TargetType="ListViewItem">
+                                            <Setter Property="HorizontalContentAlignment" Value="Stretch" />
+                                        </Style>
+                                    </ListView.ItemContainerStyle>
+                                    <ListView.ItemTemplate>
+                                        <DataTemplate x:DataType="models:GachaHistoryPoolDisplayItem">
+                                            <Grid MinHeight="112" Padding="8,8">
+                                                <Grid.RowDefinitions>
+                                                    <RowDefinition Height="Auto" />
+                                                    <RowDefinition Height="Auto" />
+                                                    <RowDefinition Height="Auto" />
+                                                </Grid.RowDefinitions>
+                                                <Grid>
+                                                    <StackPanel Orientation="Horizontal" Spacing="7">
+                                                        <TextBlock Text="{x:Bind Version}"
+                                                                   FontSize="15"
+                                                                   FontWeight="SemiBold" />
+                                                        <TextBlock MaxWidth="270"
+                                                                   Text="{x:Bind Name}"
+                                                                   FontSize="13"
+                                                                   TextTrimming="CharacterEllipsis" />
+                                                    </StackPanel>
+                                                    <TextBlock Text="{x:Bind TotalPulls}"
+                                                               HorizontalAlignment="Right"
+                                                               FontSize="11"
+                                                               Foreground="{ThemeResource AccentTextFillColorPrimaryBrush}" />
+                                                </Grid>
+                                                <ItemsControl Grid.Row="1"
+                                                              Margin="0,8,0,0"
+                                                              IsHitTestVisible="False"
+                                                              ItemTemplate="{StaticResource GachaHistoryUpItemTemplate}"
+                                                              ItemsSource="{x:Bind FeaturedItems}">
+                                                    <ItemsControl.ItemsPanel>
+                                                        <ItemsPanelTemplate>
+                                                            <ItemsWrapGrid Orientation="Horizontal" />
+                                                        </ItemsPanelTemplate>
+                                                    </ItemsControl.ItemsPanel>
+                                                </ItemsControl>
+                                                <TextBlock Grid.Row="2"
+                                                           Margin="0,5,0,0"
+                                                           Text="{x:Bind Period}"
+                                                           FontSize="10"
+                                                           Foreground="{ThemeResource TextFillColorSecondaryBrush}" />
+                                            </Grid>
+                                        </DataTemplate>
+                                    </ListView.ItemTemplate>
+                                </ListView>
+                                <Grid Grid.Row="2"
+                                      Margin="12,8,12,12"
+                                      ColumnSpacing="8">
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="*" />
+                                        <ColumnDefinition Width="Auto" />
+                                        <ColumnDefinition Width="*" />
+                                    </Grid.ColumnDefinitions>
+                                    <Button HorizontalAlignment="Left"
+                                            Command="{x:Bind ViewModel.ShowNewerHistoryPageCommand}"
+                                            IsEnabled="{x:Bind ViewModel.HasNewerHistoryPage, Mode=OneWay}"
+                                            Content="{helpers:Loc Key=GachaHistory_NewerVersion}" />
+                                    <TextBlock Grid.Column="1"
+                                               VerticalAlignment="Center"
+                                               Text="{x:Bind ViewModel.HistoryPageSummary, Mode=OneWay}"
+                                               FontSize="11"
+                                               Foreground="{ThemeResource TextFillColorSecondaryBrush}" />
+                                    <Button Grid.Column="2"
+                                            HorizontalAlignment="Right"
+                                            Command="{x:Bind ViewModel.ShowOlderHistoryPageCommand}"
+                                            IsEnabled="{x:Bind ViewModel.HasOlderHistoryPage, Mode=OneWay}"
+                                            Content="{helpers:Loc Key=GachaHistory_OlderVersion}" />
+                                </Grid>
+                            </Grid>
+                        </Border>
+
+                        <Border Grid.Column="2"
+                                CornerRadius="10"
+                                Background="{ThemeResource CardBackgroundFillColorDefaultBrush}"
+                                BorderBrush="{ThemeResource CardStrokeColorDefaultBrush}"
+                                BorderThickness="1">
+                            <ScrollViewer HorizontalScrollBarVisibility="Disabled"
+                                          HorizontalScrollMode="Disabled"
+                                          VerticalScrollBarVisibility="Auto"
+                                          VerticalScrollMode="Enabled"
+                                          Padding="18,16,10,16">
+                                <StackPanel Spacing="14">
+                                    <Grid Margin="2,0,10,0">
+                                        <StackPanel Spacing="3">
+                                            <TextBlock Text="{x:Bind ViewModel.SelectedHistoryPool.Version, Mode=OneWay}"
+                                                       FontSize="22"
+                                                       FontWeight="SemiBold" />
+                                            <TextBlock Text="{x:Bind ViewModel.SelectedHistoryPool.Name, Mode=OneWay}"
+                                                       FontSize="15"
+                                                       FontWeight="SemiBold" />
+                                            <TextBlock Text="{x:Bind ViewModel.SelectedHistoryPool.Period, Mode=OneWay}"
+                                                       FontSize="11"
+                                                       Foreground="{ThemeResource TextFillColorSecondaryBrush}" />
+                                        </StackPanel>
+                                        <Border HorizontalAlignment="Right"
+                                                VerticalAlignment="Top"
+                                                CornerRadius="12"
+                                                Padding="10,4"
+                                                Background="{ThemeResource AccentFillColorSecondaryBrush}">
+                                            <TextBlock Text="{x:Bind ViewModel.SelectedHistoryPool.TotalPulls, Mode=OneWay}"
+                                                       FontSize="12"
+                                                       FontWeight="SemiBold" />
+                                        </Border>
+                                    </Grid>
+
+                                    <Border Margin="0,0,8,0"
+                                            MinHeight="180"
+                                            MaxHeight="420"
+                                            Padding="8"
+                                            CornerRadius="10"
+                                            Background="{ThemeResource LayerFillColorAltBrush}"
+                                            BorderBrush="{ThemeResource CardStrokeColorDefaultBrush}"
+                                            BorderThickness="1">
+                                        <Image Source="{x:Bind ViewModel.SelectedHistoryPool.BannerImageUrl, Mode=OneWay}"
+                                               HorizontalAlignment="Stretch"
+                                               VerticalAlignment="Center"
+                                               Stretch="Uniform" />
+                                    </Border>
+
+                                    <StackPanel Spacing="8"
+                                                Visibility="{Binding ViewModel.SelectedHistoryPool.HasFiveStarItems, Converter={StaticResource BoolToVisibilityConverter}}">
+                                        <TextBlock Margin="2,6,0,0"
+                                                   Text="{helpers:Loc Key=GachaHistory_FiveStarItems}"
+                                                   FontSize="15"
+                                                   FontWeight="SemiBold" />
+                                        <GridView Padding="0"
+                                                  IsItemClickEnabled="False"
+                                                  ItemTemplate="{StaticResource GachaHistoryObtainedItemTemplate}"
+                                                  ItemsSource="{x:Bind ViewModel.SelectedHistoryPool.FiveStarItems, Mode=OneWay}"
+                                                  SelectionMode="None" />
+                                    </StackPanel>
+
+                                    <StackPanel Spacing="8"
+                                                Visibility="{Binding ViewModel.SelectedHistoryPool.HasFourStarItems, Converter={StaticResource BoolToVisibilityConverter}}">
+                                        <TextBlock Margin="2,6,0,0"
+                                                   Text="{helpers:Loc Key=GachaHistory_FourStarItems}"
+                                                   FontSize="15"
+                                                   FontWeight="SemiBold" />
+                                        <GridView Padding="0"
+                                                  IsItemClickEnabled="False"
+                                                  ItemTemplate="{StaticResource GachaHistoryObtainedItemTemplate}"
+                                                  ItemsSource="{x:Bind ViewModel.SelectedHistoryPool.FourStarItems, Mode=OneWay}"
+                                                  SelectionMode="None" />
+                                    </StackPanel>
+
+                                    <StackPanel Spacing="8"
+                                                Visibility="{Binding ViewModel.SelectedHistoryPool.HasThreeStarItems, Converter={StaticResource BoolToVisibilityConverter}}">
+                                        <TextBlock Margin="2,6,0,0"
+                                                   Text="{helpers:Loc Key=GachaHistory_ThreeStarItems}"
+                                                   FontSize="15"
+                                                   FontWeight="SemiBold" />
+                                        <GridView Padding="0"
+                                                  IsItemClickEnabled="False"
+                                                  ItemTemplate="{StaticResource GachaHistoryObtainedItemTemplate}"
+                                                  ItemsSource="{x:Bind ViewModel.SelectedHistoryPool.ThreeStarItems, Mode=OneWay}"
+                                                  SelectionMode="None" />
+                                    </StackPanel>
+                                </StackPanel>
+                            </ScrollViewer>
+                        </Border>
+                    </Grid>
                 </Grid>
             </Grid>
         </Grid>

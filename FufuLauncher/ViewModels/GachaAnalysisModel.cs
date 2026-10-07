@@ -133,6 +133,7 @@ public partial class GachaAnalysisModel : ObservableObject
     private bool _isDataLoaded;
 
     [ObservableProperty] private bool _isOverviewSelected = true;
+    [ObservableProperty] private bool _isHistorySelected;
     [ObservableProperty] private bool _isAnalysisLoading;
     [ObservableProperty] private bool _isAnalysisReady;
     [ObservableProperty] private GachaAnalysisDashboard _analysisDashboard = GachaAnalysisDashboard.Empty();
@@ -141,7 +142,7 @@ public partial class GachaAnalysisModel : ObservableObject
     public bool ShowOverviewList => IsOverviewSelected && !IsCardViewMode;
     public bool ShowOverviewCards => IsOverviewSelected && IsCardViewMode;
 
-    public bool IsAnalysisSelected => !IsOverviewSelected;
+    public bool IsAnalysisSelected => !IsOverviewSelected && !IsHistorySelected;
     public bool ShowAnalysisLoading => IsAnalysisSelected && IsAnalysisLoading;
     public bool ShowAnalysisContent => IsAnalysisSelected && IsAnalysisReady && !IsAnalysisLoading;
 
@@ -200,6 +201,16 @@ public partial class GachaAnalysisModel : ObservableObject
         OnPropertyChanged(nameof(ShowAnalysisContent));
         OnPropertyChanged(nameof(ShowOverviewList));
         OnPropertyChanged(nameof(ShowOverviewCards));
+    }
+
+    partial void OnIsHistorySelectedChanged(bool value)
+    {
+        OnPropertyChanged(nameof(IsAnalysisSelected));
+        OnPropertyChanged(nameof(ShowAnalysisLoading));
+        OnPropertyChanged(nameof(ShowAnalysisContent));
+        OnPropertyChanged(nameof(ShowHistoryLoading));
+        OnPropertyChanged(nameof(ShowHistoryContent));
+        OnPropertyChanged(nameof(ShowHistoryEmpty));
     }
 
     partial void OnIsCardViewModeChanged(bool value)

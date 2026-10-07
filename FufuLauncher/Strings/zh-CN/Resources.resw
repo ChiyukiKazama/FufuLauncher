@@ -3361,6 +3361,27 @@
   <data name="GachaAnalysis_WishAnalysis" xml:space="preserve">
     <value>祈愿分析</value>
   </data>
+  <data name="GachaAnalysis_WishHistory" xml:space="preserve">
+    <value>历史卡池</value>
+  </data>
+  <data name="GachaHistory_Loading" xml:space="preserve"><value>正在整理历史卡池…</value></data>
+  <data name="GachaHistory_Description" xml:space="preserve"><value>按版本分块加载，选择卡池查看该时段内的祈愿结果</value></data>
+  <data name="GachaHistory_HideEmpty" xml:space="preserve"><value>隐藏无物品卡池</value></data>
+  <data name="GachaHistory_NewerVersion" xml:space="preserve"><value>较新版本</value></data>
+  <data name="GachaHistory_OlderVersion" xml:space="preserve"><value>较早版本</value></data>
+  <data name="GachaHistory_FiveStarItems" xml:space="preserve"><value>五星物品</value></data>
+  <data name="GachaHistory_FourStarItems" xml:space="preserve"><value>四星物品</value></data>
+  <data name="GachaHistory_ThreeStarItems" xml:space="preserve"><value>三星物品</value></data>
+  <data name="GachaHistory_EmptyFilteredTitle" xml:space="preserve"><value>暂无包含抽卡物品的历史卡池</value></data>
+  <data name="GachaHistory_EmptyTitle" xml:space="preserve"><value>暂无历史卡池元数据</value></data>
+  <data name="GachaHistory_EmptyFilteredDescription" xml:space="preserve"><value>关闭“隐藏无物品卡池”后可查看完整历史。</value></data>
+  <data name="GachaHistory_EmptyDescription" xml:space="preserve"><value>更新祈愿数据或物品元数据后将自动生成。</value></data>
+  <data name="GachaHistory_PeriodFormat" xml:space="preserve"><value>{0:yyyy-MM-dd HH:mm} 至 {1:yyyy-MM-dd HH:mm}</value></data>
+  <data name="GachaHistory_TotalPullsFormat" xml:space="preserve"><value>{0} 抽</value></data>
+  <data name="GachaHistory_CharacterEvent" xml:space="preserve"><value>角色活动祈愿</value></data>
+  <data name="GachaHistory_WeaponEvent" xml:space="preserve"><value>武器活动祈愿</value></data>
+  <data name="GachaHistory_Chronicled" xml:space="preserve"><value>集录祈愿</value></data>
+  <data name="GachaHistory_Limited" xml:space="preserve"><value>限定祈愿</value></data>
   <data name="GachaAnalysis_GetRecords" xml:space="preserve">
     <value>获取抽卡记录</value>
   </data>

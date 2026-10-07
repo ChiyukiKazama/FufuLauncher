@@ -258,6 +258,20 @@ public class GachaPoolMetadata
         set;
     }
 
+    [JsonPropertyName("poolName")]
+    public string PoolName
+    {
+        get;
+        set;
+    } = string.Empty;
+
+    [JsonPropertyName("bannerImageUrl")]
+    public string BannerImageUrl
+    {
+        get;
+        set;
+    } = string.Empty;
+
     [JsonPropertyName("start")]
     public string Start
     {

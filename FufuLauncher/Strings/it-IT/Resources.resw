@@ -1833,6 +1833,27 @@ Conferma di aver selezionato la directory di installazione contenente l'eseguibi
   <data name="GachaAnalysis_GeneratingAnalysis" xml:space="preserve">
     <value>Generazione analisi desideri...</value>
   </data>
+  <data name="GachaAnalysis_WishHistory" xml:space="preserve">
+    <value>Cronologia desideri</value>
+  </data>
+  <data name="GachaHistory_Loading" xml:space="preserve"><value>Organizzazione della cronologia dei desideri…</value></data>
+  <data name="GachaHistory_Description" xml:space="preserve"><value>Caricamento per versione. Seleziona un banner per vedere i desideri effettuati nel periodo.</value></data>
+  <data name="GachaHistory_HideEmpty" xml:space="preserve"><value>Nascondi banner senza oggetti ottenuti</value></data>
+  <data name="GachaHistory_NewerVersion" xml:space="preserve"><value>Versione più recente</value></data>
+  <data name="GachaHistory_OlderVersion" xml:space="preserve"><value>Versione meno recente</value></data>
+  <data name="GachaHistory_FiveStarItems" xml:space="preserve"><value>Oggetti a 5 stelle</value></data>
+  <data name="GachaHistory_FourStarItems" xml:space="preserve"><value>Oggetti a 4 stelle</value></data>
+  <data name="GachaHistory_ThreeStarItems" xml:space="preserve"><value>Oggetti a 3 stelle</value></data>
+  <data name="GachaHistory_EmptyFilteredTitle" xml:space="preserve"><value>Nessun banner con oggetti ottenuti</value></data>
+  <data name="GachaHistory_EmptyTitle" xml:space="preserve"><value>Nessun metadato dei banner storici</value></data>
+  <data name="GachaHistory_EmptyFilteredDescription" xml:space="preserve"><value>Disattiva “Nascondi banner senza oggetti ottenuti” per visualizzare la cronologia completa.</value></data>
+  <data name="GachaHistory_EmptyDescription" xml:space="preserve"><value>Aggiorna i desideri o i metadati degli oggetti per generare automaticamente la cronologia.</value></data>
+  <data name="GachaHistory_PeriodFormat" xml:space="preserve"><value>{0:yyyy-MM-dd HH:mm} a {1:yyyy-MM-dd HH:mm}</value></data>
+  <data name="GachaHistory_TotalPullsFormat" xml:space="preserve"><value>{0} desideri</value></data>
+  <data name="GachaHistory_CharacterEvent" xml:space="preserve"><value>Desiderio evento personaggio</value></data>
+  <data name="GachaHistory_WeaponEvent" xml:space="preserve"><value>Desiderio evento arma</value></data>
+  <data name="GachaHistory_Chronicled" xml:space="preserve"><value>Desiderio cronache</value></data>
+  <data name="GachaHistory_Limited" xml:space="preserve"><value>Desiderio limitato</value></data>
   <data name="GachaAnalysis_GetRecords" xml:space="preserve">
     <value>Ottieni Record Desideri</value>
   </data>

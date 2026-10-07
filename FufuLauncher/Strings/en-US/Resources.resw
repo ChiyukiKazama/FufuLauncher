@@ -3217,6 +3217,27 @@ Go to the Microsoft website to download and install it?</value>
   <data name="GachaAnalysis_WishAnalysis" xml:space="preserve">
     <value>Wish Analysis</value>
   </data>
+  <data name="GachaAnalysis_WishHistory" xml:space="preserve">
+    <value>Wish History</value>
+  </data>
+  <data name="GachaHistory_Loading" xml:space="preserve"><value>Organizing wish history…</value></data>
+  <data name="GachaHistory_Description" xml:space="preserve"><value>Loaded by version. Select a banner to view wishes made during its period.</value></data>
+  <data name="GachaHistory_HideEmpty" xml:space="preserve"><value>Hide banners without obtained items</value></data>
+  <data name="GachaHistory_NewerVersion" xml:space="preserve"><value>Newer version</value></data>
+  <data name="GachaHistory_OlderVersion" xml:space="preserve"><value>Older version</value></data>
+  <data name="GachaHistory_FiveStarItems" xml:space="preserve"><value>5-star items</value></data>
+  <data name="GachaHistory_FourStarItems" xml:space="preserve"><value>4-star items</value></data>
+  <data name="GachaHistory_ThreeStarItems" xml:space="preserve"><value>3-star items</value></data>
+  <data name="GachaHistory_EmptyFilteredTitle" xml:space="preserve"><value>No banners with obtained items</value></data>
+  <data name="GachaHistory_EmptyTitle" xml:space="preserve"><value>No historical banner metadata</value></data>
+  <data name="GachaHistory_EmptyFilteredDescription" xml:space="preserve"><value>Turn off “Hide banners without obtained items” to view the full history.</value></data>
+  <data name="GachaHistory_EmptyDescription" xml:space="preserve"><value>Update wish records or item metadata to generate the history automatically.</value></data>
+  <data name="GachaHistory_PeriodFormat" xml:space="preserve"><value>{0:yyyy-MM-dd HH:mm} to {1:yyyy-MM-dd HH:mm}</value></data>
+  <data name="GachaHistory_TotalPullsFormat" xml:space="preserve"><value>{0} pulls</value></data>
+  <data name="GachaHistory_CharacterEvent" xml:space="preserve"><value>Character Event Wish</value></data>
+  <data name="GachaHistory_WeaponEvent" xml:space="preserve"><value>Weapon Event Wish</value></data>
+  <data name="GachaHistory_Chronicled" xml:space="preserve"><value>Chronicled Wish</value></data>
+  <data name="GachaHistory_Limited" xml:space="preserve"><value>Limited Wish</value></data>
   <data name="GachaAnalysis_GetRecords" xml:space="preserve">
     <value>Get Gacha Records</value>
   </data>

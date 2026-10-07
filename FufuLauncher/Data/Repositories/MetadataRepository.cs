@@ -79,6 +79,17 @@ public class MetadataRepository
                 context.Database.EnsureCreated();
                 Debug.WriteLine("MetadataRepository: 已创建新数据库");
             }
+
+            EnsureGachaPoolMetadataSchema(dbPath);
+            using (var context = new MetadataDbContext(dbPath))
+            {
+                context.Database.ExecuteSqlRaw(
+                    "CREATE TABLE IF NOT EXISTS __EFMigrationsHistory (MigrationId TEXT PRIMARY KEY, ProductVersion TEXT);");
+                context.Database.ExecuteSqlRaw(
+                    "INSERT OR IGNORE INTO __EFMigrationsHistory VALUES ('20240716000000_InitialCreate', '8.0.28');");
+                context.Database.ExecuteSqlRaw(
+                    "INSERT OR IGNORE INTO __EFMigrationsHistory VALUES ('20261008000000_AddGachaPoolPresentation', '8.0.28');");
+            }
         }
         catch (Exception ex)
         {
@@ -86,17 +97,73 @@ public class MetadataRepository
 
             try
             {
+                EnsureGachaPoolMetadataSchema(dbPath);
                 using var context = new MetadataDbContext(dbPath);
                 context.Database.ExecuteSqlRaw(
                     "CREATE TABLE IF NOT EXISTS __EFMigrationsHistory (MigrationId TEXT PRIMARY KEY, ProductVersion TEXT);");
                 context.Database.ExecuteSqlRaw(
                     "INSERT OR IGNORE INTO __EFMigrationsHistory VALUES ('20240716000000_InitialCreate', '8.0.28');");
+                context.Database.ExecuteSqlRaw(
+                    "INSERT OR IGNORE INTO __EFMigrationsHistory VALUES ('20261008000000_AddGachaPoolPresentation', '8.0.28');");
             }
             catch (Exception ex2)
             {
                 Debug.WriteLine($"MetadataRepository: 迁移历史回退创建失败 - {ex2.Message}");
             }
         }
+    }
+
+    private static void EnsureGachaPoolMetadataSchema(string dbPath)
+    {
+        using var connection = new SqliteConnection(SqlitePaths.BuildConnectionString(dbPath));
+        connection.Open();
+
+        using (var createCommand = connection.CreateCommand())
+        {
+            createCommand.CommandText =
+                """
+                CREATE TABLE IF NOT EXISTS "GachaPoolMetadata" (
+                    "Version" TEXT NOT NULL,
+                    "PoolType" TEXT NOT NULL,
+                    "PoolName" TEXT NOT NULL DEFAULT '',
+                    "BannerImageUrl" TEXT NOT NULL DEFAULT '',
+                    "StartTime" TEXT NOT NULL,
+                    "EndTime" TEXT NOT NULL,
+                    "UpItems" TEXT NOT NULL,
+                    "UpItemNames" TEXT NOT NULL DEFAULT '[]',
+                    CONSTRAINT "PK_GachaPoolMetadata" PRIMARY KEY ("Version", "PoolType")
+                );
+                """;
+            createCommand.ExecuteNonQuery();
+        }
+
+        EnsureColumn(connection, "PoolName");
+        EnsureColumn(connection, "BannerImageUrl");
+    }
+
+    private static void EnsureColumn(SqliteConnection connection, string columnName)
+    {
+        var exists = false;
+        using (var inspectCommand = connection.CreateCommand())
+        {
+            inspectCommand.CommandText = "PRAGMA table_info(\"GachaPoolMetadata\");";
+            using var reader = inspectCommand.ExecuteReader();
+            while (reader.Read())
+            {
+                if (string.Equals(reader.GetString(1), columnName, StringComparison.OrdinalIgnoreCase))
+                {
+                    exists = true;
+                    break;
+                }
+            }
+        }
+
+        if (exists) return;
+
+        using var alterCommand = connection.CreateCommand();
+        alterCommand.CommandText =
+            $"ALTER TABLE \"GachaPoolMetadata\" ADD COLUMN \"{columnName}\" TEXT NOT NULL DEFAULT '';";
+        alterCommand.ExecuteNonQuery();
     }
 
     // ---- Metadata (scraped items) ----
@@ -221,7 +288,7 @@ public class MetadataRepository
         try
         {
             using var context = CreateContext();
-            return context.GachaPoolMetadata.Any();
+            return context.GachaPoolMetadata.Any(pool => pool.BannerImageUrl != string.Empty);
         }
         catch
         {
@@ -246,26 +313,21 @@ public class MetadataRepository
         }
     }
 
-    public void UpsertPoolMetadata(string poolType, List<GachaPoolMetadataEntity> pools)
+    public void ReplacePoolMetadata(string poolType, List<GachaPoolMetadataEntity> pools)
     {
         using var context = CreateContext();
+        using var transaction = context.Database.BeginTransaction();
+        context.GachaPoolMetadata
+            .Where(pool => pool.PoolType == poolType)
+            .ExecuteDelete();
+
         foreach (var pool in pools)
         {
             pool.PoolType = poolType;
-            var existing = context.GachaPoolMetadata.Find(pool.Version, pool.PoolType);
-            if (existing != null)
-            {
-                existing.StartTime = pool.StartTime;
-                existing.EndTime = pool.EndTime;
-                existing.UpItems = pool.UpItems;
-                existing.UpItemNames = pool.UpItemNames;
-            }
-            else
-            {
-                context.GachaPoolMetadata.Add(pool);
-            }
+            context.GachaPoolMetadata.Add(pool);
         }
 
         context.SaveChanges();
+        transaction.Commit();
     }
 }
