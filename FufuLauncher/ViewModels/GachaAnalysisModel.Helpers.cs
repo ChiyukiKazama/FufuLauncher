@@ -97,5 +97,10 @@ public partial class GachaAnalysisModel
         _ => gameType
     };
 
+    private static bool IsLogForPoolItem(GachaLogItem log, GachaPoolItem item) =>
+        (item.ItemId > 0 && log.ItemId == item.ItemId.ToString()) ||
+        (!string.IsNullOrWhiteSpace(item.Name) &&
+         string.Equals(log.Name, item.Name, StringComparison.Ordinal));
+
     #endregion
 }

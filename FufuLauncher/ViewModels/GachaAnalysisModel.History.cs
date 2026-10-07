@@ -163,34 +163,15 @@ public partial class GachaAnalysisModel
             .GroupBy(item => item.Name)
             .ToDictionary(group => group.Key, group => group.First(), StringComparer.Ordinal);
 
-        var characterOnePools = LoadPoolMetadataFromDb("301");
-        var characterTwoPools = LoadPoolMetadataFromDb("400");
         var sources = new List<HistoryPoolSource>();
 
-        if (characterTwoPools.Count == 0)
+        foreach (var window in LoadCharacterPoolCandidates()
+                     .GroupBy(candidate => (candidate.Pool.Start, candidate.Pool.End)))
         {
-            // Older caches stored simultaneous character wishes as 301 plus a -2 version suffix.
-            // Infer the second wish only until the refreshed metadata cache supplies explicit 400 rows.
-            foreach (var group in characterOnePools.GroupBy(pool => (pool.Start, pool.End)))
+            foreach (var candidate in ResolveCharacterPoolTypes(window.ToList(), characterLogs))
             {
-                var parallelPools = group
-                    .OrderBy(pool => pool.Version, StringComparer.Ordinal)
-                    .ToList();
-                for (var index = 0; index < parallelPools.Count; index++)
-                {
-                    sources.Add(new HistoryPoolSource(
-                        parallelPools[index],
-                        index == 0 ? "301" : "400",
-                        characterLogs));
-                }
+                sources.Add(new HistoryPoolSource(candidate.Pool, candidate.PoolType, characterLogs));
             }
-        }
-        else
-        {
-            sources.AddRange(characterOnePools.Select(pool =>
-                new HistoryPoolSource(pool, "301", characterLogs)));
-            sources.AddRange(characterTwoPools.Select(pool =>
-                new HistoryPoolSource(pool, "400", characterLogs)));
         }
 
         sources.AddRange(LoadPoolMetadataFromDb("302")
@@ -233,10 +214,7 @@ public partial class GachaAnalysisModel
                     metadataByName);
                 var rank = ResolveRank(item.RankType, metadata?.Rank);
 
-                var pullCount = pulls.Count(log =>
-                    (item.ItemId > 0 && log.ItemId == item.ItemId.ToString()) ||
-                    (!string.IsNullOrWhiteSpace(item.Name) &&
-                     string.Equals(log.Name, item.Name, StringComparison.Ordinal)));
+                var pullCount = pulls.Count(log => IsLogForPoolItem(log, item));
 
                 return new GachaHistoryItemDisplayItem
                 {
@@ -368,6 +346,49 @@ public partial class GachaAnalysisModel
             "500" => log.GachaType == "500",
             _ => false
         };
+
+    private static List<CharacterPoolCandidate> ResolveCharacterPoolTypes(
+        IReadOnlyList<CharacterPoolCandidate> window,
+        IReadOnlyList<GachaLogItem> characterLogs)
+    {
+        var ordered = window
+            .OrderBy(candidate => candidate.Pool.Version, StringComparer.Ordinal)
+            .ThenBy(candidate => candidate.PoolType, StringComparer.Ordinal)
+            .Take(2)
+            .ToList();
+
+        if (ordered.Count == 0) return [];
+        if (ordered.Count == 1) return [new CharacterPoolCandidate(ordered[0].Pool, "301")];
+
+        var first = ordered[0].Pool;
+        var second = ordered[1].Pool;
+        var direct = CountPoolTypeEvidence(first, "301", characterLogs) +
+                     CountPoolTypeEvidence(second, "400", characterLogs);
+        var swapped = CountPoolTypeEvidence(first, "400", characterLogs) +
+                      CountPoolTypeEvidence(second, "301", characterLogs);
+
+        return swapped > direct
+            ? [new CharacterPoolCandidate(first, "400"), new CharacterPoolCandidate(second, "301")]
+            : [new CharacterPoolCandidate(first, "301"), new CharacterPoolCandidate(second, "400")];
+    }
+
+    private static int CountPoolTypeEvidence(
+        GachaPoolMetadata pool,
+        string poolType,
+        IReadOnlyList<GachaLogItem> characterLogs)
+    {
+        if (!DateTime.TryParse(pool.Start, out var startsAt) ||
+            !DateTime.TryParse(pool.End, out var endsAt))
+        {
+            return 0;
+        }
+
+        return characterLogs.Count(log =>
+            log.GachaType == poolType &&
+            log.RankType == "5" &&
+            IsLogInPeriod(log, startsAt, endsAt) &&
+            pool.Items.Any(item => IsLogForPoolItem(log, item)));
+    }
 
     private static bool IsLogInPeriod(GachaLogItem log, DateTime startsAt, DateTime endsAt) =>
         DateTime.TryParse(log.Time, out var time) && time >= startsAt && time <= endsAt;

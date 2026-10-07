@@ -99,9 +99,7 @@ public partial class GachaAnalysisModel
         if (matchedPools.All(p => p.Items == null || p.Items.Count == 0))
             return PityStatus.None;
 
-        var isUpItem = matchedPools.Any(pool => pool.Items.Any(p =>
-            (!string.IsNullOrEmpty(item.ItemId) && p.ItemId.ToString() == item.ItemId) ||
-            (!string.IsNullOrEmpty(p.Name) && p.Name == item.Name)));
+        var isUpItem = matchedPools.Any(pool => pool.Items.Any(p => IsLogForPoolItem(item, p)));
 
         if (item.RankType == "5")
         {

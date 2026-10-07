@@ -173,7 +173,7 @@ public partial class GachaAnalysisModel
         {
             try
             {
-                var charPools = LoadPoolMetadataFromDb("301");
+                var charPools = LoadCharacterPoolMetadata();
                 var weaponPools = LoadPoolMetadataFromDb("302");
 
                 var charStats = _gachaService.AnalyzePool("301", charLogs);

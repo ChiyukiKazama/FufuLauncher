@@ -296,13 +296,13 @@ public class MetadataRepository
         }
     }
 
-    public List<GachaPoolMetadataEntity> GetPoolMetadataByType(string poolType)
+    public List<GachaPoolMetadataEntity> GetPoolMetadataByType(params string[] poolTypes)
     {
         try
         {
             using var context = CreateContext();
             return context.GachaPoolMetadata
-                .Where(p => p.PoolType == poolType)
+                .Where(p => poolTypes.Contains(p.PoolType))
                 .OrderByDescending(p => p.StartTime)
                 .ToList();
         }
