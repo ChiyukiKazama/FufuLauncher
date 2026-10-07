@@ -17,7 +17,7 @@ public sealed class GachaHistoryItemDisplayItem
 
     public int PullCount { get; init; }
 
-    public string Badge => PullCount > 0 ? $"×{PullCount}" : "UP";
+    public string CountText => PullCount.ToString();
 
     public SolidColorBrush RarityBackground => Rank switch
     {
@@ -29,24 +29,31 @@ public sealed class GachaHistoryItemDisplayItem
 
 public sealed class GachaHistoryPoolDisplayItem
 {
-    public string Title { get; init; } = string.Empty;
+    public string Key { get; init; } = string.Empty;
+
+    public string Version { get; init; } = string.Empty;
+
+    public string Name { get; init; } = string.Empty;
 
     public string Period { get; init; } = string.Empty;
 
     public string TotalPulls { get; init; } = string.Empty;
 
+    public string BannerImageUrl { get; init; } = "ms-appx:///Assets/StoreLogo.png";
+
     public IReadOnlyList<GachaHistoryItemDisplayItem> FeaturedItems { get; init; } = [];
-}
 
-public sealed class GachaHistoryPeriodDisplayItem
-{
-    public string Key { get; init; } = string.Empty;
+    public IReadOnlyList<GachaHistoryItemDisplayItem> FiveStarItems { get; init; } = [];
 
-    public string DisplayName { get; init; } = string.Empty;
+    public IReadOnlyList<GachaHistoryItemDisplayItem> FourStarItems { get; init; } = [];
 
-    public string DateRange { get; init; } = string.Empty;
+    public IReadOnlyList<GachaHistoryItemDisplayItem> ThreeStarItems { get; init; } = [];
 
-    public string TotalPulls { get; init; } = string.Empty;
+    public bool HasFiveStarItems => FiveStarItems.Count > 0;
 
-    public IReadOnlyList<GachaHistoryPoolDisplayItem> Pools { get; init; } = [];
+    public bool HasFourStarItems => FourStarItems.Count > 0;
+
+    public bool HasThreeStarItems => ThreeStarItems.Count > 0;
+
+    public bool HasObtainedItems => HasFiveStarItems || HasFourStarItems || HasThreeStarItems;
 }

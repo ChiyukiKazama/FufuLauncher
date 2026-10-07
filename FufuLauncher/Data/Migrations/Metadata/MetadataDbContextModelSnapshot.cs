@@ -107,6 +107,16 @@ partial class MetadataDbContextModelSnapshot : ModelSnapshot
                 .HasColumnType("TEXT")
                 .HasColumnName("PoolType");
 
+            b.Property<string>("PoolName")
+                .IsRequired()
+                .HasColumnType("TEXT")
+                .HasColumnName("PoolName");
+
+            b.Property<string>("BannerImageUrl")
+                .IsRequired()
+                .HasColumnType("TEXT")
+                .HasColumnName("BannerImageUrl");
+
             b.Property<string>("StartTime")
                 .HasColumnType("TEXT")
                 .HasColumnName("StartTime");

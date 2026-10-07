@@ -40,48 +40,89 @@ public partial class GachaAnalysisModel
 
             var allPools = new List<(GachaPoolMetadata pool, string poolType)>();
 
-            var charPoolsRaw = AssignVersionSuffixes(data.Result);
-            foreach (var (item, displayVersion) in charPoolsRaw)
+            var characterGroups = data.Result
+                .Where(item => GetVersionPeriod(item.Version) != "混池")
+                .GroupBy(item => (item.Version, item.Time));
+            foreach (var group in characterGroups)
+            {
+                var entries = group.Take(2).ToList();
+                if (group.Count() > 2)
+                {
+                    Debug.WriteLine($"[Gacha] 同期角色卡池超过两个，已忽略额外条目：{group.Key.Version} {group.Key.Time}");
+                }
+
+                foreach (var (item, poolType) in AssignCharacterPoolTypes(entries))
+                {
+                    var period = GetVersionPeriod(item.Version);
+                    var (startTime, endTime) = ParseTimeRange(item.Time, period);
+                    allPools.Add((CreatePoolMetadata(
+                        item,
+                        startTime,
+                        endTime,
+                        BuildPoolName(item.Star5Role, "角色活动祈愿"),
+                        _charNameToIdMap,
+                        data.AvatarList), poolType));
+                }
+            }
+
+            foreach (var item in data.Weapon.Where(item => GetVersionPeriod(item.Version) != "混池"))
             {
                 var period = GetVersionPeriod(item.Version);
-                var poolType = period == "混池" ? "500" : "301";
                 var (startTime, endTime) = ParseTimeRange(item.Time, period);
+
+                allPools.Add((CreatePoolMetadata(
+                    item,
+                    startTime,
+                    endTime,
+                    BuildPoolName(item.Star5Role, "武器活动祈愿"),
+                    _weaponNameToIdMap,
+                    data.AvatarList), "302"));
+            }
+
+            var chronicledEntries = data.Result
+                    .Where(item => GetVersionPeriod(item.Version) == "混池")
+                    .Select(item => (Item: item, Type: "char"))
+                .Concat(data.Weapon
+                    .Where(item => GetVersionPeriod(item.Version) == "混池")
+                    .Select(item => (Item: item, Type: "weapon")));
+            foreach (var group in chronicledEntries.GroupBy(entry => (entry.Item.Version, entry.Item.Time)))
+            {
+                var first = group.First().Item;
+                var (startTime, endTime) = ParseTimeRange(first.Time, "混池");
+                var items = group.SelectMany(entry => ConvertNamesToItems(
+                        entry.Item.Star5Role,
+                        entry.Item.Star4Role,
+                        entry.Type == "char" ? _charNameToIdMap : _weaponNameToIdMap,
+                        data.AvatarList))
+                    .GroupBy(item => item.ItemId > 0 ? $"id:{item.ItemId}" : $"name:{item.Name}")
+                    .Select(itemGroup => itemGroup.First())
+                    .ToList();
 
                 allPools.Add((new GachaPoolMetadata
                 {
-                    Version = displayVersion,
+                    Version = first.Version,
+                    PoolName = "集录祈愿",
+                    BannerImageUrl = group.Select(entry => entry.Item.Avatar)
+                        .FirstOrDefault(url => !string.IsNullOrWhiteSpace(url)) ?? string.Empty,
                     Start = startTime,
                     End = endTime,
-                    Items = ConvertNamesToItems(item.Star5Role, item.Star4Role, _charNameToIdMap, data.AvatarList)
-                }, poolType));
+                    Items = items
+                }, "500"));
             }
 
-            var weaponPoolsRaw = AssignVersionSuffixes(data.Weapon);
-            foreach (var (item, displayVersion) in weaponPoolsRaw)
+            ApplyStorageVersionSuffixes(allPools);
+            foreach (var poolType in new[] { "301", "400", "302", "500" })
             {
-                var period = GetVersionPeriod(item.Version);
-                var poolType = period == "混池" ? "500" : "302";
-                var (startTime, endTime) = ParseTimeRange(item.Time, period);
-
-                allPools.Add((new GachaPoolMetadata
-                {
-                    Version = displayVersion,
-                    Start = startTime,
-                    End = endTime,
-                    Items = ConvertNamesToItems(item.Star5Role, item.Star4Role, _weaponNameToIdMap, data.AvatarList)
-                }, poolType));
-            }
-
-            var grouped = allPools.GroupBy(p => p.poolType);
-            foreach (var group in grouped)
-            {
-                await SavePoolMetadataToDbAsync(group.Select(g => g.pool).ToList(), group.Key);
+                await SavePoolMetadataToDbAsync(
+                    allPools.Where(entry => entry.poolType == poolType).Select(entry => entry.pool).ToList(),
+                    poolType);
             }
 
             var count301 = allPools.Count(p => p.poolType == "301");
+            var count400 = allPools.Count(p => p.poolType == "400");
             var count302 = allPools.Count(p => p.poolType == "302");
             var count500 = allPools.Count(p => p.poolType == "500");
-            CrawlerStatus = $"卡池元数据更新完成（共 {allPools.Count} 个历史卡池：角色 {count301}、武器 {count302}、集录 {count500}）";
+            CrawlerStatus = $"卡池元数据更新完成（共 {allPools.Count} 个历史卡池：角色一 {count301}、角色二 {count400}、武器 {count302}、集录 {count500}）";
 
             if (!deferRefresh &&
                 _cachedCharacterLogs.Count + _cachedWeaponLogs.Count + _cachedChronicledLogs.Count > 0)
@@ -122,22 +163,85 @@ public partial class GachaAnalysisModel
         return "";
     }
 
-    private static List<(WishBannerItem Item, string DisplayVersion)> AssignVersionSuffixes(List<WishBannerItem> items)
+    private List<(WishBannerItem Item, string PoolType)> AssignCharacterPoolTypes(List<WishBannerItem> items)
     {
-        var result = new List<(WishBannerItem, string)>();
-        var versionCounts = new Dictionary<string, int>();
+        if (items.Count == 0) return [];
+        if (items.Count == 1) return [(items[0], "301")];
 
-        foreach (var item in items)
+        var result = new (WishBannerItem Item, string? PoolType)[items.Count];
+        var usedTypes = new HashSet<string>(StringComparer.Ordinal);
+        for (var index = 0; index < items.Count; index++)
         {
-            versionCounts.TryGetValue(item.Version, out var count);
-            count++;
-            versionCounts[item.Version] = count;
+            var item = items[index];
+            var period = GetVersionPeriod(item.Version);
+            var (startTimeText, endTimeText) = ParseTimeRange(item.Time, period);
+            if (!DateTime.TryParse(startTimeText, out var startsAt) ||
+                !DateTime.TryParse(endTimeText, out var endsAt))
+            {
+                continue;
+            }
 
-            var displayVersion = count > 1 ? $"{item.Version}-{count}" : item.Version;
-            result.Add((item, displayVersion));
+            var evidencedTypes = _cachedCharacterLogs
+                .Where(log => IsLogInPeriod(log, startsAt, endsAt) &&
+                              item.Star5Role.Contains(log.Name, StringComparer.Ordinal) &&
+                              log.GachaType is "301" or "400")
+                .Select(log => log.GachaType)
+                .Distinct(StringComparer.Ordinal)
+                .ToList();
+            if (evidencedTypes.Count == 1 && usedTypes.Add(evidencedTypes[0]))
+            {
+                result[index] = (item, evidencedTypes[0]);
+            }
         }
 
-        return result;
+        var remainingTypes = new Queue<string>(new[] { "301", "400" }.Where(type => !usedTypes.Contains(type)));
+        for (var index = 0; index < result.Length; index++)
+        {
+            if (result[index].PoolType == null)
+            {
+                result[index] = (items[index], remainingTypes.Dequeue());
+            }
+        }
+
+        return result.Select(entry => (entry.Item, entry.PoolType!)).ToList();
+    }
+
+    private static GachaPoolMetadata CreatePoolMetadata(
+        WishBannerItem item,
+        string startTime,
+        string endTime,
+        string poolName,
+        Dictionary<string, int> nameToIdMap,
+        Dictionary<string, string> avatarList) => new()
+    {
+        Version = item.Version,
+        PoolName = poolName,
+        BannerImageUrl = item.Avatar ?? string.Empty,
+        Start = startTime,
+        End = endTime,
+        Items = ConvertNamesToItems(item.Star5Role, item.Star4Role, nameToIdMap, avatarList)
+    };
+
+    private static string BuildPoolName(IEnumerable<string> featuredFiveStars, string fallback)
+    {
+        var names = featuredFiveStars.Where(name => !string.IsNullOrWhiteSpace(name)).ToList();
+        return names.Count == 0 ? fallback : string.Join(" / ", names);
+    }
+
+    private static void ApplyStorageVersionSuffixes(List<(GachaPoolMetadata pool, string poolType)> pools)
+    {
+        foreach (var group in pools.GroupBy(entry => (entry.poolType, entry.pool.Version)))
+        {
+            var index = 0;
+            foreach (var entry in group.OrderBy(item => item.pool.Start, StringComparer.Ordinal))
+            {
+                index++;
+                if (index > 1)
+                {
+                    entry.pool.Version = $"{entry.pool.Version}-{index}";
+                }
+            }
+        }
     }
 
     private static (string startTime, string endTime) ParseTimeRange(string timeRange, string period)
@@ -198,13 +302,15 @@ public partial class GachaAnalysisModel
         var entities = pools.Select(pool => new GachaPoolMetadataEntity
         {
             Version = pool.Version,
+            PoolName = pool.PoolName,
+            BannerImageUrl = pool.BannerImageUrl,
             StartTime = pool.Start,
             EndTime = pool.End,
             UpItems = JsonSerializer.Serialize(pool.Items.Select(i => i.ItemId), jsonOptions),
             UpItemNames = JsonSerializer.Serialize(pool.Items.Select(i => i.Name), jsonOptions)
         }).ToList();
 
-        _metadataRepo.UpsertPoolMetadata(poolType, entities);
+        _metadataRepo.ReplacePoolMetadata(poolType, entities);
         await Task.CompletedTask;
     }
 
@@ -248,6 +354,8 @@ public partial class GachaAnalysisModel
             pools.Add(new GachaPoolMetadata
             {
                 Version = entity.Version,
+                PoolName = entity.PoolName,
+                BannerImageUrl = entity.BannerImageUrl,
                 Start = entity.StartTime,
                 End = entity.EndTime,
                 Items = upItems

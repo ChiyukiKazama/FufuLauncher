@@ -6,6 +6,7 @@ Licensed under the MIT License.
 using System.Collections.ObjectModel;
 using System.Text.RegularExpressions;
 using CommunityToolkit.Mvvm.ComponentModel;
+using CommunityToolkit.Mvvm.Input;
 using FufuLauncher.Models;
 
 namespace FufuLauncher.ViewModels;
@@ -13,15 +14,28 @@ namespace FufuLauncher.ViewModels;
 public partial class GachaAnalysisModel
 {
     private bool _historyDirty = true;
+    private int _historyPageIndex;
+    private List<GachaHistoryPoolDisplayItem> _allHistoryPools = [];
+    private List<List<GachaHistoryPoolDisplayItem>> _historyPages = [];
 
-    [ObservableProperty] private ObservableCollection<GachaHistoryPeriodDisplayItem> _historyPeriods = new();
-    [ObservableProperty] private GachaHistoryPeriodDisplayItem? _selectedHistoryPeriod;
+    [ObservableProperty] private ObservableCollection<GachaHistoryPoolDisplayItem> _historyPools = new();
+    [ObservableProperty] private GachaHistoryPoolDisplayItem? _selectedHistoryPool;
     [ObservableProperty] private bool _isHistoryLoading;
     [ObservableProperty] private bool _isHistoryReady;
+    [ObservableProperty] private bool _hideEmptyHistoryPools;
+    [ObservableProperty] private bool _hasNewerHistoryPage;
+    [ObservableProperty] private bool _hasOlderHistoryPage;
+    [ObservableProperty] private string _historyPageSummary = string.Empty;
 
     public bool ShowHistoryLoading => IsHistorySelected && IsHistoryLoading;
-    public bool ShowHistoryContent => IsHistorySelected && IsHistoryReady && SelectedHistoryPeriod != null;
-    public bool ShowHistoryEmpty => IsHistorySelected && IsHistoryReady && HistoryPeriods.Count == 0;
+    public bool ShowHistoryContent => IsHistorySelected && IsHistoryReady && SelectedHistoryPool != null;
+    public bool ShowHistoryEmpty => IsHistorySelected && IsHistoryReady && HistoryPools.Count == 0;
+    public string HistoryEmptyTitle => HideEmptyHistoryPools
+        ? "暂无包含抽卡物品的历史卡池"
+        : "暂无历史卡池元数据";
+    public string HistoryEmptyDescription => HideEmptyHistoryPools
+        ? "关闭“隐藏无物品卡池”后可查看完整历史。"
+        : "更新祈愿数据或物品元数据后将自动生成。";
 
     public async Task ShowHistoryAsync()
     {
@@ -40,14 +54,15 @@ public partial class GachaAnalysisModel
         var weaponLogs = _cachedWeaponLogs.ToList();
         var chronicledLogs = _cachedChronicledLogs.ToList();
         var itemMetadata = _savedMetadata.ToList();
-        var selectedKey = SelectedHistoryPeriod?.Key;
+        var selectedKey = SelectedHistoryPool?.Key;
+        var selectedVersion = SelectedHistoryPool?.Version;
 
         IsHistoryLoading = true;
         IsHistoryReady = false;
 
         try
         {
-            var periods = await Task.Run(() => BuildHistoryPeriods(
+            var pools = await Task.Run(() => BuildHistoryPools(
                 characterLogs,
                 weaponLogs,
                 chronicledLogs,
@@ -55,9 +70,8 @@ public partial class GachaAnalysisModel
 
             if (_refreshVersion != version) return;
 
-            HistoryPeriods = new ObservableCollection<GachaHistoryPeriodDisplayItem>(periods);
-            SelectedHistoryPeriod = periods.FirstOrDefault(period => period.Key == selectedKey)
-                                    ?? periods.FirstOrDefault();
+            _allHistoryPools = pools;
+            ConfigureHistoryPages(selectedKey, selectedVersion);
             _historyDirty = false;
             IsHistoryReady = true;
         }
@@ -67,7 +81,73 @@ public partial class GachaAnalysisModel
         }
     }
 
-    private List<GachaHistoryPeriodDisplayItem> BuildHistoryPeriods(
+    private void ConfigureHistoryPages(
+        string? selectedKey,
+        string? selectedVersion)
+    {
+        var visiblePools = HideEmptyHistoryPools
+            ? _allHistoryPools.Where(pool => pool.HasObtainedItems)
+            : _allHistoryPools;
+        _historyPages = visiblePools
+            .GroupBy(pool => pool.Version, StringComparer.Ordinal)
+            .Select(group => group.ToList())
+            .ToList();
+
+        var selectedPageIndex = 0;
+        if (!string.IsNullOrWhiteSpace(selectedKey))
+        {
+            var matchingPageIndex = _historyPages.FindIndex(page =>
+                page.Any(pool => pool.Key == selectedKey));
+            if (matchingPageIndex >= 0) selectedPageIndex = matchingPageIndex;
+            else if (!string.IsNullOrWhiteSpace(selectedVersion))
+            {
+                var matchingVersionIndex = _historyPages.FindIndex(page =>
+                    page.Any(pool => pool.Version == selectedVersion));
+                if (matchingVersionIndex >= 0) selectedPageIndex = matchingVersionIndex;
+            }
+        }
+
+        ShowHistoryPage(selectedPageIndex, selectedKey);
+    }
+
+    private void ShowHistoryPage(int pageIndex, string? selectedKey = null)
+    {
+        if (_historyPages.Count == 0)
+        {
+            _historyPageIndex = 0;
+            HistoryPools = new ObservableCollection<GachaHistoryPoolDisplayItem>();
+            SelectedHistoryPool = null;
+            HasNewerHistoryPage = false;
+            HasOlderHistoryPage = false;
+            HistoryPageSummary = string.Empty;
+            return;
+        }
+
+        _historyPageIndex = Math.Clamp(pageIndex, 0, _historyPages.Count - 1);
+        var page = _historyPages[_historyPageIndex];
+        HistoryPools = new ObservableCollection<GachaHistoryPoolDisplayItem>(page);
+        SelectedHistoryPool = page.FirstOrDefault(pool => pool.Key == selectedKey)
+                              ?? page.FirstOrDefault();
+        HasNewerHistoryPage = _historyPageIndex > 0;
+        HasOlderHistoryPage = _historyPageIndex < _historyPages.Count - 1;
+        HistoryPageSummary = $"{page[0].Version} · {_historyPageIndex + 1} / {_historyPages.Count}";
+    }
+
+    [RelayCommand]
+    private void ShowNewerHistoryPage()
+    {
+        if (!HasNewerHistoryPage) return;
+        ShowHistoryPage(_historyPageIndex - 1);
+    }
+
+    [RelayCommand]
+    private void ShowOlderHistoryPage()
+    {
+        if (!HasOlderHistoryPage) return;
+        ShowHistoryPage(_historyPageIndex + 1);
+    }
+
+    private List<GachaHistoryPoolDisplayItem> BuildHistoryPools(
         IReadOnlyList<GachaLogItem> characterLogs,
         IReadOnlyList<GachaLogItem> weaponLogs,
         IReadOnlyList<GachaLogItem> chronicledLogs,
@@ -82,46 +162,47 @@ public partial class GachaAnalysisModel
             .GroupBy(item => item.Name)
             .ToDictionary(group => group.Key, group => group.First(), StringComparer.Ordinal);
 
-        var sources = LoadPoolMetadataFromDb("301")
-            .Select(pool => new HistoryPoolSource(pool, "301", "角色活动", characterLogs))
-            .Concat(LoadPoolMetadataFromDb("302")
-                .Select(pool => new HistoryPoolSource(pool, "302", "武器活动", weaponLogs)))
-            .Concat(LoadPoolMetadataFromDb("500")
-                .Select(pool => new HistoryPoolSource(pool, "500", "集录祈愿", chronicledLogs)))
-            .Select(source => TryCreateHistoryPool(source, metadataById, metadataByName))
-            .Where(source => source != null)
-            .Select(source => source!)
-            .ToList();
+        var characterOnePools = LoadPoolMetadataFromDb("301");
+        var characterTwoPools = LoadPoolMetadataFromDb("400");
+        var sources = new List<HistoryPoolSource>();
+
+        if (characterTwoPools.Count == 0)
+        {
+            // Older caches stored simultaneous character wishes as 301 plus a -2 version suffix.
+            // Infer the second wish only until the refreshed metadata cache supplies explicit 400 rows.
+            foreach (var group in characterOnePools.GroupBy(pool => (pool.Start, pool.End)))
+            {
+                var parallelPools = group
+                    .OrderBy(pool => pool.Version, StringComparer.Ordinal)
+                    .ToList();
+                for (var index = 0; index < parallelPools.Count; index++)
+                {
+                    sources.Add(new HistoryPoolSource(
+                        parallelPools[index],
+                        index == 0 ? "301" : "400",
+                        characterLogs));
+                }
+            }
+        }
+        else
+        {
+            sources.AddRange(characterOnePools.Select(pool =>
+                new HistoryPoolSource(pool, "301", characterLogs)));
+            sources.AddRange(characterTwoPools.Select(pool =>
+                new HistoryPoolSource(pool, "400", characterLogs)));
+        }
+
+        sources.AddRange(LoadPoolMetadataFromDb("302")
+            .Select(pool => new HistoryPoolSource(pool, "302", weaponLogs)));
+        sources.AddRange(LoadPoolMetadataFromDb("500")
+            .Select(pool => new HistoryPoolSource(pool, "500", chronicledLogs)));
 
         return sources
-            .GroupBy(source => NormalizeHistoryVersion(source.Source.Pool.Version), StringComparer.Ordinal)
-            .Select(group =>
-            {
-                var orderedPools = group
-                    .OrderBy(source => GetHistoryPoolOrder(source.Source.PoolType))
-                    .ThenBy(source => source.Source.Pool.Version, StringComparer.Ordinal)
-                    .ToList();
-                var startsAt = orderedPools.Min(source => source.StartsAt);
-                var endsAt = orderedPools.Max(source => source.EndsAt);
-                var totalPulls = orderedPools
-                    .GroupBy(source => source.Source.PoolType, StringComparer.Ordinal)
-                    .Sum(poolGroup => CountLogsInPeriod(
-                        poolGroup.First().Source.Logs,
-                        poolGroup.Min(source => source.StartsAt),
-                        poolGroup.Max(source => source.EndsAt)));
-
-                return new HistoryPeriodBuildResult(
-                    startsAt,
-                    new GachaHistoryPeriodDisplayItem
-                    {
-                        Key = $"{group.Key}|{startsAt:O}",
-                        DisplayName = group.Key,
-                        DateRange = $"{startsAt:yyyy-MM-dd} 至 {endsAt:yyyy-MM-dd}",
-                        TotalPulls = $"共 {totalPulls} 抽",
-                        Pools = orderedPools.Select(source => source.Display).ToList()
-                    });
-            })
+            .Select(source => TryCreateHistoryPool(source, metadataById, metadataByName))
+            .Where(result => result != null)
+            .Select(result => result!)
             .OrderByDescending(result => result.StartsAt)
+            .ThenBy(result => GetHistoryPoolOrder(result.PoolType))
             .Select(result => result.Display)
             .ToList();
     }
@@ -138,22 +219,18 @@ public partial class GachaAnalysisModel
         }
 
         var pulls = source.Logs
-            .Where(log => IsLogInPeriod(log, startsAt, endsAt))
+            .Where(log => IsLogForPool(log, source.PoolType) &&
+                          IsLogInPeriod(log, startsAt, endsAt))
             .ToList();
         var featuredItems = source.Pool.Items
             .Select(item =>
             {
-                metadataById.TryGetValue(item.ItemId.ToString(), out var metadata);
-                if (metadata == null && !string.IsNullOrWhiteSpace(item.Name))
-                {
-                    metadataByName.TryGetValue(item.Name, out metadata);
-                }
-
-                var rank = item.RankType;
-                if (rank <= 0 && !int.TryParse(metadata?.Rank, out rank))
-                {
-                    rank = 0;
-                }
+                var metadata = FindItemMetadata(
+                    item.ItemId > 0 ? item.ItemId.ToString() : string.Empty,
+                    item.Name,
+                    metadataById,
+                    metadataByName);
+                var rank = ResolveRank(item.RankType, metadata?.Rank);
 
                 var pullCount = pulls.Count(log =>
                     (item.ItemId > 0 && log.ItemId == item.ItemId.ToString()) ||
@@ -163,9 +240,7 @@ public partial class GachaAnalysisModel
                 return new GachaHistoryItemDisplayItem
                 {
                     Name = item.Name,
-                    ImageUrl = string.IsNullOrWhiteSpace(metadata?.ImgSrc)
-                        ? "ms-appx:///Assets/StoreLogo.png"
-                        : metadata.ImgSrc,
+                    ImageUrl = ResolveImageUrl(metadata?.ImgSrc),
                     Rank = rank,
                     PullCount = pullCount
                 };
@@ -174,47 +249,148 @@ public partial class GachaAnalysisModel
             .ThenBy(item => item.Name, StringComparer.Ordinal)
             .ToList();
 
+        var obtainedItems = pulls
+            .GroupBy(log => !string.IsNullOrWhiteSpace(log.ItemId)
+                ? $"id:{log.ItemId}"
+                : $"name:{log.Name}", StringComparer.Ordinal)
+            .Select(group =>
+            {
+                var first = group.First();
+                var metadata = FindItemMetadata(
+                    first.ItemId,
+                    first.Name,
+                    metadataById,
+                    metadataByName);
+                var rank = ResolveRank(first.RankType, metadata?.Rank);
+                if (rank <= 0) rank = 3;
+
+                return new GachaHistoryItemDisplayItem
+                {
+                    Name = string.IsNullOrWhiteSpace(first.Name)
+                        ? metadata?.Name ?? first.ItemId
+                        : first.Name,
+                    ImageUrl = ResolveImageUrl(metadata?.ImgSrc),
+                    Rank = rank,
+                    PullCount = group.Count()
+                };
+            })
+            .OrderByDescending(item => item.PullCount)
+            .ThenBy(item => item.Name, StringComparer.Ordinal)
+            .ToList();
+
+        var poolName = !string.IsNullOrWhiteSpace(source.Pool.PoolName)
+            ? source.Pool.PoolName
+            : BuildFallbackPoolName(source.PoolType, featuredItems);
+
         return new HistoryPoolBuildResult(
-            source,
+            source.PoolType,
             startsAt,
-            endsAt,
             new GachaHistoryPoolDisplayItem
             {
-                Title = $"{source.PoolName} · {FormatPoolVersion(source.Pool.Version)}",
+                Key = $"{source.PoolType}|{source.Pool.Version}|{startsAt:O}",
+                Version = NormalizeHistoryVersion(source.Pool.Version),
+                Name = poolName,
                 Period = $"{startsAt:yyyy-MM-dd HH:mm} 至 {endsAt:yyyy-MM-dd HH:mm}",
-                TotalPulls = $"当期 {pulls.Count} 抽",
-                FeaturedItems = featuredItems
+                TotalPulls = $"{pulls.Count} 抽",
+                BannerImageUrl = ResolveImageUrl(source.Pool.BannerImageUrl),
+                FeaturedItems = featuredItems,
+                FiveStarItems = obtainedItems.Where(item => item.Rank == 5).ToList(),
+                FourStarItems = obtainedItems.Where(item => item.Rank == 4).ToList(),
+                ThreeStarItems = obtainedItems.Where(item => item.Rank <= 3).ToList()
             });
     }
 
-    private static int CountLogsInPeriod(
-        IReadOnlyList<GachaLogItem> logs,
-        DateTime startsAt,
-        DateTime endsAt) => logs.Count(log => IsLogInPeriod(log, startsAt, endsAt));
+    private static ScrapedMetadata? FindItemMetadata(
+        string itemId,
+        string itemName,
+        IReadOnlyDictionary<string, ScrapedMetadata> metadataById,
+        IReadOnlyDictionary<string, ScrapedMetadata> metadataByName)
+    {
+        if (!string.IsNullOrWhiteSpace(itemId) &&
+            metadataById.TryGetValue(itemId, out var metadataByItemId))
+        {
+            return metadataByItemId;
+        }
+
+        if (!string.IsNullOrWhiteSpace(itemName) &&
+            metadataByName.TryGetValue(itemName, out var metadataByItemName))
+        {
+            return metadataByItemName;
+        }
+
+        return null;
+    }
+
+    private static int ResolveRank(int rank, string? metadataRank)
+    {
+        if (rank > 0) return rank;
+        return int.TryParse(metadataRank, out var parsedRank) ? parsedRank : 0;
+    }
+
+    private static int ResolveRank(string? rank, string? metadataRank)
+    {
+        if (int.TryParse(rank, out var parsedRank)) return parsedRank;
+        return int.TryParse(metadataRank, out parsedRank) ? parsedRank : 0;
+    }
+
+    private static string ResolveImageUrl(string? imageUrl) =>
+        string.IsNullOrWhiteSpace(imageUrl)
+            ? "ms-appx:///Assets/StoreLogo.png"
+            : imageUrl;
+
+    private static string BuildFallbackPoolName(
+        string poolType,
+        IReadOnlyList<GachaHistoryItemDisplayItem> featuredItems)
+    {
+        var fiveStarNames = featuredItems
+            .Where(item => item.Rank == 5)
+            .Select(item => item.Name)
+            .Where(name => !string.IsNullOrWhiteSpace(name))
+            .ToList();
+        if (fiveStarNames.Count > 0) return string.Join(" / ", fiveStarNames);
+
+        return poolType switch
+        {
+            "301" or "400" => "角色活动祈愿",
+            "302" => "武器活动祈愿",
+            "500" => "集录祈愿",
+            _ => "限定祈愿"
+        };
+    }
+
+    private static bool IsLogForPool(GachaLogItem log, string poolType) =>
+        poolType switch
+        {
+            "301" => log.GachaType == "301",
+            "400" => log.GachaType == "400",
+            "302" => log.GachaType == "302",
+            "500" => log.GachaType == "500",
+            _ => false
+        };
 
     private static bool IsLogInPeriod(GachaLogItem log, DateTime startsAt, DateTime endsAt) =>
         DateTime.TryParse(log.Time, out var time) && time >= startsAt && time <= endsAt;
 
     private static string NormalizeHistoryVersion(string version)
     {
+        var match = Regex.Match(version ?? string.Empty, @"\d+\.\d+");
+        if (match.Success) return $"v{match.Value}";
+
         var normalized = Regex.Replace(version ?? string.Empty, @"-\d+$", string.Empty)
-            .Replace("上半", "上", StringComparison.Ordinal)
-            .Replace("下半", "下", StringComparison.Ordinal)
-            .Replace("中", "下", StringComparison.Ordinal)
-            .Replace("混池", "集录", StringComparison.Ordinal)
+            .Replace("上半", string.Empty, StringComparison.Ordinal)
+            .Replace("下半", string.Empty, StringComparison.Ordinal)
+            .Replace("混池", string.Empty, StringComparison.Ordinal)
             .Trim();
         return normalized.StartsWith('v') ? normalized : $"v{normalized}";
     }
 
-    private static string FormatPoolVersion(string version) =>
-        Regex.Replace(version ?? string.Empty, @"-(\d+)$", " · 卡池 $1");
-
     private static int GetHistoryPoolOrder(string poolType) => poolType switch
     {
         "301" => 0,
-        "302" => 1,
-        "500" => 2,
-        _ => 3
+        "400" => 1,
+        "302" => 2,
+        "500" => 3,
+        _ => 4
     };
 
     private void InvalidateHistory()
@@ -237,29 +413,34 @@ public partial class GachaAnalysisModel
         OnPropertyChanged(nameof(ShowHistoryEmpty));
     }
 
-    partial void OnSelectedHistoryPeriodChanged(GachaHistoryPeriodDisplayItem? value)
+    partial void OnSelectedHistoryPoolChanged(GachaHistoryPoolDisplayItem? value)
     {
         OnPropertyChanged(nameof(ShowHistoryContent));
     }
 
-    partial void OnHistoryPeriodsChanged(ObservableCollection<GachaHistoryPeriodDisplayItem> value)
+    partial void OnHistoryPoolsChanged(ObservableCollection<GachaHistoryPoolDisplayItem> value)
     {
         OnPropertyChanged(nameof(ShowHistoryEmpty));
+    }
+
+    partial void OnHideEmptyHistoryPoolsChanged(bool value)
+    {
+        var selectedKey = SelectedHistoryPool?.Key;
+        var selectedVersion = SelectedHistoryPool?.Version;
+        ConfigureHistoryPages(selectedKey, selectedVersion);
+        OnPropertyChanged(nameof(ShowHistoryContent));
+        OnPropertyChanged(nameof(ShowHistoryEmpty));
+        OnPropertyChanged(nameof(HistoryEmptyTitle));
+        OnPropertyChanged(nameof(HistoryEmptyDescription));
     }
 
     private sealed record HistoryPoolSource(
         GachaPoolMetadata Pool,
         string PoolType,
-        string PoolName,
         IReadOnlyList<GachaLogItem> Logs);
 
     private sealed record HistoryPoolBuildResult(
-        HistoryPoolSource Source,
+        string PoolType,
         DateTime StartsAt,
-        DateTime EndsAt,
         GachaHistoryPoolDisplayItem Display);
-
-    private sealed record HistoryPeriodBuildResult(
-        DateTime StartsAt,
-        GachaHistoryPeriodDisplayItem Display);
 }

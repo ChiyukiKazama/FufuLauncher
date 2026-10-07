@@ -24,6 +24,20 @@ public class GachaPoolMetadataEntity
         set;
     } = string.Empty;
 
+    [Column("PoolName")]
+    public string PoolName
+    {
+        get;
+        set;
+    } = string.Empty;
+
+    [Column("BannerImageUrl")]
+    public string BannerImageUrl
+    {
+        get;
+        set;
+    } = string.Empty;
+
     [Column("StartTime")]
     public string StartTime
     {
