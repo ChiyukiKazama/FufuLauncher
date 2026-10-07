@@ -1752,6 +1752,12 @@ Conferma di aver selezionato la directory di installazione contenente l'eseguibi
   <data name="Fps_HashMismatch_Content" xml:space="preserve">
     <value>L'hash del plugin di visualizzazione FPS non corrisponde. Potrebbe essere stato manomesso o danneggiato. Reinstalla il launcher.</value>
   </data>
+  <data name="Fps_Missing_Content" xml:space="preserve">
+    <value>Il file DLL del plugin di visualizzazione FPS non è stato trovato. Potrebbe non essere installato, essere stato eliminato per errore o bloccato dall'antivirus. Usa "Ripara Plugin Visualizzazione FPS" nel menu Funzioni e riprova.</value>
+  </data>
+  <data name="Fps_Missing_Title" xml:space="preserve">
+    <value>Plugin FPS mancante</value>
+  </data>
   <data name="Fps_Repair_Fail_Title" xml:space="preserve">
     <value>Riparazione Fallita</value>
   </data>

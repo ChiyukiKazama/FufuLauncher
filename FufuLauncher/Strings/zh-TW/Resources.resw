@@ -54,6 +54,12 @@
   <data name="Fps_HashMismatch_Content" xml:space="preserve">
     <value>幀數顯示插件雜湊不符，可能已被竄改或損壞，請重新安裝啟動器</value>
   </data>
+  <data name="Fps_Missing_Content" xml:space="preserve">
+    <value>未找到FPS插件DLL檔案，插件可能未安裝、被誤刪或被防毒軟體攔截。請點擊功能選單中的「修復FPS顯示插件」後重試。</value>
+  </data>
+  <data name="Fps_Missing_Title" xml:space="preserve">
+    <value>FPS插件缺失</value>
+  </data>
   <data name="Fps_Repair_Fail_Title" xml:space="preserve">
     <value>修復失敗</value>
   </data>

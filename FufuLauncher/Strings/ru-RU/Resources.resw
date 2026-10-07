@@ -54,6 +54,12 @@
   <data name="Fps_HashMismatch_Content" xml:space="preserve">
     <value>Хэш плагина отображения FPS не совпадает. Возможно, он был изменён или повреждён. Переустановите лаунчер.</value>
   </data>
+  <data name="Fps_Missing_Content" xml:space="preserve">
+    <value>DLL-файл плагина отображения FPS не найден. Возможно, он не установлен, был случайно удалён или заблокирован антивирусом. Воспользуйтесь пунктом «Восстановить FPS плагин» в меню функций и повторите попытку.</value>
+  </data>
+  <data name="Fps_Missing_Title" xml:space="preserve">
+    <value>Плагин FPS не найден</value>
+  </data>
   <data name="Fps_Repair_Fail_Title" xml:space="preserve">
     <value>Ошибка восстановления</value>
   </data>

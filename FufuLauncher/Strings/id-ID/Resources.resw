@@ -54,6 +54,12 @@
   <data name="Fps_HashMismatch_Content" xml:space="preserve">
     <value>Hash plugin penampil FPS tidak cocok. Plugin mungkin telah diubah atau rusak. Silakan instal ulang launcher.</value>
   </data>
+  <data name="Fps_Missing_Content" xml:space="preserve">
+    <value>File DLL plugin penampil FPS tidak ditemukan. Plugin mungkin belum terpasang, terhapus secara tidak sengaja, atau diblokir oleh antivirus. Gunakan "Perbaiki Plugin Tampilan FPS" di menu Fungsi lalu coba lagi.</value>
+  </data>
+  <data name="Fps_Missing_Title" xml:space="preserve">
+    <value>Plugin FPS Tidak Ditemukan</value>
+  </data>
   <data name="Fps_Repair_Fail_Title" xml:space="preserve">
     <value>Perbaikan Gagal</value>
   </data>

@@ -54,6 +54,12 @@
   <data name="Fps_HashMismatch_Content" xml:space="preserve">
     <value>Le hash du plugin d'affichage FPS ne correspond pas. Il a peut-être été modifié ou corrompu. Veuillez réinstaller le lanceur.</value>
   </data>
+  <data name="Fps_Missing_Content" xml:space="preserve">
+    <value>Fichier DLL du plugin FPS introuvable. Il n'est peut-être pas installé, a été supprimé par erreur ou bloqué par un antivirus. Utilisez « Réparer le plugin FPS » dans le menu Fonctions, puis réessayez.</value>
+  </data>
+  <data name="Fps_Missing_Title" xml:space="preserve">
+    <value>Plugin FPS manquant</value>
+  </data>
   <data name="Fps_Repair_Fail_Title" xml:space="preserve">
     <value>Échec de la réparation</value>
   </data>

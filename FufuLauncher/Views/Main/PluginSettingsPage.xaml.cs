@@ -38,6 +38,8 @@ public sealed partial class PluginSettingsPage : Page
         MainVM = App.GetService<MainViewModel>();
         ControlPanelVM = App.GetService<ControlPanelModel>();
         InitializeComponent();
+        ViewModel.Settings.CollectionChanged += OnSettingItemsChanged;
+        ViewModel.PinnedSettings.CollectionChanged += OnSettingItemsChanged;
         SettingsViewSource.Source = ViewModel.SettingGroups;
         Loaded += PluginSettingsPage_Loaded;
         Unloaded += PluginSettingsPage_Unloaded;
@@ -58,6 +60,7 @@ public sealed partial class PluginSettingsPage : Page
     {
         _isInitializing = true;
         EntranceStoryboard.Begin();
+        ResetSettingEntranceAnimations(true);
         ViewModel.ActivateConfigurationLoading();
         StartMainPluginWatcher();
         ShowMainPluginMissingWarningIfNeeded();
@@ -94,6 +97,7 @@ public sealed partial class PluginSettingsPage : Page
     private void PluginSettingsPage_Unloaded(object sender, RoutedEventArgs e)
     {
         ViewModel.SuspendConfigurationLoading();
+        ResetSettingEntranceAnimations(false);
         ResetSettingsSelection();
         _mainPluginWatcher?.Dispose();
         _mainPluginWatcher = null;
@@ -121,6 +125,7 @@ public sealed partial class PluginSettingsPage : Page
     protected override void OnNavigatedFrom(Microsoft.UI.Xaml.Navigation.NavigationEventArgs e)
     {
         ViewModel.SuspendConfigurationLoading();
+        ResetSettingEntranceAnimations(false);
         base.OnNavigatedFrom(e);
     }
 

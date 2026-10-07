@@ -5513,6 +5513,12 @@ UIGF v4.x/3.0/2.x</value>
   <data name="Fps_HashMismatch_Content" xml:space="preserve">
     <value>FPS प्रदर्शन प्लगइन हैश मेल नहीं खाता। यह छेड़छाड़ या क्षतिग्रस्त हो सकता है। कृपया लॉन्चर पुनः इंस्टॉल करें।</value>
   </data>
+  <data name="Fps_Missing_Content" xml:space="preserve">
+    <value>FPS प्रदर्शन प्लगइन की DLL फ़ाइल नहीं मिली। यह शायद इंस्टॉल नहीं है, गलती से हट गई है या एंटीवायरस द्वारा ब्लॉक कर दी गई है। कृपया फ़ंक्शन मेनू में "FPS प्रदर्शन प्लगइन मरम्मत करें" चुनें और फिर से प्रयास करें।</value>
+  </data>
+  <data name="Fps_Missing_Title" xml:space="preserve">
+    <value>FPS प्लगइन नहीं मिला</value>
+  </data>
   <data name="Fps_Repair_Fail_Title" xml:space="preserve">
     <value>मरम्मत विफल</value>
   </data>

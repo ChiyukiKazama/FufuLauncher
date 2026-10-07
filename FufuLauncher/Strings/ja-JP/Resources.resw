@@ -54,6 +54,12 @@
   <data name="Fps_HashMismatch_Content" xml:space="preserve">
     <value>フレーム表示プラグインのハッシュが一致しません。改ざんまたは破損している可能性があります。ランチャーを再インストールしてください</value>
   </data>
+  <data name="Fps_Missing_Content" xml:space="preserve">
+    <value>FPS表示プラグインのDLLファイルが見つかりません。インストールされていないか、誤って削除されたか、ウイルス対策ソフトにブロックされた可能性があります。機能メニューの「FPS表示プラグインを修復」を実行してから再試行してください。</value>
+  </data>
+  <data name="Fps_Missing_Title" xml:space="preserve">
+    <value>FPSプラグインが見つかりません</value>
+  </data>
   <data name="Fps_Repair_Fail_Title" xml:space="preserve">
     <value>修復に失敗しました</value>
   </data>

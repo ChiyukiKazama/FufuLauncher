@@ -568,12 +568,16 @@
                                 PointerCaptureLost="OnSettingsPointerCaptureLost"
                                 PointerCanceled="OnSettingsPointerCaptureLost">
                 <GridView x:Name="SettingsGrid"
+                          ContainerContentChanging="OnSettingContainerContentChanging"
                           ItemsSource="{Binding Source={StaticResource SettingsViewSource}}"
                           ItemTemplateSelector="{StaticResource SettingSelector}"
                           ItemContainerStyle="{StaticResource SettingGridViewItemStyle}"
                           SelectionMode="None" IsItemClickEnabled="False" HorizontalAlignment="Stretch"
                           ScrollViewer.VerticalScrollMode="Enabled" ScrollViewer.VerticalScrollBarVisibility="Auto"
                           ScrollViewer.HorizontalScrollMode="Disabled" ScrollViewer.HorizontalScrollBarVisibility="Disabled">
+                    <GridView.ItemContainerTransitions>
+                        <TransitionCollection />
+                    </GridView.ItemContainerTransitions>
                     <GridView.ItemsPanel>
                         <ItemsPanelTemplate>
                             <ItemsWrapGrid Orientation="Horizontal" GroupHeaderPlacement="Top" GroupPadding="0" />

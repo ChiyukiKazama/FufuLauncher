@@ -915,6 +915,12 @@
   <data name="Fps_HashMismatch_Content" xml:space="preserve">
     <value>帧数显示插件哈希不匹配，可能已被篡改或损坏，请重新安装启动器</value>
   </data>
+  <data name="Fps_Missing_Content" xml:space="preserve">
+    <value>未找到FPS插件DLL文件，插件可能未安装、被误删或被杀毒软件拦截。请点击功能菜单中的“修复FPS显示插件”后重试。</value>
+  </data>
+  <data name="Fps_Missing_Title" xml:space="preserve">
+    <value>FPS插件缺失</value>
+  </data>
   <data name="Fps_Repair_Fail_Title" xml:space="preserve">
     <value>修复失败</value>
   </data>

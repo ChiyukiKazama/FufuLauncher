@@ -82,11 +82,15 @@ public partial class PluginSettingsViewModel
         }
     }
 
+    private static string GetFpsPluginEnabledPath() => Path.Combine(AppContext.BaseDirectory, "Plugins", "FPS", "FPS.dll");
+
+    private static string GetFpsPluginDisabledPath() =>
+        Path.Combine(AppContext.BaseDirectory, "Plugins", "FPS", "FPS.disabled");
+
     private void CheckPluginStates()
     {
-        string fpsDir = Path.Combine(AppContext.BaseDirectory, "Plugins", "FPS");
-        string fpsEnabledPath = Path.Combine(fpsDir, "FPS.dll");
-        string fpsDisabledPath = Path.Combine(fpsDir, "FPS.disabled");
+        string fpsEnabledPath = GetFpsPluginEnabledPath();
+        string fpsDisabledPath = GetFpsPluginDisabledPath();
 
         string mainEnabledPath = GetMainPluginEnabledPath();
         string mainDisabledPath = GetMainPluginDisabledPath();
@@ -136,6 +140,13 @@ public partial class PluginSettingsViewModel
             return;
         }
 
+        if (enable && IsMainPluginDllMissing())
+        {
+            OnPropertyChanged(nameof(IsMainPluginEnabled));
+            NotifyMainPluginDllMissing();
+            return;
+        }
+
         string mainDir = GetMainPluginDirectory();
         string enabledPath = GetMainPluginEnabledPath();
         string disabledPath = GetMainPluginDisabledPath();
@@ -178,9 +189,15 @@ public partial class PluginSettingsViewModel
 
     private void ChangeFpsPluginState(bool enable)
     {
-        string fpsDir = Path.Combine(AppContext.BaseDirectory, "Plugins", "FPS");
-        string enabledPath = Path.Combine(fpsDir, "FPS.dll");
-        string disabledPath = Path.Combine(fpsDir, "FPS.disabled");
+        string enabledPath = GetFpsPluginEnabledPath();
+        string disabledPath = GetFpsPluginDisabledPath();
+
+        if (enable && IsFpsPluginDllMissing())
+        {
+            OnPropertyChanged(nameof(IsFpsPluginEnabled));
+            NotifyFpsPluginDllMissing();
+            return;
+        }
 
         try
         {
@@ -221,6 +238,29 @@ public partial class PluginSettingsViewModel
             FileLockHelper.GetLockedFileMessage(lockedFilePath),
             NotificationType.Error,
             8000));
+    }
+
+    private void NotifyMainPluginDllMissing()
+    {
+        bool lightweight = IsLightweightMode;
+        WeakReferenceMessenger.Default.Send(new NotificationMessage(
+            lightweight
+                ? "LightweightMode_LiteMissing_Title".GetLocalized()
+                : "Plugin_MainMissing_Title".GetLocalized(),
+            lightweight
+                ? "LightweightMode_LiteMissing_Content".GetLocalized()
+                : "Plugin_MainMissing_Content".GetLocalized(),
+            NotificationType.Error,
+            6000));
+    }
+
+    private static void NotifyFpsPluginDllMissing()
+    {
+        WeakReferenceMessenger.Default.Send(new NotificationMessage(
+            "Fps_Missing_Title".GetLocalized(),
+            "Fps_Missing_Content".GetLocalized(),
+            NotificationType.Error,
+            6000));
     }
 
     public void RefreshPluginStates()
@@ -299,6 +339,11 @@ public partial class PluginSettingsViewModel
     public bool IsMainPluginDllMissing()
     {
         return !File.Exists(GetMainPluginEnabledPath()) && !File.Exists(GetMainPluginDisabledPath());
+    }
+
+    public bool IsFpsPluginDllMissing()
+    {
+        return !File.Exists(GetFpsPluginEnabledPath()) && !File.Exists(GetFpsPluginDisabledPath());
     }
 
     public bool IsPluginCorrupted()
