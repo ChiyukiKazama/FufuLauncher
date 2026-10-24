@@ -15,7 +15,7 @@ public partial class MainWindow : Window
 {
     #region Fields & Constants
 
-    private const string AppVersion = "1.7.1.3";
+    private const string AppVersion = "1.7.1.5";
 
     private static readonly HttpClient _httpClient = new() 
     { 
