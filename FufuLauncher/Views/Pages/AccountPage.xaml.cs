@@ -107,6 +107,13 @@ public sealed partial class AccountPage : Page
         }
     }
 
+    internal async Task RefreshForSidebarSwitchAsync(bool accountChanged)
+    {
+        if (accountChanged)
+            await ViewModel.RefreshDataAsync();
+        await ViewModel.LoadUserInfoAsync();
+    }
+
     private void OnViewModelPropertyChanged(object sender, PropertyChangedEventArgs e)
     {
         if (e.PropertyName == nameof(AccountViewModel.IsLoggedIn))

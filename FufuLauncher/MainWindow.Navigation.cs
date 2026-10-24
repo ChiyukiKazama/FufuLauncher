@@ -442,6 +442,7 @@ public sealed partial class MainWindow
             await _accountManager.SwitchAccountAsync(account.Id);
             WeakReferenceMessenger.Default.Send(new AccountChangedMessage());
             RefreshAccountMenu();
+            await RefreshAccountPageAsync(accountChanged: true);
         }
         catch (Exception ex)
         {
@@ -488,11 +489,18 @@ public sealed partial class MainWindow
         {
             await App.GetService<GameRoleService>().SelectAsync(accountId, role);
             RefreshAccountMenu();
+            await RefreshAccountPageAsync(accountChanged: false);
         }
         catch (Exception ex)
         {
             DebugLog.Info("MainWindow.Navigation", $"[RoleSwitch] {ex.Message}");
         }
+    }
+
+    private async Task RefreshAccountPageAsync(bool accountChanged)
+    {
+        if (ContentFrame.Content is Views.AccountPage accountPage)
+            await accountPage.RefreshForSidebarSwitchAsync(accountChanged);
     }
 
     private async void AccountFlyoutGoToAccount_Click(object sender, RoutedEventArgs e)
