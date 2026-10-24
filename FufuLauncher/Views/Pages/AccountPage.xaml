@@ -295,16 +295,20 @@
                                         <ColumnDefinition Width="Auto" />
                                     </Grid.ColumnDefinitions>
 
-                                    <Ellipse
-                                        x:Name="AvatarPicture"
+                                    <Grid
                                         Width="84"
-                                        Height="84">
-                                        <Ellipse.Fill>
-                                            <ImageBrush
-                                                ImageSource="{x:Bind ViewModel.CurrentAccount.AvatarUrl, Mode=OneWay}"
-                                                Stretch="UniformToFill" />
-                                        </Ellipse.Fill>
-                                    </Ellipse>
+                                        Height="84"
+                                        CornerRadius="42">
+                                        <Image
+                                            x:Name="AvatarPicture"
+                                            Width="84"
+                                            Height="84"
+                                            Source="{x:Bind ViewModel.CurrentAccount.AvatarUrl, Mode=OneWay}"
+                                            Stretch="UniformToFill"
+                                            helpers:ImageFadeInHelper.IsFadeInEnabled="True"
+                                            helpers:ImageFadeInHelper.DurationMilliseconds="260"
+                                            helpers:ImageFadeInHelper.EnableRetry="False" />
+                                    </Grid>
 
                                     <Grid Grid.Column="1" VerticalAlignment="Center" RowSpacing="6" ColumnSpacing="16">
                                         <Grid.RowDefinitions>
