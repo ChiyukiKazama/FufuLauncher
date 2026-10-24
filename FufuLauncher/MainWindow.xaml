@@ -387,16 +387,22 @@
                             </Flyout>
                         </Button.Flyout>
                         <Grid Width="32" Height="32" IsHitTestVisible="False">
-                            <PersonPicture x:Name="AccountNavAvatar"
-                                           Width="32"
-                                           Height="32"
-                                           Visibility="Collapsed" />
                             <FontIcon x:Name="AccountNavPlaceholderIcon"
                                       HorizontalAlignment="Center"
                                       VerticalAlignment="Center"
                                       FontFamily="{StaticResource ActionIconFont}"
                                       FontSize="24"
-                                      Glyph="&#xE77B;" />
+                                      Glyph="&#xE77B;"
+                                      AutomationProperties.AccessibilityView="Raw" />
+                            <Grid CornerRadius="16">
+                                <Image x:Name="AccountNavAvatar"
+                                       Width="32"
+                                       Height="32"
+                                       Stretch="UniformToFill"
+                                       helpers:ImageFadeInHelper.IsFadeInEnabled="True"
+                                       helpers:ImageFadeInHelper.DurationMilliseconds="260"
+                                       helpers:ImageFadeInHelper.EnableRetry="False" />
+                            </Grid>
                         </Grid>
                     </Button>
                     <TextBlock x:Name="AccountNavText"

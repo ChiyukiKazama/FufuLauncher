@@ -25,9 +25,10 @@ namespace FufuLauncher;
 public sealed partial class MainWindow
 {
     private Action? _accountFlyoutClosedAction;
-    private ImageSource? _accountFlyoutAvatarSource;
     private string? _accountAvatarUrl;
-    private bool _navAvatarPending;
+    private BitmapImage? _navAvatarImage;
+
+    private static readonly Uri DefaultAccountAvatarUri = new("ms-appx:///Assets/DefaultAvatar.png");
 
     #region Navigation & Layout
 
@@ -273,14 +274,8 @@ public sealed partial class MainWindow
         var entry = _accountManager.GetActiveAccountEntry();
         if (entry == null)
         {
-            _accountFlyoutAvatarSource = null;
             _accountAvatarUrl = null;
-            _navAvatarPending = false;
-            AccountNavAvatar.ProfilePicture = null;
-            AccountNavAvatar.Visibility = Visibility.Collapsed;
-            AccountNavAvatar.Opacity = 0.0;
-            AccountNavPlaceholderIcon.Visibility = Visibility.Visible;
-            AccountNavPlaceholderIcon.Opacity = 1.0;
+            ResetNavAvatar();
             AccountNavText.Text = "Account_MenuTitle".GetLocalized();
             AccountFlyoutProfilePanel.Visibility = Visibility.Collapsed;
             AccountFlyoutGuestPanel.Visibility = Visibility.Visible;
@@ -294,16 +289,14 @@ public sealed partial class MainWindow
         if (string.IsNullOrWhiteSpace(nickname))
             nickname = string.Format("Account_User_Format".GetLocalized(), entry.Stuid);
 
-        var isNewAvatar = _accountFlyoutAvatarSource == null ||
-                          !string.Equals(_accountAvatarUrl, entry.AvatarUrl, StringComparison.Ordinal);
-        if (isNewAvatar)
+        if (_navAvatarImage == null ||
+            !string.Equals(_accountAvatarUrl, entry.AvatarUrl, StringComparison.Ordinal))
         {
-            _accountFlyoutAvatarSource = CreateAccountAvatarSource(entry.AvatarUrl);
             _accountAvatarUrl = entry.AvatarUrl;
+            ShowNavAvatar(entry.AvatarUrl);
+            ApplyFlyoutAvatar(entry.AvatarUrl);
         }
 
-        ShowNavAvatar(_accountFlyoutAvatarSource, isNewAvatar);
-        AccountFlyoutAvatar.ProfilePicture = _accountFlyoutAvatarSource;
         AccountNavText.Text = nickname;
         AccountFlyoutNickname.Text = nickname;
         AccountFlyoutCommunityUid.Text = FormatAccountValue(entry.Stuid);
@@ -324,89 +317,83 @@ public sealed partial class MainWindow
     private static string FormatAccountValue(string? value) =>
         string.IsNullOrWhiteSpace(value) ? "Common_None".GetLocalized() : value;
 
-    private static BitmapImage CreateAccountAvatarSource(string? avatarUrl)
+    private static Uri ResolveAccountAvatarUri(string? avatarUrl)
     {
-        var fallback = new Uri("ms-appx:///Assets/DefaultAvatar.png");
-        var uri = !string.IsNullOrWhiteSpace(avatarUrl) &&
-                  Uri.TryCreate(avatarUrl, UriKind.Absolute, out var parsed)
-            ? parsed
-            : fallback;
-        var image = new BitmapImage(uri);
-        if (uri != fallback)
+        if (!string.IsNullOrWhiteSpace(avatarUrl) &&
+            Uri.TryCreate(avatarUrl, UriKind.Absolute, out var parsed))
         {
-            image.ImageFailed += (_, _) =>
-            {
-                if (image.UriSource != fallback)
-                    image.UriSource = fallback;
-            };
+            return parsed;
         }
 
-        return image;
+        return DefaultAccountAvatarUri;
     }
 
-    private void ShowNavAvatar(ImageSource? source, bool animate)
+    private void ShowNavAvatar(string? avatarUrl)
     {
-        AccountNavAvatar.ProfilePicture = source;
+        DetachNavAvatarImage();
 
-        if (!animate || source is not BitmapImage bitmap)
+        var image = new BitmapImage();
+        image.ImageOpened += OnNavAvatarImageOpened;
+        image.ImageFailed += OnNavAvatarImageFailed;
+        _navAvatarImage = image;
+
+        AccountNavPlaceholderIcon.Visibility = Visibility.Visible;
+        AccountNavAvatar.Source = image;
+
+        image.UriSource = ResolveAccountAvatarUri(avatarUrl);
+    }
+
+    private void ApplyFlyoutAvatar(string? avatarUrl)
+    {
+        var image = new BitmapImage();
+        image.ImageFailed += (_, _) =>
         {
-            if (_navAvatarPending) return;
-            AccountNavAvatar.Opacity = 1.0;
-            AccountNavAvatar.Visibility = Visibility.Visible;
+            if (!ReferenceEquals(AccountFlyoutAvatar.ProfilePicture, image)) return;
+            if (image.UriSource != DefaultAccountAvatarUri)
+                image.UriSource = DefaultAccountAvatarUri;
+        };
+
+        AccountFlyoutAvatar.ProfilePicture = image;
+        image.UriSource = ResolveAccountAvatarUri(avatarUrl);
+    }
+
+    private void OnNavAvatarImageOpened(object sender, RoutedEventArgs e)
+    {
+        if (ReferenceEquals(sender, _navAvatarImage))
             AccountNavPlaceholderIcon.Visibility = Visibility.Collapsed;
-            AccountNavPlaceholderIcon.Opacity = 1.0;
+    }
+
+    private void OnNavAvatarImageFailed(object sender, ExceptionRoutedEventArgs e)
+    {
+        if (sender is not BitmapImage image || !ReferenceEquals(image, _navAvatarImage))
+            return;
+
+        if (image.UriSource != DefaultAccountAvatarUri)
+        {
+            image.UriSource = DefaultAccountAvatarUri;
             return;
         }
 
-        AccountNavAvatar.Visibility = Visibility.Visible;
-        AccountNavAvatar.Opacity = 0.0;
+        DebugLog.Info("MainWindow.Navigation", $"[NavAvatar] Avatar image failed to load: {e.ErrorMessage}");
+        ResetNavAvatar();
+    }
+
+    private void ResetNavAvatar()
+    {
+        DetachNavAvatarImage();
+
+        AccountNavAvatar.Source = null;
         AccountNavPlaceholderIcon.Visibility = Visibility.Visible;
-        AccountNavPlaceholderIcon.Opacity = 1.0;
-        _navAvatarPending = true;
-
-        void OnImageOpened(object sender, RoutedEventArgs e)
-        {
-            bitmap.ImageOpened -= OnImageOpened;
-            if (!ReferenceEquals(AccountNavAvatar.ProfilePicture, source)) return;
-            _navAvatarPending = false;
-            AnimateNavAvatarReveal();
-        }
-
-        bitmap.ImageOpened += OnImageOpened;
     }
 
-    private void AnimateNavAvatarReveal()
+    private void DetachNavAvatarImage()
     {
-        var storyboard = new Storyboard();
-        var duration = new Duration(TimeSpan.FromMilliseconds(300));
-        var easing = new CubicEase { EasingMode = EasingMode.EaseInOut };
+        if (_navAvatarImage == null)
+            return;
 
-        storyboard.Children.Add(CreateOpacityAnimation(AccountNavAvatar, 1.0, duration, easing));
-        storyboard.Children.Add(CreateOpacityAnimation(AccountNavPlaceholderIcon, 0.0, duration, easing));
-
-        storyboard.Completed += (_, _) =>
-        {
-            AccountNavPlaceholderIcon.Visibility = Visibility.Collapsed;
-            AccountNavPlaceholderIcon.Opacity = 1.0;
-        };
-
-        storyboard.Begin();
-    }
-
-    private static DoubleAnimation CreateOpacityAnimation(DependencyObject target, double to, Duration duration,
-        EasingFunctionBase easing)
-    {
-        var animation = new DoubleAnimation
-        {
-            To = to,
-            Duration = duration,
-            EasingFunction = easing,
-            EnableDependentAnimation = true
-        };
-
-        Storyboard.SetTarget(animation, target);
-        Storyboard.SetTargetProperty(animation, "Opacity");
-        return animation;
+        _navAvatarImage.ImageOpened -= OnNavAvatarImageOpened;
+        _navAvatarImage.ImageFailed -= OnNavAvatarImageFailed;
+        _navAvatarImage = null;
     }
 
     private void AccountSwitchButton_Click(object sender, RoutedEventArgs e)
