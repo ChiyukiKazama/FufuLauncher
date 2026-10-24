@@ -8966,7 +8966,7 @@ UIGF v4.x/3.0/2.x</value>
     <value>以下項目無效：{0}</value>
   </data>
   <data name="Mcp_IpRulesEmpty" xml:space="preserve">
-    <value>允許名單不能為空。</value>
+    <value>允許名單為空時，僅允許本機連線。</value>
   </data>
   <data name="Mcp_AuditSection" xml:space="preserve">
     <value>稽核日誌</value>

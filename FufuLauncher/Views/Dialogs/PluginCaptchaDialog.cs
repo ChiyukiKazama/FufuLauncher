@@ -221,7 +221,7 @@ internal static class PluginCaptchaDialog
                         string raw;
                         try
                         {
-                            raw = await webView.CoreWebView2.ExecuteScriptAsync("document.body.textContent");
+                            raw = await coreWebView.ExecuteScriptAsync("document.body.textContent");
                         }
                         catch
                         {

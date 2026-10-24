@@ -164,6 +164,7 @@ public sealed class McpSettingsViewModel : ObservableObject
                 return;
             }
 
+            RaiseLayout();
             _ = ApplyIpFilterAsync();
         }
     }
@@ -171,7 +172,13 @@ public sealed class McpSettingsViewModel : ObservableObject
     public string IpRulesText
     {
         get => _ipRulesText;
-        set => SetProperty(ref _ipRulesText, value);
+        set
+        {
+            if (SetProperty(ref _ipRulesText, value))
+            {
+                OnPropertyChanged(nameof(IpRulesHintVisibility));
+            }
+        }
     }
 
     public string IpError
@@ -183,7 +190,13 @@ public sealed class McpSettingsViewModel : ObservableObject
     public Visibility IpErrorVisibility
     {
         get => _ipErrorVisibility;
-        private set => SetProperty(ref _ipErrorVisibility, value);
+        private set
+        {
+            if (SetProperty(ref _ipErrorVisibility, value))
+            {
+                OnPropertyChanged(nameof(IpEditorVisibility));
+            }
+        }
     }
 
     public string AuditSummary
@@ -226,7 +239,15 @@ public sealed class McpSettingsViewModel : ObservableObject
 
     public Visibility AuthOffWarningVisibility => _requireAuth ? Visibility.Collapsed : Visibility.Visible;
 
-    public Visibility IpEditorVisibility => _ipFilterEnabled ? Visibility.Visible : Visibility.Collapsed;
+    public Visibility IpEditorVisibility =>
+        _ipFilterEnabled || _ipErrorVisibility == Visibility.Visible
+            ? Visibility.Visible
+            : Visibility.Collapsed;
+
+    public Visibility IpRulesHintVisibility =>
+        _ipFilterEnabled && _ipModeIndex == 0 && string.IsNullOrWhiteSpace(_ipRulesText)
+            ? Visibility.Visible
+            : Visibility.Collapsed;
 
     public async Task InitializeAsync()
     {
@@ -500,6 +521,7 @@ public sealed class McpSettingsViewModel : ObservableObject
         OnPropertyChanged(nameof(CustomTokenVisibility));
         OnPropertyChanged(nameof(AuthOffWarningVisibility));
         OnPropertyChanged(nameof(IpEditorVisibility));
+        OnPropertyChanged(nameof(IpRulesHintVisibility));
     }
 
     private void DispatchRefreshStatus()

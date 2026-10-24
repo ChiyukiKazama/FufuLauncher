@@ -8969,7 +8969,7 @@ Détails : {0}</value>
     <value>Entrées invalides : {0}</value>
   </data>
   <data name="Mcp_IpRulesEmpty" xml:space="preserve">
-    <value>La liste d'autorisation ne peut pas être vide.</value>
+    <value>Si la liste d'autorisation est vide, seul cet ordinateur peut se connecter.</value>
   </data>
   <data name="Mcp_AuditSection" xml:space="preserve">
     <value>Journal d'audit</value>

@@ -8966,7 +8966,7 @@ Bilibili 서버 지원, 미호요 커뮤니티 로그인 불필요</value>
     <value>잘못된 항목: {0}</value>
   </data>
   <data name="Mcp_IpRulesEmpty" xml:space="preserve">
-    <value>허용 목록은 비워 둘 수 없습니다.</value>
+    <value>허용 목록이 비어 있으면 이 컴퓨터에서만 연결할 수 있습니다.</value>
   </data>
   <data name="Mcp_AuditSection" xml:space="preserve">
     <value>감사 로그</value>

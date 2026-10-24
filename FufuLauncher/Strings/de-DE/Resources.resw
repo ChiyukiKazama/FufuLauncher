@@ -8970,7 +8970,7 @@ Details: {0}</value>
     <value>Ungültige Einträge: {0}</value>
   </data>
   <data name="Mcp_IpRulesEmpty" xml:space="preserve">
-    <value>Die Positivliste darf nicht leer sein.</value>
+    <value>Bei leerer Positivliste kann nur dieser Rechner verbinden.</value>
   </data>
   <data name="Mcp_AuditSection" xml:space="preserve">
     <value>Prüfprotokoll</value>

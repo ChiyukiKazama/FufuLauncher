@@ -9321,7 +9321,7 @@ Details: {0}</value>
     <value>Invalid entries: {0}</value>
   </data>
   <data name="Mcp_IpRulesEmpty" xml:space="preserve">
-    <value>The allow list cannot be empty.</value>
+    <value>With an empty allow list, only this machine can connect.</value>
   </data>
   <data name="Mcp_AuditSection" xml:space="preserve">
     <value>Audit log</value>

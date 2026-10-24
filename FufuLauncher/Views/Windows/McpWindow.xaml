@@ -310,6 +310,10 @@
                                              LostFocus="OnIpRulesLostFocus" />
                                     <TextBlock Text="{helpers:Loc Key=Mcp_IpRulesCaption}"
                                                Style="{StaticResource RowCaptionStyle}" />
+                                    <TextBlock Text="{helpers:Loc Key=Mcp_IpRulesEmpty}"
+                                               Style="{StaticResource RowCaptionStyle}"
+                                               Foreground="{ThemeResource SystemFillColorCautionBrush}"
+                                               Visibility="{x:Bind ViewModel.IpRulesHintVisibility, Mode=OneWay}" />
                                     <TextBlock Text="{x:Bind ViewModel.IpError, Mode=OneWay}"
                                                Style="{StaticResource ErrorTextStyle}"
                                                Visibility="{x:Bind ViewModel.IpErrorVisibility, Mode=OneWay}" />
@@ -474,9 +478,7 @@
                                 <ColumnDefinition Width="*" />
                                 <ColumnDefinition Width="Auto" />
                             </Grid.ColumnDefinitions>
-                            <StackPanel Spacing="2">
-                                <TextBlock Text="{helpers:Loc Key=Mcp_AuditWindowTitle}"
-                                           Style="{StaticResource RowTitleStyle}" />
+                            <StackPanel Spacing="2" VerticalAlignment="Center">
                                 <TextBlock Text="{x:Bind ViewModel.AuditSummary, Mode=OneWay}"
                                            Style="{StaticResource RowCaptionStyle}" />
                             </StackPanel>

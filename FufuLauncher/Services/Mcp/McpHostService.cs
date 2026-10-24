@@ -410,11 +410,6 @@ public sealed class McpHostService
                 string.Join(", ", invalid)));
         }
 
-        if (enabled && allowMode && rules.Count == 0)
-        {
-            return (false, "Mcp_IpRulesEmpty".GetLocalized());
-        }
-
         lock (_stateLock)
         {
             _ipFilterEnabled = enabled;

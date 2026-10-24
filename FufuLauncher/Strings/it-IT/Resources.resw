@@ -8976,7 +8976,7 @@ Dettagli: {0}</value>
     <value>Voci non valide: {0}</value>
   </data>
   <data name="Mcp_IpRulesEmpty" xml:space="preserve">
-    <value>La lista consentita non può essere vuota.</value>
+    <value>Con una lista consentita vuota, può connettersi solo questo computer.</value>
   </data>
   <data name="Mcp_AuditSection" xml:space="preserve">
     <value>Registro di audit</value>
