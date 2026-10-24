@@ -16,6 +16,7 @@ namespace FufuLauncher.Services.GameServer;
 public sealed class GameChannelSdkService
 {
     private const string SdkVersionFileName = "sdk_pkg_version";
+    private const string InstalledSdkStateFileName = ".fufu-channel-sdk.json";
     private static readonly KeyedSemaphoreSlim CacheLocks = new();
     private static readonly JsonSerializerOptions VersionJsonOptions = new() { NumberHandling = JsonNumberHandling.AllowReadingFromString };
     private static readonly string[] LegacySdkPaths =
@@ -56,13 +57,8 @@ public sealed class GameChannelSdkService
                              general.TryGetValue("channel", out string? channel) && channel == ((int)scheme.Channel).ToString() &&
                              general.TryGetValue("sub_channel", out string? subChannel) && subChannel == ((int)scheme.SubChannel).ToString() &&
                              general.TryGetValue("cps", out string? cps) && cps.Equals(scheme.Cps, StringComparison.OrdinalIgnoreCase);
-        if (current.Equals(scheme) && configMatches &&
-            await IsInstalledSdkValidAsync(gameDir, scheme, token).ConfigureAwait(false))
-        {
-            return;
-        }
-
-        await PrepareAndInstallAsync(gameDir, scheme, true, () => configuration.ApplyScheme(gameDir, scheme),
+        await PrepareAndInstallAsync(gameDir, scheme, true,
+            configMatches ? null : () => configuration.ApplyScheme(gameDir, scheme),
             print, token, onBytesTransferred).ConfigureAwait(false);
         configuration.BackupConfig(gameDir, scheme.IsOversea);
     }
@@ -75,16 +71,9 @@ public sealed class GameChannelSdkService
         Action<string>? print = null, CancellationToken token = default, Action<long>? onBytesTransferred = null)
         => PrepareAndInstallAsync(gameDir, scheme, false, null, print, token, onBytesTransferred);
 
-    public async Task VerifyAndRepairChannelSdkAsync(string gameDir, GameServerScheme scheme,
+    public Task VerifyAndRepairChannelSdkAsync(string gameDir, GameServerScheme scheme,
         Action<string>? print = null, CancellationToken token = default, Action<long>? onBytesTransferred = null)
-    {
-        if (!await IsInstalledSdkValidAsync(gameDir, scheme, token).ConfigureAwait(false))
-        {
-            print?.Invoke("GameServer_ChannelSdkConflict".GetLocalized());
-            await EnsureSdkAndDeprecatedFilesAsync(gameDir, scheme, print, token, onBytesTransferred)
-                .ConfigureAwait(false);
-        }
-    }
+        => PrepareAndInstallAsync(gameDir, scheme, true, null, print, token, onBytesTransferred);
 
     private async Task PrepareAndInstallAsync(string gameDir, GameServerScheme scheme, bool cleanLegacy,
         Action? commitConfiguration, Action<string>? print, CancellationToken token, Action<long>? onBytesTransferred)
@@ -98,10 +87,19 @@ public sealed class GameChannelSdkService
         await Task.WhenAll(sdkTask, deprecatedTask).ConfigureAwait(false);
         SdkPackage? package = await sdkTask.ConfigureAwait(false);
         List<string> deprecated = await deprecatedTask.ConfigureAwait(false);
+        bool sdkCurrent = await IsInstalledSdkCurrentAsync(gameDir, scheme, package, token).ConfigureAwait(false);
+        var deprecatedPaths = deprecated.Select(name => GameServerFileTransaction.ResolvePath(gameDir, name)).ToList();
+        string installedStatePath = GameServerFileTransaction.ResolvePath(gameDir, InstalledSdkStateFileName);
+        token.ThrowIfCancellationRequested();
+        if (sdkCurrent && commitConfiguration is null && deprecatedPaths.All(path => !File.Exists(path)))
+        {
+            return;
+        }
 
         using var transaction = new GameServerFileTransaction(gameDir);
         var staged = new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase);
-        if (package is not null)
+        string? stagedStatePath = null;
+        if (package is not null && !sdkCurrent)
         {
             string archivePath = await GetCachedPackageAsync(package, print, token, onBytesTransferred)
                 .ConfigureAwait(false);
@@ -116,6 +114,7 @@ public sealed class GameChannelSdkService
                 string staging = GameServerFileTransaction.ResolvePath(stagingDir, relative);
                 if (entry.Name.Length == 0) { continue; }
                 if (destination.Equals(Path.Combine(gameDir, GameConstants.CONFIG_FILE_NAME), StringComparison.OrdinalIgnoreCase)
+                    || destination.Equals(installedStatePath, StringComparison.OrdinalIgnoreCase)
                     || !staged.TryAdd(destination, staging))
                 {
                     throw new InvalidDataException($"Invalid channel SDK entry: {entry.FullName}");
@@ -132,10 +131,33 @@ public sealed class GameChannelSdkService
             {
                 throw new InvalidDataException("GameServer_ChannelSdkConflict".GetLocalized());
             }
+
+            // Bind the installed files to the official package hash, not just their own version manifest.
+            string manifestMd5 = await HashUtility.Md5FileAsync(Path.Combine(stagingDir, SdkVersionFileName), token)
+                .ConfigureAwait(false);
+            var installedState = new InstalledSdkState(scheme.GameId, (int)scheme.Channel, (int)scheme.SubChannel,
+                scheme.IsOversea, package.Md5, package.Size, manifestMd5);
+            stagedStatePath = Path.Combine(transaction.WorkDir, "installed-sdk.json");
+            await File.WriteAllTextAsync(stagedStatePath, JsonSerializer.Serialize(installedState), token)
+                .ConfigureAwait(false);
         }
 
-        var deprecatedPaths = deprecated.Select(name => GameServerFileTransaction.ResolvePath(gameDir, name)).ToList();
-        if (deprecatedPaths.Any(path => staged.ContainsKey(path) ||
+        var sdkPaths = new HashSet<string>(staged.Keys, StringComparer.OrdinalIgnoreCase);
+        if (sdkCurrent && package is not null)
+        {
+            foreach (string row in File.ReadLines(Path.Combine(gameDir, SdkVersionFileName)))
+            {
+                token.ThrowIfCancellationRequested();
+                if (string.IsNullOrWhiteSpace(row)) { continue; }
+                var item = JsonSerializer.Deserialize<ChannelSdkVersionItem>(row, VersionJsonOptions)
+                    ?? throw new InvalidDataException("GameServer_ChannelSdkConflict".GetLocalized());
+                sdkPaths.Add(GameServerFileTransaction.ResolvePath(gameDir, item.RelativePath));
+            }
+        }
+
+        if (deprecatedPaths.Any(path => sdkPaths.Contains(path) ||
+                (package is not null && path.Equals(Path.Combine(gameDir, SdkVersionFileName), StringComparison.OrdinalIgnoreCase)) ||
+                path.Equals(installedStatePath, StringComparison.OrdinalIgnoreCase) ||
                 path.Equals(Path.Combine(gameDir, GameConstants.CONFIG_FILE_NAME), StringComparison.OrdinalIgnoreCase)))
         {
             throw new InvalidDataException("Channel SDK and deprecated file indexes conflict.");
@@ -147,7 +169,7 @@ public sealed class GameChannelSdkService
         // Commit is deliberately non-cancellable; interruption here must not leave half a channel installed.
         try
         {
-            if (cleanLegacy)
+            if (cleanLegacy && !sdkCurrent)
             {
                 print?.Invoke("GameServer_CleaningLegacySdk".GetLocalized());
                 foreach (string relative in LegacySdkPaths)
@@ -173,6 +195,18 @@ public sealed class GameChannelSdkService
                 transaction.Capture(configPath);
                 commitConfiguration();
                 transaction.MarkChanged(configPath);
+            }
+
+            if (!sdkCurrent)
+            {
+                if (stagedStatePath is not null)
+                {
+                    transaction.Install(stagedStatePath, installedStatePath);
+                }
+                else
+                {
+                    transaction.Remove(installedStatePath);
+                }
             }
         }
         catch (Exception failure)
@@ -222,14 +256,47 @@ public sealed class GameChannelSdkService
         }
     }
 
+    private static async Task<bool> IsInstalledSdkCurrentAsync(string gameDir, GameServerScheme scheme,
+        SdkPackage? package, CancellationToken token)
+    {
+        string statePath = GameServerFileTransaction.ResolvePath(gameDir, InstalledSdkStateFileName);
+        if (package is null)
+        {
+            return !File.Exists(statePath) && !LegacySdkPaths.Any(relative => File.Exists(Path.Combine(gameDir, relative)));
+        }
+
+        if (!File.Exists(statePath)) { return false; }
+        try
+        {
+            var state = JsonSerializer.Deserialize<InstalledSdkState>(
+                await File.ReadAllTextAsync(statePath, token).ConfigureAwait(false));
+            if (state is null || state.GameId != scheme.GameId || state.Channel != (int)scheme.Channel ||
+                state.SubChannel != (int)scheme.SubChannel || state.IsOversea != scheme.IsOversea ||
+                !package.Md5.Equals(state.PackageMd5, StringComparison.OrdinalIgnoreCase) ||
+                state.PackageSize != package.Size || !IsMd5(state.ManifestMd5))
+            {
+                return false;
+            }
+
+            string manifestPath = GameServerFileTransaction.ResolvePath(gameDir, SdkVersionFileName);
+            if (!File.Exists(manifestPath) ||
+                !(await HashUtility.Md5FileAsync(manifestPath, token).ConfigureAwait(false))
+                .Equals(state.ManifestMd5, StringComparison.OrdinalIgnoreCase))
+            {
+                return false;
+            }
+
+            return await IsInstalledSdkValidAsync(gameDir, scheme, token).ConfigureAwait(false);
+        }
+        catch (Exception ex) when (ex is JsonException or IOException or UnauthorizedAccessException or ArgumentException)
+        {
+            return false;
+        }
+    }
+
     private static async Task<bool> IsInstalledSdkValidAsync(string gameDir, GameServerScheme scheme,
         CancellationToken token)
     {
-        if (scheme.Channel != ChannelType.Bili && scheme.SubChannel != SubChannelType.Epic)
-        {
-            return !LegacySdkPaths.Any(relative => File.Exists(Path.Combine(gameDir, relative)));
-        }
-
         string versionPath = Path.Combine(gameDir, SdkVersionFileName);
         if (!File.Exists(versionPath)) { return false; }
         bool hasFiles = false;
@@ -352,4 +419,6 @@ public sealed class GameChannelSdkService
         => value is { Length: 32 } && value.All(Uri.IsHexDigit);
 
     private sealed record SdkPackage(string Url, long Size, string Md5);
+    private sealed record InstalledSdkState(string GameId, int Channel, int SubChannel, bool IsOversea,
+        string PackageMd5, long PackageSize, string ManifestMd5);
 }
