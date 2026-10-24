@@ -3,6 +3,7 @@ Copyright (c) FufuLauncher Dev Team. All rights reserved.
 Licensed under the MIT License.
 */
 
+using System.ComponentModel;
 using System.Diagnostics;
 using System.Net.Http;
 using System.Security.Cryptography;
@@ -40,8 +41,8 @@ public partial class MainWindow
         {
             try
             {
-                string testProxyUrl = $"https://{domain}/{TestFileOfficialUrl}";
-                string exeProxyUrl = $"https://{domain}/{_targetExeUrl}";
+                string testProxyUrl = ApiEndpoints.GetMirrorUrl(domain, ApiEndpoints.TestFileUrl);
+                string exeProxyUrl = ApiEndpoints.GetMirrorUrl(domain, _targetExeUrl!);
 
                 var result = await VerifyAndMeasureNodeAsync(domain, testProxyUrl, exeProxyUrl);
 
@@ -50,7 +51,7 @@ public partial class MainWindow
                 {
                     if (TestStatusText != null)
                     {
-                        TestStatusText.Text = $"正在测速中...\n{current} / {proxyDomains.Length}";
+                        SetLocalizedText(TestStatusText, "MirrorTestProgress", current, proxyDomains.Length);
                     }
                 });
 
@@ -86,7 +87,7 @@ public partial class MainWindow
                 info.IsSuccess = true;
                 info.ResponseTimeMs = stopwatch.ElapsedMilliseconds;
                 double speedKbps = (fileData.Length / 1024.0) / (info.ResponseTimeMs / 1000.0);
-                info.StatusDesc = $"{info.ResponseTimeMs} ms | {(speedKbps > 500 ? "极佳" : "正常")}";
+                info.SpeedKey = speedKbps > 500 ? "MirrorSpeedExcellent" : "MirrorSpeedNormal";
             }
         }
         catch
@@ -115,11 +116,22 @@ public partial class MainWindow
     #endregion
 }
 
-public class MirrorInfo
+public class MirrorInfo : INotifyPropertyChanged
 {
+    public event PropertyChangedEventHandler? PropertyChanged;
+
     public string Domain { get; set; } = string.Empty;
     public string FullUrl { get; set; } = string.Empty;
     public bool IsSuccess { get; set; }
     public long ResponseTimeMs { get; set; }
-    public string StatusDesc { get; set; } = string.Empty;
+    public string SpeedKey { get; set; } = string.Empty;
+
+    public string StatusDesc => string.IsNullOrEmpty(SpeedKey)
+        ? string.Empty
+        : Strings.Format("MirrorStatusDesc", ResponseTimeMs, Strings.Get(SpeedKey));
+
+    public void RefreshStatusDesc()
+    {
+        PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(StatusDesc)));
+    }
 }

@@ -15,7 +15,7 @@ public partial class MainWindow
 {
     #region Download
 
-    private void StartMultiThreadDownload(string url, string downloadText = "正在下载更新文件...")
+    private void StartMultiThreadDownload(string url, string? downloadLabelKey = null, params object?[] args)
     {
         bool useR2Tls = _isR2Download;
 
@@ -23,8 +23,8 @@ public partial class MainWindow
         SelectionPanel.Visibility = Visibility.Collapsed;
         ActionPanel.Visibility = Visibility.Collapsed;
         DownloadProgressPanel.Visibility = Visibility.Visible;
-        SubtitleText.Text = "正在获取更新...";
-        DownloadMainText.Text = downloadText;
+        SetLocalizedText(SubtitleText, "FetchingUpdate");
+        SetLocalizedText(DownloadMainText, downloadLabelKey ?? "DownloadStarting", args);
 
         if (CancelBtn != null) CancelBtn.IsEnabled = true;
 
@@ -70,7 +70,7 @@ public partial class MainWindow
                 Dispatcher.InvokeAsync(() =>
                 {
                     DownloadProgressBar.Value = progress;
-                    DownloadDetailText.Text = $"{downloadedMB:F2} MB / {totalMB:F2} MB ({progress:F1}%) • {speedMB:F2} MB/s";
+                    SetLocalizedText(DownloadDetailText, "DownloadProgressDetail", downloadedMB, totalMB, progress, speedMB);
                 }, System.Windows.Threading.DispatcherPriority.Background);
             }
         };
@@ -83,18 +83,19 @@ public partial class MainWindow
                 _stuckTimer.Stop();
                 _uiUpdateTimer.Stop();
 
+                bool wasNodeDownload = _isNodeDownload;
                 bool wasR2Download = _isR2Download;
+                _isNodeDownload = false;
                 _isR2Download = false;
 
                 if (e.Cancelled)
                 {
                     if (wasR2Download)
                     {
-                        _ = FallbackToGitHubPathsAsync("已取消 Cloudflare R2 下载，可直连 GitHub 下载");
+                        _ = FallbackToGitHubPathsAsync("DownloadCancelledR2");
                     }
-                    else if (_isNodeDownload)
+                    else if (wasNodeDownload)
                     {
-                        _isNodeDownload = false;
                         _ = FallbackToMirrorSelectionAsync();
                     }
                     else
@@ -106,40 +107,47 @@ public partial class MainWindow
                 {
                     if (wasR2Download)
                     {
-                        MessageBox.Show($"Cloudflare R2 下载失败，可改用 GitHub 线路\n\n错误详情: {e.Error.Message}", "下载失败", MessageBoxButton.OK, MessageBoxImage.Warning);
-                        _ = FallbackToGitHubPathsAsync("Cloudflare R2 下载失败，可直连 GitHub 下载");
+                        MessageBox.Show(Strings.Format("R2DownloadFailed", e.Error.Message), Strings.Get("DownloadFailedTitle"), MessageBoxButton.OK, MessageBoxImage.Warning);
+                        _ = FallbackToGitHubPathsAsync("R2DownloadFailedFallback");
                     }
-                    else if (_isNodeDownload)
+                    else if (wasNodeDownload)
                     {
-                        _isNodeDownload = false;
-                        MessageBox.Show($"站点线路下载失败，已经切回GitHub线路\n\n请在列表里重新选择一个节点下载\n错误详情: {e.Error.Message}", "下载失败", MessageBoxButton.OK, MessageBoxImage.Warning);
-                        _ = FallbackToMirrorSelectionAsync();
+                        MessageBox.Show(Strings.Format("NodeDownloadFailed", e.Error.Message), Strings.Get("DownloadFailedTitle"), MessageBoxButton.OK, MessageBoxImage.Warning);
+                        _ = FallbackFromNodeAsync();
                     }
                     else
                     {
-                        MessageBox.Show($"错误: {e.Error.Message}\n\n请选择其他节点继续下载\n或者去这里下载：https://wwaoi.lanzn.com/b00wnb99ef\n密码:6hnh", "失败", MessageBoxButton.OK, MessageBoxImage.Warning);
+                        MessageBox.Show(Strings.Format("DownloadError", e.Error.Message, ApiEndpoints.DownloadPageUrl, ApiEndpoints.DownloadPagePassword), Strings.Get("DownloadFailedTitle"), MessageBoxButton.OK, MessageBoxImage.Warning);
                         ResetToSelectionUI();
                     }
                 }
                 else
                 {
-                    DownloadMainText.Text = "正在校验文件完整性";
+                    SetLocalizedText(DownloadMainText, "VerifyingIntegrity");
 
                     if (!VerifyFileSha256(savePath))
                     {
                         try { File.Delete(savePath); } catch { }
 
+                        string hashFailureMessage = wasR2Download
+                            ? Strings.Get("HashFailureR2")
+                            : wasNodeDownload
+                                ? Strings.Get("HashFailureNode")
+                                : Strings.Get("HashFailureOther");
+
                         MessageBox.Show(
-                            wasR2Download
-                                ? "下载的文件SHA-256校验失败，文件可能在传输过程中被损坏或篡改\n\n已自动删除该文件，可改用 GitHub 线路"
-                                : "下载的文件SHA-256校验失败，文件可能在传输过程中被损坏或篡改\n\n已自动删除该文件，请更换其他节点重新下载",
-                            "文件完整性校验失败",
+                            hashFailureMessage,
+                            Strings.Get("HashFailureTitle"),
                             MessageBoxButton.OK,
                             MessageBoxImage.Warning);
 
                         if (wasR2Download)
                         {
-                            _ = FallbackToGitHubPathsAsync("Cloudflare R2 文件校验失败，可直连 GitHub 下载");
+                            _ = FallbackToGitHubPathsAsync("R2HashFallback");
+                        }
+                        else if (wasNodeDownload)
+                        {
+                            _ = FallbackFromNodeAsync();
                         }
                         else
                         {
@@ -150,24 +158,32 @@ public partial class MainWindow
 
                     if (!_isPreviewMode)
                     {
-                        DownloadMainText.Text = "正在校验数字签名...";
+                        SetLocalizedText(DownloadMainText, "VerifyingSignature");
 
                         uint trustResult = VerifyAuthenticodeSignature(savePath);
                         if (trustResult != 0)
                         {
                             try { File.Delete(savePath); } catch { }
 
+                            string signatureFailureMessage = wasR2Download
+                                ? Strings.Get("SignatureFailureR2")
+                                : wasNodeDownload
+                                    ? Strings.Get("SignatureFailureNode")
+                                    : Strings.Get("SignatureFailureOther");
+
                             MessageBox.Show(
-                                wasR2Download
-                                    ? "下载的文件未通过数字签名校验，文件可能已被损坏或篡改。\n\n出于安全考虑，已终止安装并自动删除该文件，可改用 GitHub 线路。"
-                                    : "下载的文件未通过数字签名校验，文件可能已被损坏或篡改。\n\n出于安全考虑，已终止安装并自动删除该文件，请更换其他节点重新下载。",
-                                "数字签名校验失败",
+                                signatureFailureMessage,
+                                Strings.Get("SignatureFailureTitle"),
                                 MessageBoxButton.OK,
                                 MessageBoxImage.Error);
 
                             if (wasR2Download)
                             {
-                                _ = FallbackToGitHubPathsAsync("Cloudflare R2 文件签名校验失败，可直连 GitHub 下载");
+                                _ = FallbackToGitHubPathsAsync("R2SignatureFallback");
+                            }
+                            else if (wasNodeDownload)
+                            {
+                                _ = FallbackFromNodeAsync();
                             }
                             else
                             {
@@ -177,7 +193,7 @@ public partial class MainWindow
                         }
                     }
 
-                    DownloadMainText.Text = "正在启动安装...";
+                    SetLocalizedText(DownloadMainText, "StartingInstaller");
 
                     ProcessStartInfo psi = new()
                     {
@@ -205,17 +221,18 @@ public partial class MainWindow
 
         if (_downloader != null && !_downloader.IsCancelled)
         {
-            DownloadMainText.Text = "正在取消下载...";
+            SetLocalizedText(DownloadMainText, "CancellingDownload");
             _downloader.CancelAsync();
         }
     }
 
     private void ResetToSelectionUI()
     {
+        LoadingPanel.Visibility = Visibility.Collapsed;
         DownloadProgressPanel.Visibility = Visibility.Collapsed;
         SelectionPanel.Visibility = Visibility.Visible;
         ActionPanel.Visibility = Visibility.Visible;
-        SubtitleText.Text = "下载已暂停";
+        SetLocalizedText(SubtitleText, "DownloadPaused");
 
         if (CancelBtn != null) CancelBtn.IsEnabled = true;
     }
@@ -231,7 +248,7 @@ public partial class MainWindow
             if (_stuckTicks >= 10) 
             {
                 _stuckTimer.Stop();
-                var result = MessageBox.Show("下载进度长期未动或网络极慢，建议取消当前下载并更换其他节点尝试\n\n是否立即取消下载？", "下载缓慢", MessageBoxButton.YesNo, MessageBoxImage.Information);
+                var result = MessageBox.Show(Strings.Get("StuckDownloadMessage"), Strings.Get("StuckDownloadTitle"), MessageBoxButton.YesNo, MessageBoxImage.Information);
                 if (result == MessageBoxResult.Yes)
                 {
                     CancelDownload_Click(null, null);
@@ -252,18 +269,18 @@ public partial class MainWindow
 
     private void DirectDownload_Click(object sender, RoutedEventArgs e)
     {
-        StartMultiThreadDownload(_targetExeUrl!, "正在从 GitHub 下载更新文件...");
+        StartMultiThreadDownload(_targetExeUrl!, "DownloadingFromGitHub");
     }
 
     private void MirrorDownload_Click(object sender, RoutedEventArgs e)
     {
         if (MirrorListView.SelectedItem is MirrorInfo selectedMirror)
         {
-            StartMultiThreadDownload(selectedMirror.FullUrl, $"正在从 {selectedMirror.Domain} 下载更新文件...");
+            StartMultiThreadDownload(selectedMirror.FullUrl, "DownloadingFromMirror", selectedMirror.Domain);
         }
         else
         {
-            MessageBox.Show("请先在列表中选择一个可用节点", "提示");
+            MessageBox.Show(Strings.Get("SelectNodeFirstMessage"), Strings.Get("SelectNodeFirstTitle"));
         }
     }
 

@@ -1,0 +1,323 @@
+<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <resheader name="resmimetype">
+    <value>text/microsoft-resx</value>
+  </resheader>
+  <resheader name="version">
+    <value>2.0</value>
+  </resheader>
+  <resheader name="reader">
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <resheader name="writer">
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+
+  <data name="AppUnsupportedWindowsMessage" xml:space="preserve">
+    <value>This updater requires Windows 10 version 1909 or later.</value>
+  </data>
+  <data name="AppUnsupportedWindowsTitle" xml:space="preserve">
+    <value>Unsupported Windows Version</value>
+  </data>
+  <data name="WindowTitle" xml:space="preserve">
+    <value>FufuLauncher Update</value>
+  </data>
+  <data name="WindowHeader" xml:space="preserve">
+    <value>FufuLauncher Update</value>
+  </data>
+  <data name="WindowTitleTestMode" xml:space="preserve">
+    <value>FufuLauncher Update (Test Mode)</value>
+  </data>
+  <data name="SubtitlePreparing" xml:space="preserve">
+    <value>Please wait...</value>
+  </data>
+  <data name="PreparingNodeCheck" xml:space="preserve">
+    <value>Preparing node check...</value>
+  </data>
+  <data name="NoUpdateMessage" xml:space="preserve">
+    <value>You're already on the latest version. No update is needed.</value>
+  </data>
+  <data name="RollbackToStable" xml:space="preserve">
+    <value>Roll Back to Stable</value>
+  </data>
+  <data name="Close" xml:space="preserve">
+    <value>Close</value>
+  </data>
+  <data name="MirrorListHeader" xml:space="preserve">
+    <value>Available mirrors (sorted by latency):</value>
+  </data>
+  <data name="DirectOfficialSource" xml:space="preserve">
+    <value>Direct Official Source</value>
+  </data>
+  <data name="DownloadSelectedNode" xml:space="preserve">
+    <value>Download from Selected Mirror</value>
+  </data>
+  <data name="DownloadStarting" xml:space="preserve">
+    <value>Downloading update...</value>
+  </data>
+  <data name="DownloadProgressInitial" xml:space="preserve">
+    <value>0.00 MB / 0.00 MB (0.0%) • 0.00 MB/s</value>
+  </data>
+  <data name="DownloadProgressDetail" xml:space="preserve">
+    <value>{0:F2} MB / {1:F2} MB ({2:F1}%) • {3:F2} MB/s</value>
+  </data>
+  <data name="CancelDownload" xml:space="preserve">
+    <value>Cancel Download</value>
+  </data>
+  <data name="RequestingUpdateConfig" xml:space="preserve">
+    <value>Requesting update configuration...</value>
+  </data>
+  <data name="ReadingLocalUpdateConfig" xml:space="preserve">
+    <value>API request failed. Reading local update configuration...</value>
+  </data>
+  <data name="UpdateInitFailed" xml:space="preserve">
+    <value>Failed to initialize the update. Check your network, or download from:
+{0}
+Password: {1}
+Error: {2}</value>
+  </data>
+  <data name="ErrorTitle" xml:space="preserve">
+    <value>Error</value>
+  </data>
+  <data name="InvalidVersionMessage" xml:space="preserve">
+    <value>The version number could not be recognized. Please download from the official website.
+This updater cannot continue.</value>
+  </data>
+  <data name="InvalidVersionTitle" xml:space="preserve">
+    <value>Invalid Version</value>
+  </data>
+  <data name="TestModeContinuing" xml:space="preserve">
+    <value>Test mode: already on the latest version, continuing anyway...</value>
+  </data>
+  <data name="DetectingPriorityNode" xml:space="preserve">
+    <value>Checking the priority node...</value>
+  </data>
+  <data name="DetectingR2" xml:space="preserve">
+    <value>Checking Cloudflare R2...</value>
+  </data>
+  <data name="R2Available" xml:space="preserve">
+    <value>Cloudflare R2 is available</value>
+  </data>
+  <data name="SelectDownloadRoute" xml:space="preserve">
+    <value>Select a download route</value>
+  </data>
+  <data name="DirectGitHubDownload" xml:space="preserve">
+    <value>Downloading directly from GitHub...</value>
+  </data>
+  <data name="DownloadingFromGitHub" xml:space="preserve">
+    <value>Downloading the update from GitHub...</value>
+  </data>
+  <data name="DownloadingFromR2" xml:space="preserve">
+    <value>Downloading the update from Cloudflare R2...</value>
+  </data>
+  <data name="DownloadingFromNode" xml:space="preserve">
+    <value>Downloading the update from the priority node...</value>
+  </data>
+  <data name="DownloadingFromMirror" xml:space="preserve">
+    <value>Downloading the update from {0}...</value>
+  </data>
+  <data name="MirrorChecking" xml:space="preserve">
+    <value>Checking mirror connectivity...</value>
+  </data>
+  <data name="AllMirrorsFailed" xml:space="preserve">
+    <value>No mirror passed the check</value>
+  </data>
+  <data name="AllMirrorsFailedMessage" xml:space="preserve">
+    <value>No mirror passed the integrity check or the network timed out.
+
+Try another network, or use the direct official source.</value>
+  </data>
+  <data name="NetworkPoorTitle" xml:space="preserve">
+    <value>Poor Network</value>
+  </data>
+  <data name="MirrorRouteFetchFailed" xml:space="preserve">
+    <value>Failed to get download routes. Close the updater and try again.
+Error: {0}</value>
+  </data>
+  <data name="CheckComplete" xml:space="preserve">
+    <value>Check complete</value>
+  </data>
+  <data name="PreparingRollback" xml:space="preserve">
+    <value>Preparing to roll back to the stable version...</value>
+  </data>
+  <data name="RollbackConfirm" xml:space="preserve">
+    <value>Roll back to the stable version{0}?
+
+This will download and install the latest stable version and replace the current preview build.</value>
+  </data>
+  <data name="DirectGitHubDownloadStable" xml:space="preserve">
+    <value>Downloading the stable version directly from GitHub...</value>
+  </data>
+  <data name="RollbackFailed" xml:space="preserve">
+    <value>Rollback failed. Check your network.
+Error: {0}</value>
+  </data>
+  <data name="NoPreviewAvailable" xml:space="preserve">
+    <value>No preview update has been published by the server.</value>
+  </data>
+  <data name="InvalidPreviewVersion" xml:space="preserve">
+    <value>The preview version number could not be recognized. Please download from the official website.
+This updater cannot continue.</value>
+  </data>
+  <data name="InvalidOfficialVersion" xml:space="preserve">
+    <value>The stable version number could not be recognized. Please download from the official website.
+This updater cannot continue.</value>
+  </data>
+  <data name="PreviewNotNewerMessage" xml:space="preserve">
+    <value>The preview version is not newer than the latest stable version, so preview updates are not allowed.</value>
+  </data>
+  <data name="FetchingGitHubTags" xml:space="preserve">
+    <value>Fetching GitHub tags...</value>
+  </data>
+  <data name="PreviewPackageNotFound" xml:space="preserve">
+    <value>No preview package was found on GitHub (tag: {0}).
+
+The update has been stopped. Try again later.</value>
+  </data>
+  <data name="PreviewPackageNotFoundTitle" xml:space="preserve">
+    <value>Preview Package Not Found</value>
+  </data>
+  <data name="FetchingPreviewRelease" xml:space="preserve">
+    <value>Fetching preview release information...</value>
+  </data>
+  <data name="PreviewReleaseAssetMissing" xml:space="preserve">
+    <value>The preview release does not contain a file.</value>
+  </data>
+  <data name="SelectDownloadRouteRollback" xml:space="preserve">
+    <value>Select a download route (stable rollback)</value>
+  </data>
+  <data name="SelectDownloadRoutePreview" xml:space="preserve">
+    <value>Select a download route (preview)</value>
+  </data>
+  <data name="DirectGitHubDownloadPreview" xml:space="preserve">
+    <value>Downloading the preview directly from GitHub...</value>
+  </data>
+  <data name="NodeAndR2Unavailable" xml:space="preserve">
+    <value>The priority node and Cloudflare R2 are unavailable. You can download directly from GitHub.</value>
+  </data>
+  <data name="FetchingUpdate" xml:space="preserve">
+    <value>Fetching update...</value>
+  </data>
+  <data name="VerifyingIntegrity" xml:space="preserve">
+    <value>Verifying file integrity...</value>
+  </data>
+  <data name="VerifyingSignature" xml:space="preserve">
+    <value>Verifying the digital signature...</value>
+  </data>
+  <data name="StartingInstaller" xml:space="preserve">
+    <value>Starting the installer...</value>
+  </data>
+  <data name="CancellingDownload" xml:space="preserve">
+    <value>Cancelling the download...</value>
+  </data>
+  <data name="DownloadPaused" xml:space="preserve">
+    <value>Download paused</value>
+  </data>
+  <data name="StuckDownloadMessage" xml:space="preserve">
+    <value>The download has made little progress for a while or the network is very slow. Cancel the current download and try another mirror?
+
+Cancel the download now?</value>
+  </data>
+  <data name="StuckDownloadTitle" xml:space="preserve">
+    <value>Slow Download</value>
+  </data>
+  <data name="SelectNodeFirstMessage" xml:space="preserve">
+    <value>Select an available mirror first.</value>
+  </data>
+  <data name="SelectNodeFirstTitle" xml:space="preserve">
+    <value>Notice</value>
+  </data>
+  <data name="DownloadCancelledR2" xml:space="preserve">
+    <value>Cloudflare R2 download cancelled. You can download directly from GitHub.</value>
+  </data>
+  <data name="R2DownloadFailed" xml:space="preserve">
+    <value>Cloudflare R2 download failed. You can switch to the GitHub route.
+
+Error: {0}</value>
+  </data>
+  <data name="R2DownloadFailedFallback" xml:space="preserve">
+    <value>Cloudflare R2 download failed. You can download directly from GitHub.</value>
+  </data>
+  <data name="NodeDownloadFailed" xml:space="preserve">
+    <value>Priority node download failed. Trying Cloudflare R2 and then GitHub...
+
+Error: {0}</value>
+  </data>
+  <data name="DownloadError" xml:space="preserve">
+    <value>Error: {0}
+
+Select another mirror to continue, or download from:
+{1}
+Password: {2}</value>
+  </data>
+  <data name="DownloadFailedTitle" xml:space="preserve">
+    <value>Download Failed</value>
+  </data>
+  <data name="HashFailureR2" xml:space="preserve">
+    <value>The downloaded file failed SHA-256 verification and may have been corrupted or tampered with during transfer.
+
+The file was deleted automatically. You can switch to the GitHub route.</value>
+  </data>
+  <data name="HashFailureNode" xml:space="preserve">
+    <value>The downloaded file failed SHA-256 verification and may have been corrupted or tampered with during transfer.
+
+The file was deleted automatically. Trying Cloudflare R2 and then GitHub...</value>
+  </data>
+  <data name="HashFailureOther" xml:space="preserve">
+    <value>The downloaded file failed SHA-256 verification and may have been corrupted or tampered with during transfer.
+
+The file was deleted automatically. Choose another mirror and try again.</value>
+  </data>
+  <data name="HashFailureTitle" xml:space="preserve">
+    <value>File Integrity Check Failed</value>
+  </data>
+  <data name="R2HashFallback" xml:space="preserve">
+    <value>Cloudflare R2 file verification failed. You can download directly from GitHub.</value>
+  </data>
+  <data name="SignatureFailureR2" xml:space="preserve">
+    <value>The downloaded file failed digital signature verification and may have been corrupted or tampered with.
+
+For safety, the installation was stopped and the file was deleted automatically. You can switch to the GitHub route.</value>
+  </data>
+  <data name="SignatureFailureNode" xml:space="preserve">
+    <value>The downloaded file failed digital signature verification and may have been corrupted or tampered with.
+
+For safety, the installation was stopped and the file was deleted automatically. Trying Cloudflare R2 and then GitHub...</value>
+  </data>
+  <data name="SignatureFailureOther" xml:space="preserve">
+    <value>The downloaded file failed digital signature verification and may have been corrupted or tampered with.
+
+For safety, the installation was stopped and the file was deleted automatically. Choose another mirror and try again.</value>
+  </data>
+  <data name="SignatureFailureTitle" xml:space="preserve">
+    <value>Digital Signature Verification Failed</value>
+  </data>
+  <data name="R2SignatureFallback" xml:space="preserve">
+    <value>Cloudflare R2 file signature verification failed. You can download directly from GitHub.</value>
+  </data>
+  <data name="MirrorTestProgress" xml:space="preserve">
+    <value>Testing...
+{0} / {1}</value>
+  </data>
+  <data name="MirrorStatusDesc" xml:space="preserve">
+    <value>{0} ms | {1}</value>
+  </data>
+  <data name="MirrorSpeedExcellent" xml:space="preserve">
+    <value>Excellent</value>
+  </data>
+  <data name="MirrorSpeedNormal" xml:space="preserve">
+    <value>Normal</value>
+  </data>
+  <data name="LanguageShortChinese" xml:space="preserve">
+    <value>中</value>
+  </data>
+  <data name="LanguageShortEnglish" xml:space="preserve">
+    <value>EN</value>
+  </data>
+  <data name="SwitchToEnglish" xml:space="preserve">
+    <value>Switch to English</value>
+  </data>
+  <data name="SwitchToChinese" xml:space="preserve">
+    <value>Switch to Chinese</value>
+  </data>
+</root>

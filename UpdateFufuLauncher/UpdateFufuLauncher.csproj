@@ -1,4 +1,4 @@
-﻿<Project Sdk="Microsoft.NET.Sdk">
+<Project Sdk="Microsoft.NET.Sdk">
     <PropertyGroup>
         <ApplicationIcon>Assets/WindowIcon.ico</ApplicationIcon>
         <OutputType>WinExe</OutputType>
@@ -16,6 +16,12 @@
         <PackageReference Include="Downloader" Version="5.9.0" />
         <PackageReference Include="ModernWpfUI" Version="0.9.7-preview.2" />
         <PackageReference Include="Newtonsoft.Json" Version="13.0.5-beta1" />
+    </ItemGroup>
+
+    <ItemGroup>
+        <None Remove="Strings\**\*.resw" />
+        <EmbeddedResource Include="Strings\zh-CN\Resources.resw" LogicalName="Updater.Strings.zh-CN.resw" />
+        <EmbeddedResource Include="Strings\en-US\Resources.resw" LogicalName="Updater.Strings.en-US.resw" />
     </ItemGroup>
 
 </Project>

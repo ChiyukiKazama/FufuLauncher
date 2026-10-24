@@ -1,4 +1,4 @@
-﻿/*
+/*
 Copyright (c) FufuLauncher Dev Team. All rights reserved.
 Licensed under the MIT License.
 */
@@ -14,7 +14,7 @@ namespace Updater
         {
             if (Environment.OSVersion.Version.Build < 18363)
             {
-                MessageBox.Show("此更新程序仅允许在Windows 10 1909或更高版本上运行", "版本不支持", MessageBoxButton.OK, MessageBoxImage.Error);
+                MessageBox.Show(Strings.Get("AppUnsupportedWindowsMessage"), Strings.Get("AppUnsupportedWindowsTitle"), MessageBoxButton.OK, MessageBoxImage.Error);
                 Environment.Exit(0);
             }
             

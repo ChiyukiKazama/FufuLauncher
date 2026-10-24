@@ -1,0 +1,323 @@
+<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <resheader name="resmimetype">
+    <value>text/microsoft-resx</value>
+  </resheader>
+  <resheader name="version">
+    <value>2.0</value>
+  </resheader>
+  <resheader name="reader">
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <resheader name="writer">
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+
+  <data name="AppUnsupportedWindowsMessage" xml:space="preserve">
+    <value>此更新程序仅允许在Windows 10 1909或更高版本上运行</value>
+  </data>
+  <data name="AppUnsupportedWindowsTitle" xml:space="preserve">
+    <value>版本不支持</value>
+  </data>
+  <data name="WindowTitle" xml:space="preserve">
+    <value>FufuLauncher Update</value>
+  </data>
+  <data name="WindowHeader" xml:space="preserve">
+    <value>FufuLauncher Update</value>
+  </data>
+  <data name="WindowTitleTestMode" xml:space="preserve">
+    <value>FufuLauncher Update（测试模式）</value>
+  </data>
+  <data name="SubtitlePreparing" xml:space="preserve">
+    <value>请稍后...</value>
+  </data>
+  <data name="PreparingNodeCheck" xml:space="preserve">
+    <value>准备校验节点...</value>
+  </data>
+  <data name="NoUpdateMessage" xml:space="preserve">
+    <value>当前已是最新版本，无需更新</value>
+  </data>
+  <data name="RollbackToStable" xml:space="preserve">
+    <value>回退正式版</value>
+  </data>
+  <data name="Close" xml:space="preserve">
+    <value>关闭</value>
+  </data>
+  <data name="MirrorListHeader" xml:space="preserve">
+    <value>可用节点列表 (按延迟排序):</value>
+  </data>
+  <data name="DirectOfficialSource" xml:space="preserve">
+    <value>直连官方源</value>
+  </data>
+  <data name="DownloadSelectedNode" xml:space="preserve">
+    <value>使用选定节点下载</value>
+  </data>
+  <data name="DownloadStarting" xml:space="preserve">
+    <value>正在下载更新文件...</value>
+  </data>
+  <data name="DownloadProgressInitial" xml:space="preserve">
+    <value>0.00 MB / 0.00 MB (0.0%) • 0.00 MB/s</value>
+  </data>
+  <data name="DownloadProgressDetail" xml:space="preserve">
+    <value>{0:F2} MB / {1:F2} MB ({2:F1}%) • {3:F2} MB/s</value>
+  </data>
+  <data name="CancelDownload" xml:space="preserve">
+    <value>取消下载</value>
+  </data>
+  <data name="RequestingUpdateConfig" xml:space="preserve">
+    <value>请求API更新配置...</value>
+  </data>
+  <data name="ReadingLocalUpdateConfig" xml:space="preserve">
+    <value>API请求失败，读取本地更新配置...</value>
+  </data>
+  <data name="UpdateInitFailed" xml:space="preserve">
+    <value>更新初始化失败，请检查网络，或者去下面下载
+{0}
+密码:{1}
+错误详情: {2}</value>
+  </data>
+  <data name="ErrorTitle" xml:space="preserve">
+    <value>错误</value>
+  </data>
+  <data name="InvalidVersionMessage" xml:space="preserve">
+    <value>版本号无法识别，请前往官网下载
+此处不提供更新</value>
+  </data>
+  <data name="InvalidVersionTitle" xml:space="preserve">
+    <value>版本异常</value>
+  </data>
+  <data name="TestModeContinuing" xml:space="preserve">
+    <value>测试模式：已是最新版本，仍继续下载...</value>
+  </data>
+  <data name="DetectingPriorityNode" xml:space="preserve">
+    <value>正在检测节点...</value>
+  </data>
+  <data name="DetectingR2" xml:space="preserve">
+    <value>正在检测Cloudflare R2...</value>
+  </data>
+  <data name="R2Available" xml:space="preserve">
+    <value>已发现Cloudflare R2</value>
+  </data>
+  <data name="SelectDownloadRoute" xml:space="preserve">
+    <value>请选择下载线路</value>
+  </data>
+  <data name="DirectGitHubDownload" xml:space="preserve">
+    <value>直连GitHub下载...</value>
+  </data>
+  <data name="DownloadingFromGitHub" xml:space="preserve">
+    <value>正在从 GitHub 下载更新文件...</value>
+  </data>
+  <data name="DownloadingFromR2" xml:space="preserve">
+    <value>正在从Cloudflare R2下载更新文件...</value>
+  </data>
+  <data name="DownloadingFromNode" xml:space="preserve">
+    <value>正在从节点下载更新文件...</value>
+  </data>
+  <data name="DownloadingFromMirror" xml:space="preserve">
+    <value>正在从 {0} 下载更新文件...</value>
+  </data>
+  <data name="MirrorChecking" xml:space="preserve">
+    <value>节点联通性校验...</value>
+  </data>
+  <data name="AllMirrorsFailed" xml:space="preserve">
+    <value>所有节点均未通过校验</value>
+  </data>
+  <data name="AllMirrorsFailedMessage" xml:space="preserve">
+    <value>所有镜像节点均未通过文件完整性校验或网络超时
+
+请更换网络环境，或尝试使用直连官方源下载</value>
+  </data>
+  <data name="NetworkPoorTitle" xml:space="preserve">
+    <value>网络不佳</value>
+  </data>
+  <data name="MirrorRouteFetchFailed" xml:space="preserve">
+    <value>下载线路获取失败，请关闭更新器后重试
+错误详情: {0}</value>
+  </data>
+  <data name="CheckComplete" xml:space="preserve">
+    <value>检查完毕</value>
+  </data>
+  <data name="PreparingRollback" xml:space="preserve">
+    <value>准备回退正式版...</value>
+  </data>
+  <data name="RollbackConfirm" xml:space="preserve">
+    <value>确定要回退到正式版{0}吗？
+
+回退将下载并安装最新正式版，覆盖当前预览版。</value>
+  </data>
+  <data name="DirectGitHubDownloadStable" xml:space="preserve">
+    <value>直连GitHub下载正式版...</value>
+  </data>
+  <data name="RollbackFailed" xml:space="preserve">
+    <value>回退正式版失败，请检查网络
+错误详情: {0}</value>
+  </data>
+  <data name="NoPreviewAvailable" xml:space="preserve">
+    <value>服务端暂未发布预览版更新</value>
+  </data>
+  <data name="InvalidPreviewVersion" xml:space="preserve">
+    <value>预览版版本号无法识别，请前往官网下载
+此处不提供更新</value>
+  </data>
+  <data name="InvalidOfficialVersion" xml:space="preserve">
+    <value>正式版版本号无法识别，请前往官网下载
+此处不提供更新</value>
+  </data>
+  <data name="PreviewNotNewerMessage" xml:space="preserve">
+    <value>预览版版本号未高于最新正式版，不允许更新预览版</value>
+  </data>
+  <data name="FetchingGitHubTags" xml:space="preserve">
+    <value>获取GitHub标签列表...</value>
+  </data>
+  <data name="PreviewPackageNotFound" xml:space="preserve">
+    <value>未在GitHub找到预览版发布包（标签: {0}）
+
+更新流程已终止，请稍后再试</value>
+  </data>
+  <data name="PreviewPackageNotFoundTitle" xml:space="preserve">
+    <value>未找到预览版</value>
+  </data>
+  <data name="FetchingPreviewRelease" xml:space="preserve">
+    <value>获取预览版Release信息...</value>
+  </data>
+  <data name="PreviewReleaseAssetMissing" xml:space="preserve">
+    <value>预览版Release中不存在文件</value>
+  </data>
+  <data name="SelectDownloadRouteRollback" xml:space="preserve">
+    <value>请选择下载线路（回退正式版）</value>
+  </data>
+  <data name="SelectDownloadRoutePreview" xml:space="preserve">
+    <value>请选择下载线路（预览版）</value>
+  </data>
+  <data name="DirectGitHubDownloadPreview" xml:space="preserve">
+    <value>直连GitHub下载预览版...</value>
+  </data>
+  <data name="NodeAndR2Unavailable" xml:space="preserve">
+    <value>节点与 R2 均不可用，可直连 GitHub 下载</value>
+  </data>
+  <data name="FetchingUpdate" xml:space="preserve">
+    <value>正在获取更新...</value>
+  </data>
+  <data name="VerifyingIntegrity" xml:space="preserve">
+    <value>正在校验文件完整性</value>
+  </data>
+  <data name="VerifyingSignature" xml:space="preserve">
+    <value>正在校验数字签名...</value>
+  </data>
+  <data name="StartingInstaller" xml:space="preserve">
+    <value>正在启动安装...</value>
+  </data>
+  <data name="CancellingDownload" xml:space="preserve">
+    <value>正在取消下载...</value>
+  </data>
+  <data name="DownloadPaused" xml:space="preserve">
+    <value>下载已暂停</value>
+  </data>
+  <data name="StuckDownloadMessage" xml:space="preserve">
+    <value>下载进度长期未动或网络极慢，建议取消当前下载并更换其他节点尝试
+
+是否立即取消下载？</value>
+  </data>
+  <data name="StuckDownloadTitle" xml:space="preserve">
+    <value>下载缓慢</value>
+  </data>
+  <data name="SelectNodeFirstMessage" xml:space="preserve">
+    <value>请先在列表中选择一个可用节点</value>
+  </data>
+  <data name="SelectNodeFirstTitle" xml:space="preserve">
+    <value>提示</value>
+  </data>
+  <data name="DownloadCancelledR2" xml:space="preserve">
+    <value>已取消 Cloudflare R2 下载，可直连 GitHub 下载</value>
+  </data>
+  <data name="R2DownloadFailed" xml:space="preserve">
+    <value>Cloudflare R2 下载失败，可改用 GitHub 线路
+
+错误详情: {0}</value>
+  </data>
+  <data name="R2DownloadFailedFallback" xml:space="preserve">
+    <value>Cloudflare R2 下载失败，可直连 GitHub 下载</value>
+  </data>
+  <data name="NodeDownloadFailed" xml:space="preserve">
+    <value>节点下载失败，将依次尝试 Cloudflare R2 和 GitHub 线路
+
+错误详情: {0}</value>
+  </data>
+  <data name="DownloadError" xml:space="preserve">
+    <value>错误: {0}
+
+请选择其他节点继续下载
+或者去这里下载：{1}
+密码:{2}</value>
+  </data>
+  <data name="DownloadFailedTitle" xml:space="preserve">
+    <value>下载失败</value>
+  </data>
+  <data name="HashFailureR2" xml:space="preserve">
+    <value>下载的文件SHA-256校验失败，文件可能在传输过程中被损坏或篡改
+
+已自动删除该文件，可改用 GitHub 线路</value>
+  </data>
+  <data name="HashFailureNode" xml:space="preserve">
+    <value>下载的文件SHA-256校验失败，文件可能在传输过程中被损坏或篡改
+
+已自动删除该文件，将依次尝试 Cloudflare R2 和 GitHub 线路</value>
+  </data>
+  <data name="HashFailureOther" xml:space="preserve">
+    <value>下载的文件SHA-256校验失败，文件可能在传输过程中被损坏或篡改
+
+已自动删除该文件，请更换其他节点重新下载</value>
+  </data>
+  <data name="HashFailureTitle" xml:space="preserve">
+    <value>文件完整性校验失败</value>
+  </data>
+  <data name="R2HashFallback" xml:space="preserve">
+    <value>Cloudflare R2 文件校验失败，可直连 GitHub 下载</value>
+  </data>
+  <data name="SignatureFailureR2" xml:space="preserve">
+    <value>下载的文件未通过数字签名校验，文件可能已被损坏或篡改。
+
+出于安全考虑，已终止安装并自动删除该文件，可改用 GitHub 线路。</value>
+  </data>
+  <data name="SignatureFailureNode" xml:space="preserve">
+    <value>下载的文件未通过数字签名校验，文件可能已被损坏或篡改。
+
+出于安全考虑，已终止安装并自动删除该文件，将依次尝试 Cloudflare R2 和 GitHub 线路。</value>
+  </data>
+  <data name="SignatureFailureOther" xml:space="preserve">
+    <value>下载的文件未通过数字签名校验，文件可能已被损坏或篡改。
+
+出于安全考虑，已终止安装并自动删除该文件，请更换其他节点重新下载。</value>
+  </data>
+  <data name="SignatureFailureTitle" xml:space="preserve">
+    <value>数字签名校验失败</value>
+  </data>
+  <data name="R2SignatureFallback" xml:space="preserve">
+    <value>Cloudflare R2 文件签名校验失败，可直连 GitHub 下载</value>
+  </data>
+  <data name="MirrorTestProgress" xml:space="preserve">
+    <value>正在测速中...
+{0} / {1}</value>
+  </data>
+  <data name="MirrorStatusDesc" xml:space="preserve">
+    <value>{0} ms | {1}</value>
+  </data>
+  <data name="MirrorSpeedExcellent" xml:space="preserve">
+    <value>极佳</value>
+  </data>
+  <data name="MirrorSpeedNormal" xml:space="preserve">
+    <value>正常</value>
+  </data>
+  <data name="LanguageShortChinese" xml:space="preserve">
+    <value>中</value>
+  </data>
+  <data name="LanguageShortEnglish" xml:space="preserve">
+    <value>EN</value>
+  </data>
+  <data name="SwitchToEnglish" xml:space="preserve">
+    <value>切换为英文</value>
+  </data>
+  <data name="SwitchToChinese" xml:space="preserve">
+    <value>切换为中文</value>
+  </data>
+</root>

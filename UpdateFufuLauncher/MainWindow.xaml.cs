@@ -7,6 +7,8 @@ using System.Diagnostics;
 using System.Net.Http;
 using System.Net.Security;
 using System.Windows;
+using System.Windows.Automation;
+using System.Windows.Controls;
 using System.Windows.Threading;
 using Downloader;
 
@@ -49,11 +51,7 @@ public partial class MainWindow : Window
     private bool _isInstalledPreviewBuild = false;
     private string _officialVersion = string.Empty;
 
-    private const string TestFileOfficialUrl = "https://raw.githubusercontent.com/moodlehq/moodle-exttests/master/test.html";
     private const string ExpectedTestFileMD5 = "47250a973d1b88d9445f94db4ef2c97a";
-    private const string NodeStatusUrl = "https://fufu.668851.xyz/api/status";
-    private const string NodeBaseUrl = "https://fufu.668851.xyz";
-    private const string R2BaseUrl = "https://fufu.snaphutaorp.org";
 
     #endregion
 
@@ -62,6 +60,9 @@ public partial class MainWindow : Window
     public MainWindow()
     {
         InitializeComponent();
+        Strings.LanguageChanged += OnLanguageChanged;
+        Closed += (_, _) => Strings.LanguageChanged -= OnLanguageChanged;
+
         _httpClient.DefaultRequestHeaders.Add("User-Agent", DefaultUserAgent);
 
         _stuckTimer = new DispatcherTimer { Interval = TimeSpan.FromSeconds(2) };
@@ -95,9 +96,10 @@ public partial class MainWindow : Window
 
         if (_isTestForceUpdate)
         {
-            Title = "FufuLauncher Update（测试模式）";
+            Title = Strings.Get("WindowTitleTestMode");
         }
 
+        UpdateLanguageToggle();
         _isInstalledPreviewBuild = _installedVersion.IndexOf("Pre-release", StringComparison.OrdinalIgnoreCase) >= 0;
     }
 
@@ -119,6 +121,75 @@ public partial class MainWindow : Window
         };
         client.DefaultRequestHeaders.Add("User-Agent", DefaultUserAgent);
         return client;
+    }
+
+    #endregion
+
+    #region Localization
+
+    private sealed class LocalizedMessage
+    {
+        public LocalizedMessage(string key, object?[] args)
+        {
+            Key = key;
+            Args = args;
+        }
+
+        public string Key { get; }
+        public object?[] Args { get; }
+    }
+
+    private void SetLocalizedText(TextBlock target, string key, params object?[] args)
+    {
+        target.Tag = new LocalizedMessage(key, args);
+        target.Text = Strings.Format(key, args);
+    }
+
+    private static void RefreshLocalizedText(TextBlock target)
+    {
+        if (target.Tag is LocalizedMessage message)
+        {
+            target.Text = Strings.Format(message.Key, message.Args);
+        }
+    }
+
+    private void RefreshLocalizedTexts()
+    {
+        RefreshLocalizedText(SubtitleText);
+        RefreshLocalizedText(DownloadMainText);
+        RefreshLocalizedText(DownloadDetailText);
+        RefreshLocalizedText(NoUpdateText);
+        RefreshLocalizedText(TestStatusText);
+
+        foreach (MirrorInfo mirror in _mirrors)
+        {
+            mirror.RefreshStatusDesc();
+        }
+    }
+
+    private void UpdateLanguageToggle()
+    {
+        LanguageToggleBtn.Content = Strings.Get(Strings.CurrentLanguage == "zh-CN" ? "LanguageShortChinese" : "LanguageShortEnglish");
+
+        string tooltip = Strings.Get(Strings.CurrentLanguage == "zh-CN" ? "SwitchToEnglish" : "SwitchToChinese");
+        LanguageToggleBtn.ToolTip = tooltip;
+        AutomationProperties.SetName(LanguageToggleBtn, tooltip);
+    }
+
+    private void LanguageToggle_Click(object sender, RoutedEventArgs e)
+    {
+        Strings.ToggleLanguage();
+    }
+
+    private void OnLanguageChanged(object? sender, EventArgs e)
+    {
+        UpdateLanguageToggle();
+
+        Title = _isTestForceUpdate
+            ? Strings.Get("WindowTitleTestMode")
+            : Strings.Get("WindowTitle");
+
+        RefreshLocalizedTexts();
     }
 
     #endregion
