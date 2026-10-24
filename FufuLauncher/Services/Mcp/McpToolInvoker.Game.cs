@@ -158,11 +158,9 @@ public sealed partial class McpToolInvoker
         }
 
         var previous = snapshot.Server == null ? null : DescribeScheme(snapshot.Server, true);
-        _serverConfiguration.ApplyScheme(snapshot.GamePath, scheme);
-
         try
         {
-            await _channelSdk.EnsureSdkAndDeprecatedFilesAsync(snapshot.GamePath, scheme, null, cancellationToken)
+            await _channelSdk.SwitchSchemeAsync(snapshot.GamePath, scheme, null, cancellationToken)
                 .ConfigureAwait(false);
         }
         catch (OperationCanceledException)
@@ -171,7 +169,7 @@ public sealed partial class McpToolInvoker
         }
         catch (Exception ex)
         {
-            throw new McpToolException($"Server scheme was written to the game config, but channel SDK handling failed: {ex.Message}");
+            throw new McpToolException($"Server switch failed: {ex.Message}");
         }
 
         var updated = await _gameSession.GetSnapshotAsync(cancellationToken).ConfigureAwait(false);

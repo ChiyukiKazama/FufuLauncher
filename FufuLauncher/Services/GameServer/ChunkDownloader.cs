@@ -136,6 +136,8 @@ public sealed class ChunkDownloader
                 await Task.Delay(TimeSpan.FromSeconds(attempt), token).ConfigureAwait(false);
             }
         }
+
+        throw new TimeoutException(string.Format("GameServer_ChunkDownloadFailed".GetLocalized(), url));
     }
 
     private async Task DownloadFileCoreAsync(string url, string destPath, long? expectedSize, CancellationToken token,

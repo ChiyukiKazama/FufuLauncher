@@ -87,9 +87,8 @@ public partial class GameLauncherService
                         var configIniPath = Path.Combine(gamePath, "config.ini");
                         if (File.Exists(configIniPath))
                         {
-                            var configContent = await File.ReadAllTextAsync(configIniPath);
-                            isBilibili = configContent.Contains("channel=14") ||
-                                         configContent.Contains("cps=bilibili");
+                            isBilibili = _gameServerConfigurationService.TryDetectCurrentScheme(gamePath)?.Channel
+                                         == Models.GameServer.ChannelType.Bili;
                         }
                     }
                     catch

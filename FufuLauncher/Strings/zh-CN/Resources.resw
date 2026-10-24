@@ -9390,4 +9390,13 @@ UIGF v4.x/3.0/2.x</value>
   <data name="McpTool_CancelInstallCaption" xml:space="preserve">
     <value>取消正在运行或等待验证的安装任务，并关闭验证窗口。</value>
   </data>
+  <data name="GameServer_OperationInProgress" xml:space="preserve">
+    <value>此游戏目录正在切换服务器或修复，请等待当前操作完成。</value>
+  </data>
+  <data name="GameServer_CloseGameFirst" xml:space="preserve">
+    <value>请先关闭游戏，再切换服务器或修复游戏文件。</value>
+  </data>
+  <data name="GameServer_ClientConversionRequired" xml:space="preserve">
+    <value>当前客户端与目标服务器不兼容，请使用国服/国际服转换功能。</value>
+  </data>
 </root>
