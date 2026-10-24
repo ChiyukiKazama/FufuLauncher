@@ -4,7 +4,9 @@ Licensed under the MIT License.
 */
 
 using System.IO;
+using System.Net;
 using System.Net.Http;
+using System.Net.Http.Headers;
 using System.Windows;
 using Newtonsoft.Json.Linq;
 
@@ -70,8 +72,13 @@ public partial class MainWindow
 
             if (currentVersion >= remoteVersion)
             {
-                ShowNoUpdate("当前已是最新版本，无需更新", _isInstalledPreviewBuild);
-                return;
+                if (!_isTestForceUpdate)
+                {
+                    ShowNoUpdate("当前已是最新版本，无需更新", _isInstalledPreviewBuild);
+                    return;
+                }
+
+                SubtitleText.Text = "测试模式：已是最新版本，仍继续下载...";
             }
 
             PrepareOfficialReleaseDownload();
@@ -98,9 +105,20 @@ public partial class MainWindow
         string version = _officialVersion.Trim();
         _fileName = $"FufuLauncher_Setup_v{version}.exe";
         _targetExeUrl = $"https://github.com/FufuLauncher/FufuLauncher/releases/latest/download/{_fileName}";
+        _r2ExeUrl = $"{R2BaseUrl}/FufuLauncher_Setup_v{version}.exe";
     }
 
     private async Task PrepareDownloadAsync(string selectionSubtitle, string directSubtitle)
+    {
+        if (await TryStartR2DownloadAsync())
+        {
+            return;
+        }
+
+        await PrepareGitHubDownloadAsync(selectionSubtitle, directSubtitle);
+    }
+
+    private async Task PrepareGitHubDownloadAsync(string selectionSubtitle, string directSubtitle)
     {
         if (_useThirdPartyCDN)
         {
@@ -113,10 +131,115 @@ public partial class MainWindow
         }
         else
         {
-
             SubtitleText.Text = directSubtitle;
-            StartMultiThreadDownload(_targetExeUrl);
+            StartMultiThreadDownload(_targetExeUrl!, "正在从 GitHub 下载更新文件...");
         }
+    }
+
+    private async Task<bool> TryStartR2DownloadAsync()
+    {
+        string? r2Url = _r2ExeUrl;
+        if (_isPreviewMode || string.IsNullOrWhiteSpace(r2Url))
+        {
+            return false;
+        }
+
+        SubtitleText.Text = "正在检测Cloudflare R2...";
+        string? resolvedR2Url = await ResolveR2InstallerUrlAsync(r2Url);
+        if (resolvedR2Url == null)
+        {
+            return false;
+        }
+
+        _isR2Download = true;
+        SubtitleText.Text = "已发现Cloudflare R2";
+        StartMultiThreadDownload(resolvedR2Url, "正在从Cloudflare R2下载更新文件...");
+        return true;
+    }
+
+    private async Task<string?> ResolveR2InstallerUrlAsync(string url)
+    {
+        if (!Uri.TryCreate(url, UriKind.Absolute, out Uri? parsedUri) ||
+            parsedUri is null ||
+            !string.Equals(parsedUri.Scheme, Uri.UriSchemeHttps, StringComparison.OrdinalIgnoreCase))
+        {
+            return null;
+        }
+
+        Uri currentUri = parsedUri;
+
+        try
+        {
+            using var cts = new CancellationTokenSource(TimeSpan.FromSeconds(6));
+
+            for (int redirectCount = 0; redirectCount <= 3; redirectCount++)
+            {
+                using var request = new HttpRequestMessage(HttpMethod.Get, currentUri);
+                request.Headers.Range = new RangeHeaderValue(0, 1);
+
+                using var response = await _r2HttpClient.SendAsync(request, HttpCompletionOption.ResponseHeadersRead, cts.Token);
+
+                if ((int)response.StatusCode is >= 300 and <= 399)
+                {
+                    Uri? redirectUri = response.Headers.Location;
+                    if (redirectUri == null)
+                    {
+                        return null;
+                    }
+
+                    if (!redirectUri.IsAbsoluteUri)
+                    {
+                        redirectUri = new Uri(currentUri, redirectUri);
+                    }
+
+                    if (!string.Equals(redirectUri.Scheme, Uri.UriSchemeHttps, StringComparison.OrdinalIgnoreCase))
+                    {
+                        return null;
+                    }
+
+                    currentUri = redirectUri;
+                    continue;
+                }
+
+                if (response.StatusCode != HttpStatusCode.OK && response.StatusCode != HttpStatusCode.PartialContent)
+                {
+                    return null;
+                }
+
+                string? mediaType = response.Content.Headers.ContentType?.MediaType;
+                if (mediaType != null &&
+                    (mediaType.Contains("html", StringComparison.OrdinalIgnoreCase) ||
+                     mediaType.Contains("json", StringComparison.OrdinalIgnoreCase)))
+                {
+                    return null;
+                }
+
+                await using var stream = await response.Content.ReadAsStreamAsync(cts.Token);
+                byte[] signature = new byte[2];
+                int read = await stream.ReadAtLeastAsync(signature, signature.Length, throwOnEndOfStream: false, cancellationToken: cts.Token);
+                return read == 2 && signature[0] == (byte)'M' && signature[1] == (byte)'Z'
+                    ? currentUri.AbsoluteUri
+                    : null;
+            }
+
+            return null;
+        }
+        catch
+        {
+            return null;
+        }
+    }
+
+    private async Task FallbackToGitHubPathsAsync(string directFallbackSubtitle)
+    {
+        if (_useThirdPartyCDN)
+        {
+            await FallbackToMirrorSelectionAsync();
+            return;
+        }
+
+        ResetToSelectionUI();
+        SubtitleText.Text = directFallbackSubtitle;
     }
 
     private async Task<bool> TryStartNodeDownloadAsync()
@@ -164,7 +287,7 @@ public partial class MainWindow
                 : $"{NodeBaseUrl}/{(downloadPath.StartsWith('/') ? downloadPath.Substring(1) : downloadPath)}";
 
             _isNodeDownload = true;
-            StartMultiThreadDownload(nodeDownloadUrl);
+            StartMultiThreadDownload(nodeDownloadUrl, "正在从站点线路下载更新文件...");
             return true;
         }
         catch
@@ -175,6 +298,8 @@ public partial class MainWindow
 
     private async Task ShowMirrorSelectionAsync(string selectionSubtitle)
     {
+        DownloadProgressPanel.Visibility = Visibility.Collapsed;
+        LoadingPanel.Visibility = Visibility.Visible;
         SubtitleText.Text = "节点联通性校验...";
         await TestMirrorsAsync();
 
@@ -301,6 +426,7 @@ public partial class MainWindow
 
         _targetExeUrl = targetAsset["browser_download_url"]!.ToString();
         _fileName = targetAsset["name"]!.ToString();
+        _r2ExeUrl = null;
 
 
         string digest = targetAsset["digest"]?.ToString();

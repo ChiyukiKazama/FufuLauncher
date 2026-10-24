@@ -15,13 +15,16 @@ public partial class MainWindow
 {
     #region Download
 
-    private void StartMultiThreadDownload(string url)
+    private void StartMultiThreadDownload(string url, string downloadText = "正在下载更新文件...")
     {
+        bool useR2Tls = _isR2Download;
+
+        LoadingPanel.Visibility = Visibility.Collapsed;
         SelectionPanel.Visibility = Visibility.Collapsed;
         ActionPanel.Visibility = Visibility.Collapsed;
         DownloadProgressPanel.Visibility = Visibility.Visible;
         SubtitleText.Text = "正在获取更新...";
-        DownloadMainText.Text = "正在下载更新文件...";
+        DownloadMainText.Text = downloadText;
 
         if (CancelBtn != null) CancelBtn.IsEnabled = true;
 
@@ -33,10 +36,12 @@ public partial class MainWindow
             ParallelDownload = true,
             MaxTryAgainOnFailure = 9999,
             ClearPackageOnCompletionWithFailure = false,
-            CustomHttpClientFactory = () => new HttpClient() 
-            { 
-                Timeout = TimeSpan.FromSeconds(30) 
-            }
+            CustomHttpClientFactory = () => useR2Tls
+                ? CreateR2HttpClient(TimeSpan.FromSeconds(30))
+                : new HttpClient()
+                {
+                    Timeout = TimeSpan.FromSeconds(30)
+                }
         };
 
         _downloader = new DownloadService(downloadOpt);
@@ -78,9 +83,16 @@ public partial class MainWindow
                 _stuckTimer.Stop();
                 _uiUpdateTimer.Stop();
 
+                bool wasR2Download = _isR2Download;
+                _isR2Download = false;
+
                 if (e.Cancelled)
                 {
-                    if (_isNodeDownload)
+                    if (wasR2Download)
+                    {
+                        _ = FallbackToGitHubPathsAsync("已取消 Cloudflare R2 下载，可直连 GitHub 下载");
+                    }
+                    else if (_isNodeDownload)
                     {
                         _isNodeDownload = false;
                         _ = FallbackToMirrorSelectionAsync();
@@ -92,7 +104,12 @@ public partial class MainWindow
                 }
                 else if (e.Error != null)
                 {
-                    if (_isNodeDownload)
+                    if (wasR2Download)
+                    {
+                        MessageBox.Show($"Cloudflare R2 下载失败，可改用 GitHub 线路\n\n错误详情: {e.Error.Message}", "下载失败", MessageBoxButton.OK, MessageBoxImage.Warning);
+                        _ = FallbackToGitHubPathsAsync("Cloudflare R2 下载失败，可直连 GitHub 下载");
+                    }
+                    else if (_isNodeDownload)
                     {
                         _isNodeDownload = false;
                         MessageBox.Show($"站点线路下载失败，已经切回GitHub线路\n\n请在列表里重新选择一个节点下载\n错误详情: {e.Error.Message}", "下载失败", MessageBoxButton.OK, MessageBoxImage.Warning);
@@ -113,12 +130,21 @@ public partial class MainWindow
                         try { File.Delete(savePath); } catch { }
 
                         MessageBox.Show(
-                            "下载的文件SHA-256校验失败，文件可能在传输过程中被损坏或篡改\n\n已自动删除该文件，请更换其他节点重新下载",
+                            wasR2Download
+                                ? "下载的文件SHA-256校验失败，文件可能在传输过程中被损坏或篡改\n\n已自动删除该文件，可改用 GitHub 线路"
+                                : "下载的文件SHA-256校验失败，文件可能在传输过程中被损坏或篡改\n\n已自动删除该文件，请更换其他节点重新下载",
                             "文件完整性校验失败",
                             MessageBoxButton.OK,
                             MessageBoxImage.Warning);
 
-                        ResetToSelectionUI();
+                        if (wasR2Download)
+                        {
+                            _ = FallbackToGitHubPathsAsync("Cloudflare R2 文件校验失败，可直连 GitHub 下载");
+                        }
+                        else
+                        {
+                            ResetToSelectionUI();
+                        }
                         return;
                     }
 
@@ -132,12 +158,21 @@ public partial class MainWindow
                             try { File.Delete(savePath); } catch { }
 
                             MessageBox.Show(
-                                "下载的文件未通过数字签名校验，文件可能已被损坏或篡改。\n\n出于安全考虑，已终止安装并自动删除该文件，请更换其他节点重新下载。",
+                                wasR2Download
+                                    ? "下载的文件未通过数字签名校验，文件可能已被损坏或篡改。\n\n出于安全考虑，已终止安装并自动删除该文件，可改用 GitHub 线路。"
+                                    : "下载的文件未通过数字签名校验，文件可能已被损坏或篡改。\n\n出于安全考虑，已终止安装并自动删除该文件，请更换其他节点重新下载。",
                                 "数字签名校验失败",
                                 MessageBoxButton.OK,
                                 MessageBoxImage.Error);
 
-                            ResetToSelectionUI();
+                            if (wasR2Download)
+                            {
+                                _ = FallbackToGitHubPathsAsync("Cloudflare R2 文件签名校验失败，可直连 GitHub 下载");
+                            }
+                            else
+                            {
+                                ResetToSelectionUI();
+                            }
                             return;
                         }
                     }
@@ -217,14 +252,14 @@ public partial class MainWindow
 
     private void DirectDownload_Click(object sender, RoutedEventArgs e)
     {
-        StartMultiThreadDownload(_targetExeUrl);
+        StartMultiThreadDownload(_targetExeUrl!, "正在从 GitHub 下载更新文件...");
     }
 
     private void MirrorDownload_Click(object sender, RoutedEventArgs e)
     {
         if (MirrorListView.SelectedItem is MirrorInfo selectedMirror)
         {
-            StartMultiThreadDownload(selectedMirror.FullUrl);
+            StartMultiThreadDownload(selectedMirror.FullUrl, $"正在从 {selectedMirror.Domain} 下载更新文件...");
         }
         else
         {

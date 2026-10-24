@@ -233,7 +233,7 @@
         </Grid>
 
         <StackPanel Grid.Row="2" x:Name="DownloadProgressPanel" Visibility="Collapsed" Margin="0,24,0,0" VerticalAlignment="Bottom">
-            <TextBlock x:Name="DownloadMainText" Text="正在下载更新文件..." FontSize="16" FontWeight="SemiBold" Foreground="White" Margin="0,0,0,12"/>
+            <TextBlock x:Name="DownloadMainText" Text="正在下载更新文件..." FontSize="16" FontWeight="SemiBold" Foreground="White" Margin="0,0,0,12" TextWrapping="Wrap"/>
             <ProgressBar x:Name="DownloadProgressBar" Height="8" ui:ControlHelper.CornerRadius="4" Foreground="#FFFFFF" Background="#333333" Maximum="100"/>
             <Grid Margin="0,16,0,0">
                 <Grid.ColumnDefinitions>
