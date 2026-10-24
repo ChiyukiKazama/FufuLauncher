@@ -21,9 +21,9 @@ namespace FufuLauncher.Services
         [DllImport("kernel32.dll", SetLastError = true)]
         private static extern IntPtr GetCurrentProcess();
 
-        public static void FlushMemory(bool isMinimizedOrHidden)
+        public static void FlushMemory()
         {
-            if (!isMinimizedOrHidden || Environment.OSVersion.Platform != PlatformID.Win32NT)
+            if (Environment.OSVersion.Platform != PlatformID.Win32NT)
             {
                 return;
             }

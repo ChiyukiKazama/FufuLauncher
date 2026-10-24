@@ -32,11 +32,34 @@ public sealed partial class MainWindow
             if ((isMinimized || isHidden) && ContentFrame.BackStackDepth > 0)
                 ContentFrame.BackStack.Clear();
 
-            MemoryOptimizationService.FlushMemory(true);
+            MemoryOptimizationService.FlushMemory();
         }
         catch (Exception ex)
         {
             DebugLog.Info("MainWindow.Memory", $"Memory cleanup exception: {ex.Message}");
+        }
+    }
+
+    private void ReleaseMemoryAfterSuspend()
+    {
+        try
+        {
+            var isMinimized = AppWindow.Presenter.Kind == AppWindowPresenterKind.Overlapped &&
+                              ((OverlappedPresenter)AppWindow.Presenter).State == OverlappedPresenterState.Minimized;
+            var isHidden = !Visible;
+
+            if ((isMinimized || isHidden) && ContentFrame.BackStackDepth > 0)
+                ContentFrame.BackStack.Clear();
+
+            MemoryOptimizationService.FlushMemory();
+
+            using var process = Process.GetCurrentProcess();
+            DebugLog.Info("MainWindow.Memory",
+                $"Memory released right after suspension, working set {process.WorkingSet64 / 1048576.0:F1} MB");
+        }
+        catch (Exception ex)
+        {
+            DebugLog.Info("MainWindow.Memory", $"Exception while releasing memory after suspension: {ex.Message}");
         }
     }
 
@@ -81,9 +104,9 @@ public sealed partial class MainWindow
         _messageDismissTimer.Stop();
 
         _announcementCheckTimer.Stop();
-        FlushMemory();
 
         DebugLog.Info("MainWindow.Memory", "App suspended");
+        ReleaseMemoryAfterSuspend();
     }
 
     private void RestoreFromSuspension()
