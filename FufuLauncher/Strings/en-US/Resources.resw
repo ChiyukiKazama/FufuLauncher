@@ -9395,4 +9395,13 @@ Details: {0}</value>
   <data name="McpTool_CancelInstallCaption" xml:space="preserve">
     <value>Cancel a running or waiting installation and close the verification window.</value>
   </data>
+  <data name="GameServer_OperationInProgress" xml:space="preserve">
+    <value>A server switch or repair is already in progress for this game folder. Wait for it to finish.</value>
+  </data>
+  <data name="GameServer_CloseGameFirst" xml:space="preserve">
+    <value>Close the game before switching servers or repairing game files.</value>
+  </data>
+  <data name="GameServer_ClientConversionRequired" xml:space="preserve">
+    <value>The target server requires a different client. Use the Chinese/global client conversion feature.</value>
+  </data>
 </root>

@@ -59,41 +59,74 @@ public sealed class GameServerConfigurationService
     public void ApplyScheme(string gameDir, GameServerScheme scheme)
     {
         string configPath = Path.Combine(gameDir, GameConstants.CONFIG_FILE_NAME);
-        if (!File.Exists(configPath))
+        string temporary = configPath + $".{Guid.NewGuid():N}.tmp";
+        try
         {
-            string backupPath = Path.Combine(AppPaths.ServerCacheDir,
-                scheme.IsOversea ? "config_oversea.ini" : "config_cn.ini");
-            if (!File.Exists(backupPath) || !TryRestoreConfigBackup(backupPath, configPath))
+            if (File.Exists(configPath))
             {
-                File.WriteAllText(configPath, BuildNewConfigContent(scheme, TryGetGameVersion(gameDir)));
-                return;
+                File.Copy(configPath, temporary);
+                File.SetAttributes(temporary, FileAttributes.Normal);
             }
-        }
+            else
+            {
+                string backupPath = Path.Combine(AppPaths.ServerCacheDir,
+                    scheme.IsOversea ? "config_oversea.ini" : "config_cn.ini");
+                if (!File.Exists(backupPath) || !TryRestoreConfigBackup(backupPath, temporary))
+                {
+                    File.WriteAllText(temporary, BuildNewConfigContent(scheme, TryGetGameVersion(gameDir)));
+                }
+            }
 
-        var ini = new IniFile(configPath);
+            UpdateScheme(temporary, scheme);
+            File.Move(temporary, configPath, true);
+        }
+        finally
+        {
+            if (File.Exists(temporary)) { File.Delete(temporary); }
+        }
+    }
+
+    private static void UpdateScheme(string configPath, GameServerScheme scheme)
+    {
         var updates = new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase)
         {
             ["channel"] = ((int)scheme.Channel).ToString(),
             ["sub_channel"] = ((int)scheme.SubChannel).ToString(),
+            ["cps"] = scheme.Cps,
         };
-
-        var all = ini.ReadAll();
-        string? currentCps = null;
-        bool hasCps = false;
-        if (all.TryGetValue("General", out var general))
+        var lines = File.ReadAllLines(configPath).ToList();
+        var found = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
+        bool inGeneral = false;
+        int generalEnd = -1;
+        for (int index = 0; index < lines.Count; index++)
         {
-            hasCps = general.TryGetValue("cps", out currentCps);
+            string trimmed = lines[index].Trim();
+            if (trimmed.StartsWith('[') && trimmed.EndsWith(']'))
+            {
+                if (inGeneral) { generalEnd = index; }
+                inGeneral = trimmed[1..^1].Trim().Equals("General", StringComparison.OrdinalIgnoreCase);
+                if (inGeneral) { generalEnd = lines.Count; }
+                continue;
+            }
+
+            int separator = trimmed.IndexOf('=');
+            if (inGeneral && separator > 0 && updates.TryGetValue(trimmed[..separator].Trim(), out string? value))
+            {
+                string key = trimmed[..separator].Trim();
+                lines[index] = $"{key}={value}";
+                found.Add(key);
+            }
         }
 
-        if (!hasCps || !currentCps!.Equals(scheme.Cps, StringComparison.OrdinalIgnoreCase))
+        if (generalEnd < 0)
         {
-            updates["cps"] = scheme.Cps;
+            lines.Add("[General]");
+            generalEnd = lines.Count;
         }
 
-        ini.UpdateMultiple(new Dictionary<string, Dictionary<string, string>>(StringComparer.OrdinalIgnoreCase)
-        {
-            ["General"] = updates,
-        });
+        lines.InsertRange(generalEnd, updates.Where(item => !found.Contains(item.Key))
+            .Select(item => $"{item.Key}={item.Value}"));
+        File.WriteAllLines(configPath, lines, Encoding.UTF8);
     }
 
     public void BackupConfig(string gameDir, bool isOversea)
@@ -138,6 +171,7 @@ public sealed class GameServerConfigurationService
         try
         {
             File.Copy(backupPath, configPath, true);
+            File.SetAttributes(configPath, FileAttributes.Normal);
             return true;
         }
         catch

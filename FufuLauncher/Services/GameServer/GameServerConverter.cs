@@ -38,6 +38,15 @@ public sealed class GameServerConverter
         ArgumentNullException.ThrowIfNull(currentScheme);
         ArgumentNullException.ThrowIfNull(targetScheme);
 
+        // Official CN and Bilibili share the same client resources. Only their channel SDK differs.
+        if (currentScheme.IsOversea == targetScheme.IsOversea)
+        {
+            await _gameChannelSdkService.SwitchSchemeAsync(gameDir, targetScheme, log, token,
+                downloadMonitor is null ? null : downloadMonitor.AddBytes).ConfigureAwait(false);
+            return;
+        }
+
+        using var operation = await GameServerOperation.EnterAsync(gameDir, token).ConfigureAwait(false);
         EnsureDirectoryPermissions(gameDir);
 
         var context = new GameServerConversionContext(gameDir, currentScheme, targetScheme, AppPaths.ServerCacheDir,
@@ -56,8 +65,6 @@ public sealed class GameServerConverter
             await _sophonBuildClient.DownloadManifestAsync(currentInfo, token).ConfigureAwait(false);
         SophonManifestProto targetManifest =
             await _sophonBuildClient.DownloadManifestAsync(targetInfo, token).ConfigureAwait(false);
-
-        CleanPluginsFolder(context);
 
         log("GameServer_StageDiff".GetLocalized());
         List<GameServerAssetOperation> operations = BuildDiffOperations(currentManifest, targetManifest,
@@ -79,6 +86,7 @@ public sealed class GameServerConverter
     {
         ArgumentNullException.ThrowIfNull(currentScheme);
 
+        using var operation = await GameServerOperation.EnterAsync(gameDir, token).ConfigureAwait(false);
         EnsureDirectoryPermissions(gameDir);
 
         var context = new GameServerConversionContext(gameDir, currentScheme, currentScheme, AppPaths.ServerCacheDir,
@@ -91,8 +99,6 @@ public sealed class GameServerConverter
         log("GameServer_StageDecodeManifests".GetLocalized());
         SophonManifestProto manifest =
             await _sophonBuildClient.DownloadManifestAsync(branchInfo, token).ConfigureAwait(false);
-
-        CleanPluginsFolder(context);
 
         await _gameChannelSdkService.VerifyAndRepairChannelSdkAsync(
             context.GameDir, currentScheme, context.Log, context.Token,
@@ -643,11 +649,11 @@ public sealed class GameServerConverter
             File.Move(currentExe, targetExe);
         }
 
-        _configurationService.ApplyScheme(context.GameDir, targetScheme);
-
         await _gameChannelSdkService.EnsureSdkAndDeprecatedFilesAsync(
             context.GameDir, targetScheme, context.Log, context.Token,
             context.DownloadMonitor is null ? null : context.DownloadMonitor.AddBytes).ConfigureAwait(false);
+
+        _configurationService.ApplyScheme(context.GameDir, targetScheme);
     }
 
     private static void MovePreparedFilesToGame(GameServerConversionContext context,
@@ -843,18 +849,6 @@ public sealed class GameServerConverter
         }
         catch
         {
-        }
-    }
-
-    private void CleanPluginsFolder(GameServerConversionContext context)
-    {
-        string localDataDirName =
-            context.CurrentScheme.IsOversea ? GameConstants.OS_DATA_DIR : GameConstants.CN_DATA_DIR;
-        string pluginsDir = Path.Combine(context.GameDir, localDataDirName, "Plugins");
-        if (Directory.Exists(pluginsDir))
-        {
-            Directory.Delete(pluginsDir, true);
-            context.Log("GameServer_CleanedPlugins".GetLocalized());
         }
     }
 

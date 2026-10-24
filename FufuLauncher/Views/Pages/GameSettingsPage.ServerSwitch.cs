@@ -26,6 +26,7 @@ public sealed partial class GameSettingsPage
         }
 
         string gameDir = _currentConfig.GamePath;
+        gameDir = gameDir.Trim().Trim('"');
         if (File.Exists(gameDir))
         {
             gameDir = Path.GetDirectoryName(gameDir) ?? gameDir;
@@ -35,18 +36,8 @@ public sealed partial class GameSettingsPage
 
         if (!File.Exists(configPath))
         {
-            string parentDir = Directory.GetParent(gameDir)?.FullName ?? "";
-            string parentConfig = Path.Combine(parentDir, "config.ini");
-            if (File.Exists(parentConfig))
-            {
-                gameDir = parentDir;
-                configPath = parentConfig;
-            }
-            else
-            {
-                await ShowError(string.Format("Err_ConfigIniNotFound_Format".GetLocalized(), configPath));
-                return;
-            }
+            await ShowError(string.Format("Err_ConfigIniNotFound_Format".GetLocalized(), configPath));
+            return;
         }
 
         bool isGlobalExe = File.Exists(Path.Combine(gameDir, "GenshinImpact.exe"));

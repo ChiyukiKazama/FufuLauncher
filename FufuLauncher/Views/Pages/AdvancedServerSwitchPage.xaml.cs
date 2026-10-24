@@ -6,7 +6,6 @@ Licensed under the MIT License.
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Navigation;
-using FufuLauncher.Constants;
 using FufuLauncher.Helpers;
 using FufuLauncher.Models.GameServer;
 using FufuLauncher.Services.GameServer;
@@ -42,6 +41,7 @@ namespace FufuLauncher.Views
                 _gameDir = param.GameDir;
                 _parentWindow = param.ParentWindow;
                 _targetServer = param.TargetServer ?? string.Empty;
+                _parentWindow.Closed += ParentWindow_Closed;
             }
 
             InitializeServerSelector();
@@ -91,12 +91,6 @@ namespace FufuLauncher.Views
             if (_cts is not null)
             {
                 return;
-            }
-
-            string? pluginDeleteError = TryDeletePluginsFolders();
-            if (pluginDeleteError is not null)
-            {
-                AppendStatus(string.Format("AdvancedServerSwitch_PluginCleanFailed".GetLocalized(), pluginDeleteError));
             }
 
             StartBtn.IsEnabled = false;
@@ -166,6 +160,13 @@ namespace FufuLauncher.Views
             _cts?.Cancel();
         }
 
+        private void ParentWindow_Closed(object sender, WindowEventArgs args)
+        {
+            _cts?.Cancel();
+            _chartController?.Stop();
+            if (_parentWindow is not null) { _parentWindow.Closed -= ParentWindow_Closed; }
+        }
+
         private void UpdateProgress(GameServerConversionProgress p)
         {
             _chartController?.UpdateProgress(p);
@@ -197,28 +198,6 @@ namespace FufuLauncher.Views
         private void AppendStatus(string message)
         {
             DispatcherQueue.TryEnqueue(() => StatusText.Text = message);
-        }
-
-        private string? TryDeletePluginsFolders()
-        {
-            string? lastError = null;
-            foreach (string dataDir in new[] { GameConstants.CN_DATA_DIR, GameConstants.OS_DATA_DIR })
-            {
-                string pluginsDir = Path.Combine(_gameDir, dataDir, "Plugins");
-                try
-                {
-                    if (Directory.Exists(pluginsDir))
-                    {
-                        Directory.Delete(pluginsDir, true);
-                    }
-                }
-                catch (Exception ex)
-                {
-                    lastError = ex.Message;
-                }
-            }
-
-            return lastError;
         }
 
         private async Task ShowMessageAsync(string message, string? title = null)
