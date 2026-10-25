@@ -85,7 +85,6 @@ public sealed partial class GameUpdateService
             }
             catch
             {
-                // A partial patch build must not be reported as a complete predownload.
                 return null;
             }
         }

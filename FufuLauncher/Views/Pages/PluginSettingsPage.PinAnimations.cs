@@ -148,7 +148,8 @@ public sealed partial class PluginSettingsPage
             }
             catch (Exception ex)
             {
-                DebugLog.Info("PluginSettingsPage.PinAnimations", $"[PluginSettings] Setting pin animation cleanup failed: {ex}");
+                DebugLog.Info("PluginSettingsPage.PinAnimations",
+                    $"[PluginSettings] Setting pin animation cleanup failed: {ex}");
             }
             finally
             {
@@ -179,7 +180,8 @@ public sealed partial class PluginSettingsPage
         catch (Exception ex)
         {
             _settingEntranceAnimationsEnabled = false;
-            DebugLog.Info("PluginSettingsPage.PinAnimations", $"[PluginSettings] Setting pin container preparation failed: {ex}");
+            DebugLog.Info("PluginSettingsPage.PinAnimations",
+                $"[PluginSettings] Setting pin container preparation failed: {ex}");
         }
     }
 
@@ -273,7 +275,8 @@ public sealed partial class PluginSettingsPage
             }
             catch (TimeoutException)
             {
-                DebugLog.Info("PluginSettingsPage.PinAnimations", "[PluginSettings] Settings animation completion timed out.");
+                DebugLog.Info("PluginSettingsPage.PinAnimations",
+                    "[PluginSettings] Settings animation completion timed out.");
             }
         }
         finally

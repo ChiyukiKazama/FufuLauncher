@@ -12,7 +12,6 @@ using Windows.UI;
 
 namespace FufuLauncher.Controls;
 
-/// <summary>Reusable Genshin rarity background with arbitrary foreground content.</summary>
 public sealed class ItemRarityBackground : ContentControl
 {
     public static readonly DependencyProperty RarityProperty = DependencyProperty.Register(
@@ -33,7 +32,7 @@ public sealed class ItemRarityBackground : ContentControl
         UpdateBackground();
     }
 
-    /// <summary>One to five stars; other values use the three-star background.</summary>
+
     public int Rarity
     {
         get => (int)GetValue(RarityProperty);
@@ -60,8 +59,8 @@ public sealed class ItemRarityBackground : ContentControl
         var rarity = Rarity is >= 1 and <= 5 ? Rarity : 3;
         var relativePath = $"Assets/ItemRarity/ItemBackground{rarity}.png";
         var localPath = Path.Combine(AppContext.BaseDirectory, relativePath);
-        // Resolve unpackaged assets from the executable, independent of the working directory
-        // and MRT resource-map selection. Keep ms-appx support for packaged assets.
+
+
         var uri = File.Exists(localPath)
             ? new Uri(localPath)
             : new Uri($"ms-appx:///{relativePath}");

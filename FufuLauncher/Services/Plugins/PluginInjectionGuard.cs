@@ -41,7 +41,8 @@ public static class PluginInjectionGuard
                 }
                 catch (Exception ex)
                 {
-                    DebugLog.Info("PluginInjectionGuard", $"[PluginInjectionGuard] Failed to rename leftover file in plugin root directory {file}: {ex.Message}");
+                    DebugLog.Info("PluginInjectionGuard",
+                        $"[PluginInjectionGuard] Failed to rename leftover file in plugin root directory {file}: {ex.Message}");
                 }
             }
         }
@@ -74,7 +75,8 @@ public static class PluginInjectionGuard
         }
         catch (Exception ex)
         {
-            DebugLog.Info("PluginInjectionGuard", $"[PluginInjectionGuard] Failed to scan plugin directory: {ex.Message}");
+            DebugLog.Info("PluginInjectionGuard",
+                $"[PluginInjectionGuard] Failed to scan plugin directory: {ex.Message}");
             return Array.Empty<PluginDllConflict>();
         }
     }
@@ -103,7 +105,8 @@ public static class PluginInjectionGuard
         {
             var lockedFile = FileLockHelper.FindLockedFile(dllPath, configPath);
             errorMessage = lockedFile != null ? FileLockHelper.GetLockedFileMessage(lockedFile) : ex.Message;
-            DebugLog.Info("PluginInjectionGuard", $"[PluginInjectionGuard] Failed to delete plugin {dllPath}: {ex.Message}");
+            DebugLog.Info("PluginInjectionGuard",
+                $"[PluginInjectionGuard] Failed to delete plugin {dllPath}: {ex.Message}");
             return false;
         }
     }
@@ -158,7 +161,8 @@ public static class PluginInjectionGuard
         }
         catch (Exception ex)
         {
-            DebugLog.Info("PluginInjectionGuard", $"[PluginInjectionGuard] Failed to read plugin config {configPath}: {ex.Message}");
+            DebugLog.Info("PluginInjectionGuard",
+                $"[PluginInjectionGuard] Failed to read plugin config {configPath}: {ex.Message}");
             return false;
         }
     }

@@ -101,7 +101,8 @@ public partial class LaunchConfigurationViewModel
         }
         catch (Exception ex)
         {
-            DebugLog.Info("LaunchConfigurationViewModel.Hoyolab", $"[SettingsVM] Exception during validation: {ex.Message}");
+            DebugLog.Info("LaunchConfigurationViewModel.Hoyolab",
+                $"[SettingsVM] Exception during validation: {ex.Message}");
             _dispatcherQueue.TryEnqueue(() =>
             {
                 IsUsingHoyolabAccount = false;

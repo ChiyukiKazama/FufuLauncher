@@ -29,7 +29,8 @@ public sealed class GameRegistrySnapshot
         try
         {
             _snapshot = Registry.GetValue(_keyName, _valueName, null) as byte[];
-            DebugLog.Info("GameRegistrySnapshot", $"[RegistrySnapshot] Saved snapshot: {_keyName}\\{_valueName} (length: {_snapshot?.Length ?? 0})");
+            DebugLog.Info("GameRegistrySnapshot",
+                $"[RegistrySnapshot] Saved snapshot: {_keyName}\\{_valueName} (length: {_snapshot?.Length ?? 0})");
         }
         catch (Exception ex)
         {
@@ -42,7 +43,8 @@ public sealed class GameRegistrySnapshot
     {
         if (_keyName == null || _valueName == null)
         {
-            DebugLog.Info("GameRegistrySnapshot", "[RegistrySnapshot] No snapshot to restore (TakeSnapshot not called)");
+            DebugLog.Info("GameRegistrySnapshot",
+                "[RegistrySnapshot] No snapshot to restore (TakeSnapshot not called)");
             return;
         }
 

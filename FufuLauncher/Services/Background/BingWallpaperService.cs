@@ -11,28 +11,68 @@ namespace FufuLauncher.Services.Background;
 
 public class BingWallpaperItem
 {
-    public string Url { get; init; } = string.Empty;
+    public string Url
+    {
+        get;
+        init;
+    } = string.Empty;
 
-    public string ThumbnailUrl { get; init; } = string.Empty;
+    public string ThumbnailUrl
+    {
+        get;
+        init;
+    } = string.Empty;
 
-    public string Copyright { get; init; } = string.Empty;
+    public string Copyright
+    {
+        get;
+        init;
+    } = string.Empty;
 
-    public string Title { get; init; } = string.Empty;
+    public string Title
+    {
+        get;
+        init;
+    } = string.Empty;
 
-    public string StartDate { get; init; } = string.Empty;
+    public string StartDate
+    {
+        get;
+        init;
+    } = string.Empty;
 
-    public string EndDate { get; init; } = string.Empty;
+    public string EndDate
+    {
+        get;
+        init;
+    } = string.Empty;
 
-    public string Hash { get; init; } = string.Empty;
+    public string Hash
+    {
+        get;
+        init;
+    } = string.Empty;
 
-    public string Market { get; init; } = string.Empty;
+    public string Market
+    {
+        get;
+        init;
+    } = string.Empty;
 }
 
 public sealed class BingWallpaperLoadResult
 {
-    public BingWallpaperItem Wallpaper { get; init; } = new();
+    public BingWallpaperItem Wallpaper
+    {
+        get;
+        init;
+    } = new();
 
-    public BackgroundRenderResult Result { get; init; } = new();
+    public BackgroundRenderResult Result
+    {
+        get;
+        init;
+    } = new();
 }
 
 public class BingWallpaperService
@@ -49,6 +89,7 @@ public class BingWallpaperService
     private static readonly HttpClient HttpClient;
     private static readonly JsonSerializerOptions JsonOptions = new() { PropertyNameCaseInsensitive = true };
     private static readonly TimeSpan CacheDuration = TimeSpan.FromMinutes(30);
+
     private static readonly HashSet<string> SupportedMarkets = new(StringComparer.OrdinalIgnoreCase)
     {
         "zh-CN", "zh-TW", "en-US", "en-GB", "ja-JP", "ko-KR", "de-DE", "fr-FR",
@@ -366,7 +407,8 @@ public class BingWallpaperService
 
                 if (year > 0 &&
                     !string.IsNullOrWhiteSpace(image.StartDate) &&
-                    !image.StartDate.StartsWith(year.ToString(System.Globalization.CultureInfo.InvariantCulture), StringComparison.Ordinal))
+                    !image.StartDate.StartsWith(year.ToString(System.Globalization.CultureInfo.InvariantCulture),
+                        StringComparison.Ordinal))
                     continue;
 
                 var thumbnailUrl = fullUrl;
@@ -392,7 +434,8 @@ public class BingWallpaperService
             }
             catch (Exception ex)
             {
-                DebugLog.Info("BingWallpaperService", $"[BingWallpaper] Failed to load historical wallpaper: {ex.Message}");
+                DebugLog.Info("BingWallpaperService",
+                    $"[BingWallpaper] Failed to load historical wallpaper: {ex.Message}");
                 return null;
             }
         }
@@ -476,32 +519,88 @@ public class BingWallpaperService
 
     private sealed class BingArchiveResponse
     {
-        public List<BingImage>? Images { get; set; }
+        public List<BingImage>? Images
+        {
+            get;
+            set;
+        }
     }
 
     private sealed class BingHistoricalImage
     {
-        public string? StartDate { get; set; }
-        public string? Copyright { get; set; }
-        public string? Title { get; set; }
-        public string? UrlBase { get; set; }
-        public string? Url { get; set; }
+        public string? StartDate
+        {
+            get;
+            set;
+        }
+
+        public string? Copyright
+        {
+            get;
+            set;
+        }
+
+        public string? Title
+        {
+            get;
+            set;
+        }
+
+        public string? UrlBase
+        {
+            get;
+            set;
+        }
+
+        public string? Url
+        {
+            get;
+            set;
+        }
     }
 
     private sealed class BingImage
     {
-        public string? Url { get; set; }
+        public string? Url
+        {
+            get;
+            set;
+        }
 
-        public string? UrlBase { get; set; }
+        public string? UrlBase
+        {
+            get;
+            set;
+        }
 
-        public string? Copyright { get; set; }
+        public string? Copyright
+        {
+            get;
+            set;
+        }
 
-        public string? Title { get; set; }
+        public string? Title
+        {
+            get;
+            set;
+        }
 
-        public string? StartDate { get; set; }
+        public string? StartDate
+        {
+            get;
+            set;
+        }
 
-        public string? EndDate { get; set; }
+        public string? EndDate
+        {
+            get;
+            set;
+        }
 
-        public string? Hsh { get; set; }
+        public string? Hsh
+        {
+            get;
+            set;
+        }
     }
 }

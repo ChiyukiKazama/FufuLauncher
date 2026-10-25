@@ -71,7 +71,8 @@ public class MetadataRepository
                     "CREATE TABLE IF NOT EXISTS __EFMigrationsHistory (MigrationId TEXT PRIMARY KEY, ProductVersion TEXT);");
                 context.Database.ExecuteSqlRaw(
                     "INSERT OR IGNORE INTO __EFMigrationsHistory VALUES ('20240716000000_InitialCreate', '8.0.28');");
-                DebugLog.Info("MetadataRepository", "MetadataRepository: existing database detected, migration skipped");
+                DebugLog.Info("MetadataRepository",
+                    "MetadataRepository: existing database detected, migration skipped");
             }
             else
             {
@@ -108,7 +109,8 @@ public class MetadataRepository
             }
             catch (Exception ex2)
             {
-                DebugLog.Info("MetadataRepository", $"MetadataRepository: Failed to create migration history fallback - {ex2.Message}");
+                DebugLog.Info("MetadataRepository",
+                    $"MetadataRepository: Failed to create migration history fallback - {ex2.Message}");
             }
         }
     }

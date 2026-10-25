@@ -83,7 +83,8 @@ public partial class OtherViewModel
         {
             if (!_dispatcherQueue.HasThreadAccess)
             {
-                DebugLog.Info("OtherViewModel.AdditionalProgram", "[Error] BrowseProgramAsync not executing on UI thread");
+                DebugLog.Info("OtherViewModel.AdditionalProgram",
+                    "[Error] BrowseProgramAsync not executing on UI thread");
                 return;
             }
 
@@ -123,7 +124,8 @@ public partial class OtherViewModel
         }
         catch (Exception ex)
         {
-            DebugLog.Info("OtherViewModel.AdditionalProgram", $"Program selection failed: {ex.Message}\nStack trace: {ex.StackTrace}");
+            DebugLog.Info("OtherViewModel.AdditionalProgram",
+                $"Program selection failed: {ex.Message}\nStack trace: {ex.StackTrace}");
             await ShowErrorAsync(string.Format("AdditionalProgram_SelectFailed_Format".GetLocalized(), ex.Message));
         }
     }

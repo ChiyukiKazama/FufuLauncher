@@ -93,8 +93,7 @@ public partial class SettingsViewModel : ObservableRecipient
     [ObservableProperty] private Visibility _autoThemeColorPreviewVisibility = Visibility.Collapsed;
     private Windows.UI.Color _launchButtonOverlayColorObj = Windows.UI.Color.FromArgb(255, 0, 120, 215);
 
-    [ObservableProperty]
-    [NotifyPropertyChangedFor(nameof(IsManualThemeColorEnabled))]
+    [ObservableProperty] [NotifyPropertyChangedFor(nameof(IsManualThemeColorEnabled))]
     private bool _isAutoThemeColorEnabled;
 
     public bool IsManualThemeColorEnabled => !IsAutoThemeColorEnabled;

@@ -51,7 +51,8 @@ public partial class GachaAnalysisViewModel
         }
         catch (Exception ex)
         {
-            DebugLog.Info("GachaAnalysisViewModel.Metadata", $"[Gacha] Failed to fetch metadata from API: {ex.Message}");
+            DebugLog.Info("GachaAnalysisViewModel.Metadata",
+                $"[Gacha] Failed to fetch metadata from API: {ex.Message}");
             UpdateMetadata(null, deferRefresh: true);
         }
         finally
@@ -82,7 +83,8 @@ public partial class GachaAnalysisViewModel
             }
             else
             {
-                DebugLog.Info("GachaAnalysisViewModel.Metadata", $"[Gacha] {typeName} metadata fetch failed, still empty after {maxAttempts} attempts");
+                DebugLog.Info("GachaAnalysisViewModel.Metadata",
+                    $"[Gacha] {typeName} metadata fetch failed, still empty after {maxAttempts} attempts");
             }
         }
 

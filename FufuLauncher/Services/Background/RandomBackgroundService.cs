@@ -21,14 +21,17 @@ public static class RandomBackgroundService
     private const string ChallengeCookieName = "acw_sc__v2";
     private const string ChallengeKey = "3000176000856006061501533003690027800375";
     public const string PinnedSettingKey = "IsRandomBackgroundPinned";
+
     private static readonly int[] ChallengeOrder =
     {
         0x0f, 0x23, 0x1d, 0x18, 0x21, 0x10, 0x01, 0x26, 0x0a, 0x09, 0x13, 0x1f, 0x28, 0x1b,
         0x16, 0x17, 0x19, 0x0d, 0x06, 0x0b, 0x27, 0x12, 0x14, 0x08, 0x0e, 0x15, 0x20, 0x1a,
         0x02, 0x1e, 0x07, 0x04, 0x11, 0x05, 0x03, 0x1c, 0x22, 0x25, 0x0c, 0x24
     };
+
     private static readonly Regex ChallengeArgPattern =
         new(@"arg1\s*=\s*'([0-9A-Fa-f]{16,})'", RegexOptions.Compiled);
+
     private static readonly HttpClient Client;
     private static readonly object DisplayedImageLock = new();
     private static byte[]? _lastDisplayedBytes;
@@ -89,6 +92,7 @@ public static class RandomBackgroundService
                 _lastDisplayedPath = path;
                 _lastDisplayedBytes = null;
             }
+
             return new BackgroundRenderResult { ImageSource = image, IsVideo = false };
         }
         catch (Exception ex)
@@ -112,6 +116,7 @@ public static class RandomBackgroundService
                 _lastDisplayedPath = path;
                 _lastDisplayedBytes = null;
             }
+
             return new BackgroundRenderResult { ImageSource = image, IsVideo = false };
         }
         catch (Exception ex)
@@ -153,6 +158,7 @@ public static class RandomBackgroundService
                 _lastDisplayedPath = PinnedImagePath;
                 _lastDisplayedBytes = null;
             }
+
             return true;
         }
         catch (Exception ex)

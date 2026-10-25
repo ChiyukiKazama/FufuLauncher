@@ -157,7 +157,8 @@ public sealed class ProcessCpuUsageMonitor : IDisposable
             catch (Exception ex)
             {
                 _isAlertOpen = false;
-                DebugLog.Info("ProcessCpuUsageMonitor", $"[CpuUsageMonitor] Failed to show notification window: {ex.Message}");
+                DebugLog.Info("ProcessCpuUsageMonitor",
+                    $"[CpuUsageMonitor] Failed to show notification window: {ex.Message}");
             }
         });
     }

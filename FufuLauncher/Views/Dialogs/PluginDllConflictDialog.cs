@@ -278,7 +278,8 @@ internal static class PluginDllConflictDialog
             }
             catch (Exception ex)
             {
-                DebugLog.Info("PluginDllConflictDialog", $"[PluginDllConflictDialog] Failed to show dialog: {ex.Message}");
+                DebugLog.Info("PluginDllConflictDialog",
+                    $"[PluginDllConflictDialog] Failed to show dialog: {ex.Message}");
                 return (false, ContentDialogResult.None);
             }
         }
@@ -304,7 +305,8 @@ internal static class PluginDllConflictDialog
         }
         catch (Exception ex)
         {
-            DebugLog.Info("PluginDllConflictDialog", $"[PluginDllConflictDialog] Failed to open plugin directory: {ex.Message}");
+            DebugLog.Info("PluginDllConflictDialog",
+                $"[PluginDllConflictDialog] Failed to open plugin directory: {ex.Message}");
         }
     }
 
@@ -319,7 +321,8 @@ internal static class PluginDllConflictDialog
         }
         catch (Exception ex)
         {
-            DebugLog.Info("PluginDllConflictDialog", $"[PluginDllConflictDialog] Failed to read theme brushes: {ex.Message}");
+            DebugLog.Info("PluginDllConflictDialog",
+                $"[PluginDllConflictDialog] Failed to read theme brushes: {ex.Message}");
         }
 
         return new SolidColorBrush(fallback);

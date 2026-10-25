@@ -41,7 +41,8 @@ public class AnnouncementService : IAnnouncementService
         }
         catch (Exception ex)
         {
-            DebugLog.Info("AnnouncementService", $"[AnnouncementService] Failed to get current announcement URL: {ex.Message}");
+            DebugLog.Info("AnnouncementService",
+                $"[AnnouncementService] Failed to get current announcement URL: {ex.Message}");
             return null;
         }
     }
@@ -93,7 +94,8 @@ public class AnnouncementService : IAnnouncementService
         }
         catch (Exception ex)
         {
-            DebugLog.Info("AnnouncementService", $"[AnnouncementService] Error in announcement update check: {ex.Message}");
+            DebugLog.Info("AnnouncementService",
+                $"[AnnouncementService] Error in announcement update check: {ex.Message}");
             return null;
         }
         finally
@@ -119,7 +121,8 @@ public class AnnouncementService : IAnnouncementService
         }
         catch (Exception ex)
         {
-            DebugLog.Info("AnnouncementService", $"[AnnouncementService] Error checking game running state: {ex.Message}");
+            DebugLog.Info("AnnouncementService",
+                $"[AnnouncementService] Error checking game running state: {ex.Message}");
             return false;
         }
     }

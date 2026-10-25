@@ -233,7 +233,8 @@ internal static class BackgroundColorAnalyzer
         return saturationFactor * (0.35 + 0.65 * lightnessFactor);
     }
 
-    private static bool IsFlatArea(byte[] pixels, int width, int height, int x, int y, int stride, byte red, byte green, byte blue)
+    private static bool IsFlatArea(byte[] pixels, int width, int height, int x, int y, int stride, byte red, byte green,
+        byte blue)
     {
         var delta = 0;
         var comparisons = 0;
@@ -267,7 +268,8 @@ internal static class BackgroundColorAnalyzer
         return comparisons > 0 && delta / comparisons <= FlatDeltaThreshold;
     }
 
-    private static void RgbToHsl(byte red, byte green, byte blue, out double hue, out double saturation, out double lightness)
+    private static void RgbToHsl(byte red, byte green, byte blue, out double hue, out double saturation,
+        out double lightness)
     {
         var r = red / 255.0;
         var g = green / 255.0;

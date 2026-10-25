@@ -76,7 +76,8 @@ public class ScreenshotService : IScreenshotService, IDisposable
 
         if (_gameWindowHandle == IntPtr.Zero)
         {
-            DebugLog.Info("ScreenshotService", "[Screenshot] Game window not found, screenshot service startup aborted");
+            DebugLog.Info("ScreenshotService",
+                "[Screenshot] Game window not found, screenshot service startup aborted");
             return;
         }
 
@@ -88,7 +89,8 @@ public class ScreenshotService : IScreenshotService, IDisposable
         _hookThread.Start();
 
         _isRunning = true;
-        DebugLog.Info("ScreenshotService", $"[Screenshot] Started, listening for hotkey, game PID: {gamePid}, window handle: {_gameWindowHandle}");
+        DebugLog.Info("ScreenshotService",
+            $"[Screenshot] Started, listening for hotkey, game PID: {gamePid}, window handle: {_gameWindowHandle}");
     }
 
     public Task StopAsync()
@@ -548,7 +550,8 @@ public class ScreenshotService : IScreenshotService, IDisposable
 
             if (hr != 0 || d3dDevice == IntPtr.Zero)
             {
-                DebugLog.Info("ScreenshotService", $"[Screenshot] D3D11CreateDevice HARDWARE failed, HRESULT: 0x{hr:X8}");
+                DebugLog.Info("ScreenshotService",
+                    $"[Screenshot] D3D11CreateDevice HARDWARE failed, HRESULT: 0x{hr:X8}");
                 hr = D3D11CreateDevice(
                     IntPtr.Zero,
                     5,
@@ -563,7 +566,8 @@ public class ScreenshotService : IScreenshotService, IDisposable
 
                 if (hr != 0 || d3dDevice == IntPtr.Zero)
                 {
-                    DebugLog.Info("ScreenshotService", $"[Screenshot] D3D11CreateDevice WARP also failed, HRESULT: 0x{hr:X8}");
+                    DebugLog.Info("ScreenshotService",
+                        $"[Screenshot] D3D11CreateDevice WARP also failed, HRESULT: 0x{hr:X8}");
                     return null;
                 }
             }
@@ -578,7 +582,8 @@ public class ScreenshotService : IScreenshotService, IDisposable
 
             if (hr != 0 || dxgiDevice == IntPtr.Zero)
             {
-                DebugLog.Info("ScreenshotService", $"[Screenshot] QueryInterface IDXGIDevice failed, HRESULT: 0x{hr:X8}");
+                DebugLog.Info("ScreenshotService",
+                    $"[Screenshot] QueryInterface IDXGIDevice failed, HRESULT: 0x{hr:X8}");
                 return null;
             }
 
@@ -596,7 +601,8 @@ public class ScreenshotService : IScreenshotService, IDisposable
 
             if (hr != 0 || inspectable == IntPtr.Zero)
             {
-                DebugLog.Info("ScreenshotService", $"[Screenshot] CreateDirect3D11DeviceFromDXGIDevice failed, HRESULT: 0x{hr:X8}");
+                DebugLog.Info("ScreenshotService",
+                    $"[Screenshot] CreateDirect3D11DeviceFromDXGIDevice failed, HRESULT: 0x{hr:X8}");
                 return null;
             }
 
@@ -613,7 +619,8 @@ public class ScreenshotService : IScreenshotService, IDisposable
         }
         catch (Exception ex)
         {
-            DebugLog.Info("ScreenshotService", $"[Screenshot] CreateDirect3DDevice error: {ex.Message}\n{ex.StackTrace}");
+            DebugLog.Info("ScreenshotService",
+                $"[Screenshot] CreateDirect3DDevice error: {ex.Message}\n{ex.StackTrace}");
             return null;
         }
     }

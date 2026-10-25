@@ -21,7 +21,10 @@ public sealed partial class McpAuditWindow : Window
 {
     private static McpAuditWindow? _current;
 
-    public McpAuditViewModel ViewModel { get; }
+    public McpAuditViewModel ViewModel
+    {
+        get;
+    }
 
     public static void ShowOrActivate()
     {

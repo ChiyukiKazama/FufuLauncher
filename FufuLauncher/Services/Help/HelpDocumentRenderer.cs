@@ -93,7 +93,8 @@ public static class HelpDocumentRenderer
         }
         catch (Exception ex)
         {
-            DebugLog.Info("HelpDocumentRenderer", $"[HelpDocumentRenderer] Failed to read document template: {ex.Message}");
+            DebugLog.Info("HelpDocumentRenderer",
+                $"[HelpDocumentRenderer] Failed to read document template: {ex.Message}");
             return FallbackTemplate;
         }
     }

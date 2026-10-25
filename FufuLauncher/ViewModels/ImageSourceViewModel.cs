@@ -54,15 +54,19 @@ public partial class ImageSourceViewModel : ObservableObject
 
     [ObservableProperty] private string _sourceTitle = string.Empty;
     [ObservableProperty] private string _sourceCaption = string.Empty;
-    [ObservableProperty]
-    [NotifyPropertyChangedFor(nameof(HasStatus))]
+
+    [ObservableProperty] [NotifyPropertyChangedFor(nameof(HasStatus))]
     private string _statusText = string.Empty;
+
     [ObservableProperty] private string _bingCopyright = string.Empty;
     [ObservableProperty] private bool _bingChangeOnStartup = true;
     private bool _isBingOfficial;
     private BingYearOption? _selectedBingYearOption;
 
-    public IReadOnlyList<BingYearOption> BingYearOptions { get; }
+    public IReadOnlyList<BingYearOption> BingYearOptions
+    {
+        get;
+    }
 
     public bool IsBingOfficial
     {
@@ -111,6 +115,7 @@ public partial class ImageSourceViewModel : ObservableObject
             OnIsRandomBackgroundPinnedChanged(value);
         }
     }
+
     [ObservableProperty] private bool _hasCustomBackground;
     [ObservableProperty] private bool _hasSlideshowFolder;
     [ObservableProperty] private bool _isPreviewLoading;
@@ -135,21 +140,45 @@ public partial class ImageSourceViewModel : ObservableObject
 
     public bool HasStatus => !string.IsNullOrWhiteSpace(StatusText);
 
-    public IAsyncRelayCommand NextCommand { get; }
+    public IAsyncRelayCommand NextCommand
+    {
+        get;
+    }
 
-    public IAsyncRelayCommand PreviousCommand { get; }
+    public IAsyncRelayCommand PreviousCommand
+    {
+        get;
+    }
 
-    public IAsyncRelayCommand SelectCustomBackgroundCommand { get; }
+    public IAsyncRelayCommand SelectCustomBackgroundCommand
+    {
+        get;
+    }
 
-    public IAsyncRelayCommand ClearCustomBackgroundCommand { get; }
+    public IAsyncRelayCommand ClearCustomBackgroundCommand
+    {
+        get;
+    }
 
-    public IAsyncRelayCommand SelectSlideshowFolderCommand { get; }
+    public IAsyncRelayCommand SelectSlideshowFolderCommand
+    {
+        get;
+    }
 
-    public IAsyncRelayCommand ClearSlideshowFolderCommand { get; }
+    public IAsyncRelayCommand ClearSlideshowFolderCommand
+    {
+        get;
+    }
 
-    public IAsyncRelayCommand SaveBackgroundApiCommand { get; }
+    public IAsyncRelayCommand SaveBackgroundApiCommand
+    {
+        get;
+    }
 
-    public IAsyncRelayCommand ResetBackgroundApiCommand { get; }
+    public IAsyncRelayCommand ResetBackgroundApiCommand
+    {
+        get;
+    }
 
     public ImageSourceViewModel(
         ILocalSettingsService localSettingsService,
@@ -249,7 +278,8 @@ public partial class ImageSourceViewModel : ObservableObject
         else if (SelectedTab == ImageSourceTab.Slideshow && !HasSlideshowFolder)
             ClearPreview("ImageSource_SlideshowEmpty");
 
-        DebugLog.Info("ImageSourceViewModel", "VM.Initialize.End", $"{Environment.TickCount64 - started}ms tab={SelectedTab}");
+        DebugLog.Info("ImageSourceViewModel", "VM.Initialize.End",
+            $"{Environment.TickCount64 - started}ms tab={SelectedTab}");
     }
 
     private async Task<ImageSourceSettingsSnapshot> LoadSettingsSnapshotAsync()
@@ -261,7 +291,8 @@ public partial class ImageSourceViewModel : ObservableObject
 
         var customApiUrl =
             (await _localSettingsService.ReadSettingAsync("CustomBackgroundApiUrl"))?.ToString() ?? string.Empty;
-        var customPath = (await _localSettingsService.ReadSettingAsync("CustomBackgroundPath"))?.ToString() ?? string.Empty;
+        var customPath = (await _localSettingsService.ReadSettingAsync("CustomBackgroundPath"))?.ToString() ??
+                         string.Empty;
         var slideshowFolder =
             (await _localSettingsService.ReadSettingAsync("BackgroundSlideshowFolder"))?.ToString() ?? string.Empty;
         var intervalJson = await _localSettingsService.ReadSettingAsync("BackgroundSlideshowInterval");
@@ -390,12 +421,14 @@ public partial class ImageSourceViewModel : ObservableObject
                 _isStepping = false;
         }
 
-        DebugLog.Info("ImageSourceViewModel", "SelectTab.End", $"{tab} in {Environment.TickCount64 - started}ms current={requestVersion == _requestVersion}");
+        DebugLog.Info("ImageSourceViewModel", "SelectTab.End",
+            $"{tab} in {Environment.TickCount64 - started}ms current={requestVersion == _requestVersion}");
     }
 
     public void ApplyBackgroundResult(BackgroundRenderResult? result)
     {
-        DebugLog.Info("ImageSourceViewModel", "VM.ApplyBackgroundResult", $"source={(result?.ImageSource == null ? "null" : "set")} fallback={result?.IsFallback} tab={SelectedTab}");
+        DebugLog.Info("ImageSourceViewModel", "VM.ApplyBackgroundResult",
+            $"source={(result?.ImageSource == null ? "null" : "set")} fallback={result?.IsFallback} tab={SelectedTab}");
         if (SelectedTab == ImageSourceTab.Custom && !HasCustomBackground) return;
         if (SelectedTab == ImageSourceTab.Slideshow && !HasSlideshowFolder) return;
 
@@ -616,7 +649,8 @@ public partial class ImageSourceViewModel : ObservableObject
         }
         catch (Exception ex)
         {
-            DebugLog.Info("ImageSourceViewModel", $"[ImageSource] Failed to save random background range: {ex.Message}");
+            DebugLog.Info("ImageSourceViewModel",
+                $"[ImageSource] Failed to save random background range: {ex.Message}");
             StatusText = ex.Message;
         }
     }
@@ -836,7 +870,8 @@ public partial class ImageSourceViewModel : ObservableObject
         {
             if (requestVersion == _requestVersion && SelectedTab == ImageSourceTab.Official)
             {
-                DebugLog.Info("ImageSourceViewModel", $"[ImageSource] Failed to fetch official backgrounds: {ex.Message}");
+                DebugLog.Info("ImageSourceViewModel",
+                    $"[ImageSource] Failed to fetch official backgrounds: {ex.Message}");
                 StatusText = ex.Message;
                 IsPreviewLoading = false;
             }
@@ -924,6 +959,7 @@ public partial class ImageSourceViewModel : ObservableObject
                         if (!moved && requestVersion == _requestVersion)
                             IsPreviewLoading = false;
                     }
+
                     break;
             }
         }

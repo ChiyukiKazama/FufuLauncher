@@ -83,6 +83,7 @@ public partial class App
             {
                 DebugLog.Info("App.Startup", $"[App] MCP service start skipped: {ex.Message}");
             }
+
             var shouldRunBackgroundTasks = !AppPaths.IsFirstRun &&
                                            !(MainWindow is MainWindow mw && mw.IsAgreementShowing);
             if (shouldRunBackgroundTasks)

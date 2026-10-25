@@ -87,7 +87,8 @@ public class AchievementRepository
                     "CREATE TABLE IF NOT EXISTS __EFMigrationsHistory (MigrationId TEXT PRIMARY KEY, ProductVersion TEXT);");
                 context.Database.ExecuteSqlRaw(
                     "INSERT OR IGNORE INTO __EFMigrationsHistory VALUES ('20240716000000_InitialCreate', '8.0.28');");
-                DebugLog.Info("AchievementRepository", "AchievementRepository: existing database detected, migration skipped");
+                DebugLog.Info("AchievementRepository",
+                    "AchievementRepository: existing database detected, migration skipped");
             }
             else
             {
@@ -98,7 +99,8 @@ public class AchievementRepository
         }
         catch (Exception ex)
         {
-            DebugLog.Info("AchievementRepository", $"AchievementRepository: Database migration exception - {ex.Message}");
+            DebugLog.Info("AchievementRepository",
+                $"AchievementRepository: Database migration exception - {ex.Message}");
 
             try
             {
@@ -110,7 +112,8 @@ public class AchievementRepository
             }
             catch (Exception ex2)
             {
-                DebugLog.Info("AchievementRepository", $"AchievementRepository: Failed to create migration history fallback - {ex2.Message}");
+                DebugLog.Info("AchievementRepository",
+                    $"AchievementRepository: Failed to create migration history fallback - {ex2.Message}");
             }
         }
     }

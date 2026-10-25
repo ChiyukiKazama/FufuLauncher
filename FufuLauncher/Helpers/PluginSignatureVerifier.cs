@@ -218,7 +218,8 @@ public static class PluginSignatureVerifier
         }
         catch (Exception ex)
         {
-            DebugLog.Info("PluginSignatureVerifier", $"[Signature] Failed to read signing certificate {filePath}: {ex.Message}");
+            DebugLog.Info("PluginSignatureVerifier",
+                $"[Signature] Failed to read signing certificate {filePath}: {ex.Message}");
             return null;
         }
     }
@@ -267,7 +268,8 @@ public static class PluginSignatureVerifier
         }
         catch (Exception ex)
         {
-            DebugLog.Info("PluginSignatureVerifier", $"[Signature] Failed to verify trust status {filePath}: {ex.Message}");
+            DebugLog.Info("PluginSignatureVerifier",
+                $"[Signature] Failed to verify trust status {filePath}: {ex.Message}");
             return TRUST_E_NOSIGNATURE;
         }
         finally

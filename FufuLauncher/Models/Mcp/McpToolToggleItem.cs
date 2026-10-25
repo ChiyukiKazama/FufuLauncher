@@ -22,11 +22,20 @@ public sealed class McpToolToggleItem : ObservableObject
         _onChanged = onChanged;
     }
 
-    public string Id { get; }
+    public string Id
+    {
+        get;
+    }
 
-    public string Title { get; }
+    public string Title
+    {
+        get;
+    }
 
-    public string Description { get; }
+    public string Description
+    {
+        get;
+    }
 
     public bool IsEnabled
     {

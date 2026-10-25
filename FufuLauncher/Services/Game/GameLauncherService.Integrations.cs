@@ -70,7 +70,8 @@ public partial class GameLauncherService
 
                 if (!string.IsNullOrEmpty(programPath) && File.Exists(programPath))
                 {
-                    DebugLog.Info("GameLauncherService.Integrations", $"[AdditionalProgram] File exists, starting: {programPath}");
+                    DebugLog.Info("GameLauncherService.Integrations",
+                        $"[AdditionalProgram] File exists, starting: {programPath}");
 
                     var startInfo = new ProcessStartInfo
                     {
@@ -85,17 +86,20 @@ public partial class GameLauncherService
                 }
                 else
                 {
-                    DebugLog.Info("GameLauncherService.Integrations", $"[AdditionalProgram] File not found or invalid path: '{programPath}'");
+                    DebugLog.Info("GameLauncherService.Integrations",
+                        $"[AdditionalProgram] File not found or invalid path: '{programPath}'");
                 }
             }
             else
             {
-                DebugLog.Info("GameLauncherService.Integrations", $"[AdditionalProgram] Disabled or empty path: enabled={enabled}, path={path}");
+                DebugLog.Info("GameLauncherService.Integrations",
+                    $"[AdditionalProgram] Disabled or empty path: enabled={enabled}, path={path}");
             }
         }
         catch (Exception ex)
         {
-            DebugLog.Info("GameLauncherService.Integrations", $"[AdditionalProgram] Start failed: {ex.Message}\n{ex.StackTrace}");
+            DebugLog.Info("GameLauncherService.Integrations",
+                $"[AdditionalProgram] Start failed: {ex.Message}\n{ex.StackTrace}");
         }
     }
 
@@ -111,7 +115,8 @@ public partial class GameLauncherService
                     ? Math.Clamp(Convert.ToDouble(delaySetting), 0.0, 60.0)
                     : 0.0;
 
-                DebugLog.Info("GameLauncherService.Integrations", $"[BetterGI] Config enabled, launching bettergi://start via URL scheme in {delaySeconds:0.#} seconds");
+                DebugLog.Info("GameLauncherService.Integrations",
+                    $"[BetterGI] Config enabled, launching bettergi://start via URL scheme in {delaySeconds:0.#} seconds");
 
                 if (delaySeconds > 0)
                 {
@@ -121,14 +126,16 @@ public partial class GameLauncherService
                     }
                     catch (OperationCanceledException)
                     {
-                        DebugLog.Info("GameLauncherService.Integrations", "[BetterGI] Launch canceled, skipping BetterGI start");
+                        DebugLog.Info("GameLauncherService.Integrations",
+                            "[BetterGI] Launch canceled, skipping BetterGI start");
                         return;
                     }
                 }
 
                 if (cancellationToken.IsCancellationRequested)
                 {
-                    DebugLog.Info("GameLauncherService.Integrations", "[BetterGI] Launch canceled, skipping BetterGI start");
+                    DebugLog.Info("GameLauncherService.Integrations",
+                        "[BetterGI] Launch canceled, skipping BetterGI start");
                     return;
                 }
 
@@ -171,7 +178,8 @@ public partial class GameLauncherService
                     }
                     catch (Exception ex)
                     {
-                        DebugLog.Info("GameLauncherService.Integrations", $"[BetterGI] Failed to terminate process: {ex.Message}");
+                        DebugLog.Info("GameLauncherService.Integrations",
+                            $"[BetterGI] Failed to terminate process: {ex.Message}");
                     }
                 }
 
@@ -192,7 +200,8 @@ public partial class GameLauncherService
             }
             catch (Exception ex)
             {
-                DebugLog.Info("GameLauncherService.Integrations", $"[BetterGI] taskkill termination failed: {ex.Message}");
+                DebugLog.Info("GameLauncherService.Integrations",
+                    $"[BetterGI] taskkill termination failed: {ex.Message}");
             }
         }
         catch (Exception ex)

@@ -65,7 +65,8 @@ public sealed partial class McpToolInvoker
         var enabled = RequiredBool(arguments, "enabled");
 
         var plugin = ResolvePlugin(ScanPlugins(), selector) ??
-                     throw new McpToolException($"Plugin not found: {selector}. Call list_plugins to see installed plugins.");
+                     throw new McpToolException(
+                         $"Plugin not found: {selector}. Call list_plugins to see installed plugins.");
 
         if (plugin.Enabled == enabled)
         {
@@ -85,7 +86,8 @@ public sealed partial class McpToolInvoker
             if (_constraintService.IsRestricted &&
                 LightweightPluginService.IsMainPluginPackage(folderName, plugin.FileName))
             {
-                throw new McpToolException($"Enabling this plugin is blocked by the launcher policy: {_constraintService.BlockMessage}");
+                throw new McpToolException(
+                    $"Enabling this plugin is blocked by the launcher policy: {_constraintService.BlockMessage}");
             }
 
             var blockReason = _lightweightPlugin.GetInstallBlockReason(folderName, plugin.FileName);
@@ -356,7 +358,8 @@ public sealed partial class McpToolInvoker
     {
         if (string.IsNullOrWhiteSpace(plugin.ConfigPath) || !File.Exists(plugin.ConfigPath))
         {
-            throw new McpToolException($"Plugin \"{plugin.Id}\" has no config file; configuration cannot be read or changed.");
+            throw new McpToolException(
+                $"Plugin \"{plugin.Id}\" has no config file; configuration cannot be read or changed.");
         }
 
         return plugin.ConfigPath;
@@ -400,7 +403,8 @@ public sealed partial class McpToolInvoker
             case PluginConfigValueKind.Key:
                 if (!int.TryParse(trimmed, NumberStyles.Integer, CultureInfo.InvariantCulture, out var keyCode))
                 {
-                    throw new McpToolException($"Option \"{option.SectionName}\" requires an integer virtual-key code.");
+                    throw new McpToolException(
+                        $"Option \"{option.SectionName}\" requires an integer virtual-key code.");
                 }
 
                 return keyCode.ToString(CultureInfo.InvariantCulture);
@@ -426,7 +430,8 @@ public sealed partial class McpToolInvoker
             default:
                 if (trimmed.Length > 2048)
                 {
-                    throw new McpToolException($"Option \"{option.SectionName}\" text is too long (max 2048 characters).");
+                    throw new McpToolException(
+                        $"Option \"{option.SectionName}\" text is too long (max 2048 characters).");
                 }
 
                 if (trimmed.Contains('\r') || trimmed.Contains('\n') || trimmed.Contains('\0'))

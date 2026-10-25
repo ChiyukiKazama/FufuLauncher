@@ -86,7 +86,8 @@ public sealed partial class CommunityWindow : Window
         }
         catch (InvalidCastException ex)
         {
-            DebugLog.Info("CommunityWindow", $"ContextMenuRequested event unsupported (WebView2 version too old): {ex.Message}");
+            DebugLog.Info("CommunityWindow",
+                $"ContextMenuRequested event unsupported (WebView2 version too old): {ex.Message}");
         }
 
         CommunityWebView.CoreWebView2.WebMessageReceived += CoreWebView2_WebMessageReceived;

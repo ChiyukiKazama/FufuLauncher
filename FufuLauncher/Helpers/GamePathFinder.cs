@@ -38,12 +38,14 @@ namespace FufuLauncher.Helpers
                                 var subDirPath = Path.Combine(value, "Genshin Impact Game", exeName);
                                 if (File.Exists(subDirPath))
                                 {
-                                    DebugLog.Info("GamePathFinder", $"[Debug] Validation passed: file found {subDirPath}");
+                                    DebugLog.Info("GamePathFinder",
+                                        $"[Debug] Validation passed: file found {subDirPath}");
                                     return Path.GetDirectoryName(subDirPath);
                                 }
                             }
 
-                            DebugLog.Info("GamePathFinder", "[Debug] Registry path exists but game executable not found there!");
+                            DebugLog.Info("GamePathFinder",
+                                "[Debug] Registry path exists but game executable not found there!");
                         }
                     }
                     else

@@ -23,7 +23,8 @@ public partial class LuaPluginInstaller
 
         if (rawPath.Contains(".."))
         {
-            DebugLog.Info("LuaPluginInstaller.Security", $"[LuaInstaller] SECURITY: Path traversal attempt blocked in {operation}: {rawPath}");
+            DebugLog.Info("LuaPluginInstaller.Security",
+                $"[LuaInstaller] SECURITY: Path traversal attempt blocked in {operation}: {rawPath}");
             throw new SecurityViolationException(
                 string.Format("PluginStorePathTraversal".GetLocalized()));
         }
@@ -45,7 +46,8 @@ public partial class LuaPluginInstaller
             !fullPath.StartsWith(Path.TrimEndingDirectorySeparator(pluginsDirFull) + Path.DirectorySeparatorChar,
                 StringComparison.OrdinalIgnoreCase))
         {
-            DebugLog.Info("LuaPluginInstaller.Security", $"[LuaInstaller] SECURITY: Path outside plugins dir blocked in {operation}: {fullPath}");
+            DebugLog.Info("LuaPluginInstaller.Security",
+                $"[LuaInstaller] SECURITY: Path outside plugins dir blocked in {operation}: {fullPath}");
             throw new SecurityViolationException(
                 string.Format("PluginStoreSecurityOutsideDir".GetLocalized(), operation));
         }
@@ -67,7 +69,8 @@ public partial class LuaPluginInstaller
             name.Contains('?') || name.Contains('"') ||
             name.Contains('<') || name.Contains('>') || name.Contains('|'))
         {
-            DebugLog.Info("LuaPluginInstaller.Security", $"[LuaInstaller] SECURITY: Invalid name characters in {operation}: {name}");
+            DebugLog.Info("LuaPluginInstaller.Security",
+                $"[LuaInstaller] SECURITY: Invalid name characters in {operation}: {name}");
             throw new SecurityViolationException(
                 string.Format("PluginStorePathTraversal".GetLocalized()));
         }
@@ -93,7 +96,8 @@ public partial class LuaPluginInstaller
         }
         catch (RegexMatchTimeoutException)
         {
-            DebugLog.Info("LuaPluginInstaller.Security", $"[LuaInstaller] Wildcard match timeout for pattern: {pattern}");
+            DebugLog.Info("LuaPluginInstaller.Security",
+                $"[LuaInstaller] Wildcard match timeout for pattern: {pattern}");
             return false;
         }
     }

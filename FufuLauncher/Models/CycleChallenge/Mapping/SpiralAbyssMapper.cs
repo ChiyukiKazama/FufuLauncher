@@ -9,15 +9,8 @@ using FufuLauncher.Models.CycleChallenge.Dto;
 
 namespace FufuLauncher.Models.CycleChallenge.Mapping;
 
-/// <summary>
-/// 深境螺旋 DTO → 展示模型的纯函数映射。
-/// 只做「排序 / 取数 / 文本格式化」，不做 IO、不弹 UI、不抛异常（脏数据退化为占位文本）。
-/// </summary>
 public static class SpiralAbyssMapper
 {
-    /// <summary>
-    /// 映射入口。传入 null（未参与 / 接口无 data）时返回 <see cref="SpiralAbyssDisplay.Empty"/>。
-    /// </summary>
     public static SpiralAbyssDisplay Map(SpiralAbyssDto? dto, CycleChallengeTimeContext? timeContext = null)
     {
         var context = timeContext ?? CycleChallengeTimeContext.Default;
@@ -26,7 +19,7 @@ public static class SpiralAbyssMapper
             return SpiralAbyssDisplay.Empty(timeContext: context);
         }
 
-        // 层按 index 升序；每层的间、每间的战斗同样按 index 升序（战斗 1=上半，2=下半）。
+
         var floors = new List<SpiralAbyssFloor>();
         foreach (var floorDto in dto.Floors ?? new List<SpiralAbyssFloorDto>())
         {
@@ -40,11 +33,11 @@ public static class SpiralAbyssMapper
 
         floors.Sort(static (left, right) => left.Index.CompareTo(right.Index));
 
-        // 总星口径（校准结论）：直接用接口的 total_star（全 12 层口径），不要用 floors 累加。
+
         var totalStar = Math.Max(dto.TotalStar, 0);
         var (maxFloorValue, maxFloorText) = ResolveMaxFloor(dto.MaxFloor, floors);
 
-        // 最强一击 = damage_rank 的第一条（接口已按数值倒序返回）。
+
         var strongestHit = 0L;
         foreach (var rank in dto.DamageRank ?? new List<SpiralAbyssRankDto>())
         {
@@ -97,8 +90,7 @@ public static class SpiralAbyssMapper
 
         levels.Sort(static (left, right) => left.Index.CompareTo(right.Index));
 
-        // 地脉异常三形态互斥（校准结论）：common、upper、lower 通常只有一组非空。
-        // 文案为中文，原样保留（只去掉空行），由控件按「上/下优先，common 回退」的规则展示。
+
         var leyLineCommon = NormalizeTextList(dto.LeyLineDisorder);
         var leyLineUpper = NormalizeTextList(dto.LeyLineDisorderUpper);
         var leyLineLower = NormalizeTextList(dto.LeyLineDisorderLower);
@@ -127,7 +119,7 @@ public static class SpiralAbyssMapper
             battles.Add(MapBattle(battleDto, context));
         }
 
-        // 1 = 上半，2 = 下半，按 index 升序后控件取 [0]/[1]。
+
         battles.Sort(static (left, right) => left.Index.CompareTo(right.Index));
 
         return new SpiralAbyssLevel(
@@ -182,10 +174,7 @@ public static class SpiralAbyssMapper
         return new SpiralAbyssRankSection(kind, rows);
     }
 
-    /// <summary>
-    /// 解析 max_floor：既能吃 "12" 这种纯数字字符串，也能吃 "12-3" 这种原始形态；
-    /// 都不可用时退回「最深的已解锁层」。
-    /// </summary>
+
     private static (int Value, string Text) ResolveMaxFloor(string? raw, IReadOnlyList<SpiralAbyssFloor> floors)
     {
         if (!string.IsNullOrWhiteSpace(raw))
@@ -218,10 +207,7 @@ public static class SpiralAbyssMapper
         return (deepest, deepest > 0 ? deepest.ToString(CultureInfo.InvariantCulture) : string.Empty);
     }
 
-    /// <summary>
-    /// 解析时间：兼容 unix 秒（数字或"数字字符串"）、unix 毫秒、以及
-    /// "2026-10-15 20:00:00+00:00" / ISO8601 字符串；0 或无法解析返回 null。
-    /// </summary>
+
     private static DateTimeOffset? ParseTime(string? raw)
     {
         if (string.IsNullOrWhiteSpace(raw))
@@ -243,7 +229,8 @@ public static class SpiralAbyssMapper
                 : DateTimeOffset.FromUnixTimeSeconds(unix);
         }
 
-        if (double.TryParse(text, NumberStyles.Float, CultureInfo.InvariantCulture, out var unixDouble) && unixDouble > 0)
+        if (double.TryParse(text, NumberStyles.Float, CultureInfo.InvariantCulture, out var unixDouble) &&
+            unixDouble > 0)
         {
             return unixDouble > 100_000_000_000d
                 ? DateTimeOffset.FromUnixTimeMilliseconds((long)unixDouble)
@@ -263,11 +250,7 @@ public static class SpiralAbyssMapper
         return null;
     }
 
-    /// <summary>
-    /// 解析 settle_date_time（校准：战斗级才是真实通关时间；楼层级恒 null）。
-    /// 兼容三种形态：1) <c>{ year, month, day, hour, minute, second }</c> 对象；2) 日期字符串；3) unix 秒数字。
-    /// 返回 <see cref="DateTimeKind.Unspecified"/> 的「墙上时间」——接口给的就是服务器本地时间，不做时区换算。
-    /// </summary>
+
     private static DateTime? ParseDateTimeElement(JsonElement? element, CycleChallengeTimeContext context)
     {
         if (element is not { } value)
@@ -315,15 +298,16 @@ public static class SpiralAbyssMapper
                     break;
                 }
 
-                // 无偏移：接口给的是服务器墙上时间，原样返回，由 FormatWallClock 统一换算展示时区
+
                 if (DateTime.TryParse(text, CultureInfo.InvariantCulture, DateTimeStyles.RoundtripKind, out var wall)
                     && wall.Kind == DateTimeKind.Unspecified)
                 {
                     return wall;
                 }
 
-                // 带偏移（含 Z）：先换到服务器时区，再由 FormatWallClock 换算一次
-                if (DateTimeOffset.TryParse(text, CultureInfo.InvariantCulture, DateTimeStyles.AssumeUniversal, out var parsed))
+
+                if (DateTimeOffset.TryParse(text, CultureInfo.InvariantCulture, DateTimeStyles.AssumeUniversal,
+                        out var parsed))
                 {
                     return parsed.ToOffset(context.SourceOffset).DateTime;
                 }
@@ -343,12 +327,11 @@ public static class SpiralAbyssMapper
         return null;
     }
 
-    /// <summary>读取日期对象里的整数字段；兼容 number 与数字字符串两种序列化。</summary>
+
     private static int? ReadInt(JsonElement element, string propertyName)
     {
         if (!element.TryGetProperty(propertyName, out var property))
         {
-            // 兼容首字母大写写法（保守容错）
             var pascalName = char.ToUpperInvariant(propertyName[0]) + propertyName[1..];
             if (!element.TryGetProperty(pascalName, out property))
             {
@@ -359,12 +342,13 @@ public static class SpiralAbyssMapper
         return property.ValueKind switch
         {
             JsonValueKind.Number when property.TryGetInt32(out var number) => number,
-            JsonValueKind.String when int.TryParse(property.GetString(), NumberStyles.Integer, CultureInfo.InvariantCulture, out var parsed) => parsed,
+            JsonValueKind.String when int.TryParse(property.GetString(), NumberStyles.Integer,
+                CultureInfo.InvariantCulture, out var parsed) => parsed,
             _ => null,
         };
     }
 
-    /// <summary>把字符串数组规范化为「去空白、去空行」的文案列表，顺序与原文保持不变。</summary>
+
     private static List<string> NormalizeTextList(List<string>? texts)
     {
         var result = new List<string>();
@@ -379,7 +363,7 @@ public static class SpiralAbyssMapper
         return result;
     }
 
-    /// <summary>头像 URL 轻量规范化：去空白、补协议相对路径；无效返回 null。</summary>
+
     private static string? NormalizeIconUrl(string? raw)
     {
         if (string.IsNullOrWhiteSpace(raw))

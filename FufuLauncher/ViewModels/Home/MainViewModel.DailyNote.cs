@@ -65,7 +65,8 @@ public partial class MainViewModel
 
             if (dailyNoteData == null)
             {
-                DebugLog.Info("MainViewModel.DailyNote", "[DailyNote] Login expired and refresh failed, skipping note update");
+                DebugLog.Info("MainViewModel.DailyNote",
+                    "[DailyNote] Login expired and refresh failed, skipping note update");
                 return;
             }
 

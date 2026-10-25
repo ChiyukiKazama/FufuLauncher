@@ -62,7 +62,8 @@ public sealed partial class OverseaPasswordLoginDialog : ContentDialog, IPasspor
 
             if (await _geetestService.TryVerifyAigisSessionAsync(this, rawAigis, isOversea: true))
             {
-                DebugLog.Info("OverseaPasswordLoginDialog", $"[OverseaPasswordLogin] Geetest completed, retrying with aigis");
+                DebugLog.Info("OverseaPasswordLoginDialog",
+                    $"[OverseaPasswordLogin] Geetest completed, retrying with aigis");
                 continue;
             }
 

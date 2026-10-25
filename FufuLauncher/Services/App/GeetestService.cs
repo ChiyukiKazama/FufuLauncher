@@ -54,7 +54,8 @@ public sealed class GeetestService
             int retcode = doc.RootElement.TryGetProperty("retcode", out JsonElement rc) ? rc.GetInt32() : -1;
             if (retcode != 0 || !doc.RootElement.TryGetProperty("data", out JsonElement data))
             {
-                DebugLog.Info("GeetestService", $"[GeetestService] TryVerifyForDailyNote: createVerification failed retcode={retcode}");
+                DebugLog.Info("GeetestService",
+                    $"[GeetestService] TryVerifyForDailyNote: createVerification failed retcode={retcode}");
                 return null;
             }
 
@@ -70,7 +71,8 @@ public sealed class GeetestService
         GeetestResult result = await ShowGeetestWebViewAsync(gt, challenge, isOversea: false, showNotice: showNotice);
         if (result == null || string.IsNullOrEmpty(result.Validate))
         {
-            DebugLog.Info("GeetestService", $"[GeetestService] TryVerifyForDailyNote: user did not complete verification (result=null) or validate is empty");
+            DebugLog.Info("GeetestService",
+                $"[GeetestService] TryVerifyForDailyNote: user did not complete verification (result=null) or validate is empty");
             return null;
         }
 
@@ -83,7 +85,8 @@ public sealed class GeetestService
             int retcode = doc.RootElement.TryGetProperty("retcode", out JsonElement rc) ? rc.GetInt32() : -1;
             if (retcode != 0 || !doc.RootElement.TryGetProperty("data", out JsonElement data))
             {
-                DebugLog.Info("GeetestService", $"[GeetestService] TryVerifyForDailyNote: verifyVerification failed retcode={retcode}");
+                DebugLog.Info("GeetestService",
+                    $"[GeetestService] TryVerifyForDailyNote: verifyVerification failed retcode={retcode}");
                 return null;
             }
 
@@ -105,7 +108,8 @@ public sealed class GeetestService
         }
         catch (Exception ex)
         {
-            DebugLog.Info("GeetestService", $"[GeetestService] Failed to read captcha dialog description setting, using default display: {ex.Message}");
+            DebugLog.Info("GeetestService",
+                $"[GeetestService] Failed to read captcha dialog description setting, using default display: {ex.Message}");
             return true;
         }
     }
@@ -431,7 +435,8 @@ public sealed class GeetestService
             return false;
         }
 
-        DebugLog.Info("GeetestService", $"[GeetestService] TryVerifyAigisSession: rawSession={Truncate(rawSession, 500)}");
+        DebugLog.Info("GeetestService",
+            $"[GeetestService] TryVerifyAigisSession: rawSession={Truncate(rawSession, 500)}");
 
         AigisSession? session = Deserialize<AigisSession>(rawSession);
         if (session is null || string.IsNullOrEmpty(session.SessionId))
@@ -461,7 +466,8 @@ public sealed class GeetestService
 
         if (isOversea && (result is null || (result.Error == 1 && string.IsNullOrEmpty(result.Validate))))
         {
-            DebugLog.Info("GeetestService", "[GeetestService] TryVerifyAigisSession: api-na load failed, falling back to api.geetest.com");
+            DebugLog.Info("GeetestService",
+                "[GeetestService] TryVerifyAigisSession: api-na load failed, falling back to api.geetest.com");
             result = await ShowGeetestWebViewAsync(verification.Gt, verification.Challenge, isOversea,
                 apiServerOverride: "api.geetest.com");
         }

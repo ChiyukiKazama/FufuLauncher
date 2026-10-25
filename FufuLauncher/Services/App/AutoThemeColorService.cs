@@ -61,7 +61,8 @@ public sealed class AutoThemeColorService : IAutoThemeColorService
         var palette = BackgroundColorPaletteCache.Get(backgroundImage);
         if (palette == null)
         {
-            DebugLog.Info("AutoThemeColorService", "No color palette available for the current background, keeping current colors");
+            DebugLog.Info("AutoThemeColorService",
+                "No color palette available for the current background, keeping current colors");
             return false;
         }
 

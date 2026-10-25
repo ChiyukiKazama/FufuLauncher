@@ -292,7 +292,8 @@ public sealed partial class AvatarCard : UserControl
                     }
                     catch (Exception ex)
                     {
-                        DebugLog.Info("AvatarCard", $"[AvatarCard] Failed to resolve metadata character name: {ex.Message}");
+                        DebugLog.Info("AvatarCard",
+                            $"[AvatarCard] Failed to resolve metadata character name: {ex.Message}");
                     }
 
                     if (names.Count > 0)

@@ -175,7 +175,8 @@ namespace FufuLauncher.Services
                 }
                 catch (Exception ex)
                 {
-                    DebugLog.Info("PluginUpdateService", $"[PluginUpdate] Failed to clean temporary files: {ex.Message}");
+                    DebugLog.Info("PluginUpdateService",
+                        $"[PluginUpdate] Failed to clean temporary files: {ex.Message}");
                 }
             }
         }

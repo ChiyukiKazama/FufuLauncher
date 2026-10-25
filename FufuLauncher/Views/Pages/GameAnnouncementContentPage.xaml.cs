@@ -90,7 +90,8 @@ public sealed partial class GameAnnouncementContentPage : Page
         }
         catch (Exception ex)
         {
-            DebugLog.Info("GameAnnouncementContentPage", $"[GameAnnouncementContentPage] WebView2 initialization failed: {ex.Message}");
+            DebugLog.Info("GameAnnouncementContentPage",
+                $"[GameAnnouncementContentPage] WebView2 initialization failed: {ex.Message}");
             LoadingBar.Visibility = Visibility.Collapsed;
         }
     }

@@ -714,26 +714,67 @@ public sealed class McpInstallJobService
             Message = "Waiting to start.";
         }
 
-        public string Id { get; }
+        public string Id
+        {
+            get;
+        }
 
-        public CancellationTokenSource Cts { get; } = new();
+        public CancellationTokenSource Cts
+        {
+            get;
+        } = new();
 
-        public DateTimeOffset StartedAt { get; }
+        public DateTimeOffset StartedAt
+        {
+            get;
+        }
 
-        public string Status { get; set; }
+        public string Status
+        {
+            get;
+            set;
+        }
 
-        public int ProgressPercent { get; set; }
+        public int ProgressPercent
+        {
+            get;
+            set;
+        }
 
-        public string Message { get; set; }
+        public string Message
+        {
+            get;
+            set;
+        }
 
-        public string? PluginId { get; set; }
+        public string? PluginId
+        {
+            get;
+            set;
+        }
 
-        public string? PluginName { get; set; }
+        public string? PluginName
+        {
+            get;
+            set;
+        }
 
-        public string? CaptchaUrl { get; set; }
+        public string? CaptchaUrl
+        {
+            get;
+            set;
+        }
 
-        public string? Error { get; set; }
+        public string? Error
+        {
+            get;
+            set;
+        }
 
-        public DateTimeOffset UpdatedAt { get; set; }
+        public DateTimeOffset UpdatedAt
+        {
+            get;
+            set;
+        }
     }
 }

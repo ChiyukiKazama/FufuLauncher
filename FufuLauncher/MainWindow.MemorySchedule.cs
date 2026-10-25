@@ -93,7 +93,8 @@ public sealed partial class MainWindow
         _gameMemoryTelemetryTimer = new DispatcherTimer { Interval = GameMemoryTelemetryInterval };
         _gameMemoryTelemetryTimer.Tick += OnGameMemoryTelemetryTick;
         _gameMemoryTelemetryTimer.Start();
-        DebugLog.Info("MainWindow.MemorySchedule", "[MemorySchedule] Game launched, starting 5-minute resource telemetry");
+        DebugLog.Info("MainWindow.MemorySchedule",
+            "[MemorySchedule] Game launched, starting 5-minute resource telemetry");
     }
 
     private void OnGameMemoryTelemetryTick(object? sender, object e)

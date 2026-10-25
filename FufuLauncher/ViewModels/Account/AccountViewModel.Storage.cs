@@ -121,7 +121,8 @@ public partial class AccountViewModel
                 StatusMessage = "Account_LoggedIn".GetLocalized();
             });
 
-            DebugLog.Info("AccountViewModel.Storage", $"[LoadAccountInfo] Loaded account: {entry.Nickname} ({entry.Id})");
+            DebugLog.Info("AccountViewModel.Storage",
+                $"[LoadAccountInfo] Loaded account: {entry.Nickname} ({entry.Id})");
 
             RefreshSavedAccountsList();
         }

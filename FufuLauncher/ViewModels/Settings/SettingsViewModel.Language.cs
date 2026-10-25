@@ -20,7 +20,8 @@ public partial class SettingsViewModel
     {
         try
         {
-            DebugLog.Info("SettingsViewModel.Language", $"[SettingsVM] ApplyLanguageChangeAsync: language={language}, enumValue={(int)language}");
+            DebugLog.Info("SettingsViewModel.Language",
+                $"[SettingsVM] ApplyLanguageChangeAsync: language={language}, enumValue={(int)language}");
 
             await _localSettingsService.SaveSettingAsync("AppLanguage", (int)language);
             var culture = LanguagePreferenceResolver.Resolve(

@@ -103,13 +103,14 @@ public sealed partial class GameUpdateService
     {
         return patchAssets.Count > 0
             ? patchAssets.GroupBy(asset => asset.PatchInfo.Id, StringComparer.Ordinal)
-                .ToDictionary(group => group.Key, group => group.First().PatchInfo.PatchFileSize, StringComparer.Ordinal)
+                .ToDictionary(group => group.Key, group => group.First().PatchInfo.PatchFileSize,
+                    StringComparer.Ordinal)
             : operations.SelectMany(operation => operation.Chunks)
                 .GroupBy(chunk => chunk.AssetChunk.ChunkName, StringComparer.Ordinal)
                 .ToDictionary(group => group.Key, group => group.First().AssetChunk.ChunkSize, StringComparer.Ordinal);
     }
 
-    // Keep the source intact until a complete, verified replacement is ready on the same volume.
+
     private static string GetTemporaryAssetPath(string assetPath) => $"{assetPath}.{Guid.NewGuid():N}.tmp";
 
     private static async Task<bool> CommitAssetAsync(GameUpdateContext context, string tempPath, string targetPath,

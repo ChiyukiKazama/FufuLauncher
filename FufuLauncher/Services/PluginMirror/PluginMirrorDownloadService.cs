@@ -39,7 +39,8 @@ public class PluginMirrorDownloadService
         if (!await IsEnabledAsync()) return false;
         if (_mirrorProvider.LoadConfig().Mirrors.Count == 0)
         {
-            DebugLog.Info("PluginMirrorDownloadService", "[PluginMirrorDownloadService] No mirrors configured, use direct download");
+            DebugLog.Info("PluginMirrorDownloadService",
+                "[PluginMirrorDownloadService] No mirrors configured, use direct download");
             return false;
         }
 
@@ -50,12 +51,14 @@ public class PluginMirrorDownloadService
             if (resolved == null || !MirrorSiteProvider.IsGitHubUrl(resolved))
                 return false;
             targetUrl = resolved;
-            DebugLog.Info("PluginMirrorDownloadService", $"[PluginMirrorDownloadService] Redirect to GitHub detected: {fileUrl} -> {targetUrl}");
+            DebugLog.Info("PluginMirrorDownloadService",
+                $"[PluginMirrorDownloadService] Redirect to GitHub detected: {fileUrl} -> {targetUrl}");
         }
 
         if (App.MainWindow?.DispatcherQueue is not { } dispatcherQueue)
         {
-            DebugLog.Info("PluginMirrorDownloadService", "[PluginMirrorDownloadService] Main window dispatcher unavailable, use direct download");
+            DebugLog.Info("PluginMirrorDownloadService",
+                "[PluginMirrorDownloadService] Main window dispatcher unavailable, use direct download");
             return false;
         }
 

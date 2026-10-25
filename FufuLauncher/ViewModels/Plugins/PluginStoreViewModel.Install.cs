@@ -90,7 +90,8 @@ public partial class PluginStoreViewModel
                 }
                 catch (Exception ex)
                 {
-                    DebugLog.Info("PluginStoreViewModel.Install", $"[PluginStoreVM] Private access failed: {ex.Message}");
+                    DebugLog.Info("PluginStoreViewModel.Install",
+                        $"[PluginStoreVM] Private access failed: {ex.Message}");
                     _installingPluginIds.Remove(item.Id);
                     item.State = StorePluginState.Available;
                     item.InstallProgress = 0;
@@ -194,7 +195,8 @@ public partial class PluginStoreViewModel
             }
             catch (CaptchaRequiredException captchaEx)
             {
-                DebugLog.Info("PluginStoreViewModel.Install", $"[PluginStoreVM] Captcha required: {captchaEx.VerifyUrl}");
+                DebugLog.Info("PluginStoreViewModel.Install",
+                    $"[PluginStoreVM] Captcha required: {captchaEx.VerifyUrl}");
                 item.InstallStatusText = "PluginStoreCaptchaRequired".GetLocalized();
 
                 var dlToken = await ShowGeetestCaptchaAsync(captchaEx.VerifyUrl);
@@ -206,11 +208,13 @@ public partial class PluginStoreViewModel
 
                 item.DlToken = dlToken;
                 attempt++;
-                DebugLog.Info("PluginStoreViewModel.Install", $"[PluginStoreVM] Got dl_token, retrying download (attempt {attempt})...");
+                DebugLog.Info("PluginStoreViewModel.Install",
+                    $"[PluginStoreVM] Got dl_token, retrying download (attempt {attempt})...");
             }
             catch (PrivatePluginAccessException privEx)
             {
-                DebugLog.Info("PluginStoreViewModel.Install", $"[PluginStoreVM] Private access required: {privEx.Message}");
+                DebugLog.Info("PluginStoreViewModel.Install",
+                    $"[PluginStoreVM] Private access required: {privEx.Message}");
                 item.InstallStatusText = "PluginStorePrivateAccessRequired".GetLocalized();
 
                 var accessKey = await ShowPrivateAccessDialogAsync(item);
@@ -263,7 +267,8 @@ public partial class PluginStoreViewModel
             catch (InvalidOperationException ex) when (ex.Message.Contains("download") ||
                                                        ex.Message.Contains("Download"))
             {
-                DebugLog.Info("PluginStoreViewModel.Install", $"[PluginStoreVM] Download error (may need captcha): {ex.Message}");
+                DebugLog.Info("PluginStoreViewModel.Install",
+                    $"[PluginStoreVM] Download error (may need captcha): {ex.Message}");
                 attempt++;
                 if (attempt >= maxCaptchaRetries) throw;
             }

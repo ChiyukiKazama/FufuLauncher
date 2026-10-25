@@ -484,7 +484,8 @@ namespace FufuLauncher.Views
                 }
                 catch (Exception innerEx)
                 {
-                    DebugLog.Info("AchievementUpdaterWindow", $"[AchievementUpdater] Exception while handling error: {innerEx.Message}");
+                    DebugLog.Info("AchievementUpdaterWindow",
+                        $"[AchievementUpdater] Exception while handling error: {innerEx.Message}");
                 }
             }
         }

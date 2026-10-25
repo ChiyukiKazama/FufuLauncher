@@ -149,7 +149,8 @@ public sealed partial class BBSWindow
                 string fp = _activeDeviceFp;
                 if (string.IsNullOrEmpty(fp))
                 {
-                    DebugLog.Info("BBSWindow.Protocol", "[BBSWindow] Warning: _activeDeviceFp is empty, using a temporary random value");
+                    DebugLog.Info("BBSWindow.Protocol",
+                        "[BBSWindow] Warning: _activeDeviceFp is empty, using a temporary random value");
                     fp = Convert.ToHexString(RandomNumberGenerator.GetBytes(7)).ToLowerInvariant();
                 }
 
@@ -193,7 +194,8 @@ public sealed partial class BBSWindow
         string fp = _activeDeviceFp;
         if (string.IsNullOrEmpty(fp))
         {
-            DebugLog.Info("BBSWindow.Protocol", "[BBSWindow] GetHttpRequestHeader: _activeDeviceFp is empty, using random fallback");
+            DebugLog.Info("BBSWindow.Protocol",
+                "[BBSWindow] GetHttpRequestHeader: _activeDeviceFp is empty, using random fallback");
             fp = Convert.ToHexString(RandomNumberGenerator.GetBytes(7)).ToLowerInvariant();
         }
 
@@ -214,7 +216,8 @@ public sealed partial class BBSWindow
         string fp = _activeDeviceFp;
         if (string.IsNullOrEmpty(fp))
         {
-            DebugLog.Info("BBSWindow.Protocol", "[BBSWindow] GetCookieInfoMinimal: _activeDeviceFp is empty, using random fallback");
+            DebugLog.Info("BBSWindow.Protocol",
+                "[BBSWindow] GetCookieInfoMinimal: _activeDeviceFp is empty, using random fallback");
             fp = Convert.ToHexString(RandomNumberGenerator.GetBytes(7)).ToLowerInvariant();
         }
 

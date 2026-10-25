@@ -29,7 +29,8 @@ public partial class GachaAnalysisViewModel
         {
             if (_savedMetadata.Count == 0)
             {
-                DebugLog.Info("GachaAnalysisViewModel.PoolMetadata", "[Gacha] Skipping pool metadata fetch: item metadata not ready");
+                DebugLog.Info("GachaAnalysisViewModel.PoolMetadata",
+                    "[Gacha] Skipping pool metadata fetch: item metadata not ready");
                 return;
             }
 
@@ -37,7 +38,8 @@ public partial class GachaAnalysisViewModel
 
             _charNameToIdMap = BuildNameToIdMap("char");
             _weaponNameToIdMap = BuildNameToIdMap("weapon");
-            DebugLog.Info("GachaAnalysisViewModel.PoolMetadata", $"[Gacha] Pool name→id mappings: characters {_charNameToIdMap.Count}, weapons {_weaponNameToIdMap.Count}");
+            DebugLog.Info("GachaAnalysisViewModel.PoolMetadata",
+                $"[Gacha] Pool name→id mappings: characters {_charNameToIdMap.Count}, weapons {_weaponNameToIdMap.Count}");
 
             var response = await _httpClient.GetStringAsync(ApiEndpoints.WishHistoryUrl);
             var data = JsonSerializer.Deserialize<WishHistoryResponse>(response);
@@ -53,7 +55,8 @@ public partial class GachaAnalysisViewModel
                 var entries = group.Take(2).ToList();
                 if (group.Count() > 2)
                 {
-                    DebugLog.Info("GachaAnalysisViewModel.PoolMetadata", $"[Gacha] More than two character pools in same period, ignored extra entries: {group.Key.Version} {group.Key.Time}");
+                    DebugLog.Info("GachaAnalysisViewModel.PoolMetadata",
+                        $"[Gacha] More than two character pools in same period, ignored extra entries: {group.Key.Version} {group.Key.Time}");
                 }
 
                 foreach (var item in entries)
@@ -137,7 +140,8 @@ public partial class GachaAnalysisViewModel
         }
         catch (Exception ex)
         {
-            DebugLog.Info("GachaAnalysisViewModel.PoolMetadata", $"[Gacha] Failed to fetch pool metadata: {ex.Message}");
+            DebugLog.Info("GachaAnalysisViewModel.PoolMetadata",
+                $"[Gacha] Failed to fetch pool metadata: {ex.Message}");
         }
         finally
         {

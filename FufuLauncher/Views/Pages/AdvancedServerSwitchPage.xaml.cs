@@ -164,7 +164,10 @@ namespace FufuLauncher.Views
         {
             _cts?.Cancel();
             _chartController?.Stop();
-            if (_parentWindow is not null) { _parentWindow.Closed -= ParentWindow_Closed; }
+            if (_parentWindow is not null)
+            {
+                _parentWindow.Closed -= ParentWindow_Closed;
+            }
         }
 
         private void UpdateProgress(GameServerConversionProgress p)

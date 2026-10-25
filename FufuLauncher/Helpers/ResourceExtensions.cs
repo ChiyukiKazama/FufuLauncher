@@ -150,7 +150,8 @@ public static class ResourceExtensions
         }
         catch (Exception ex)
         {
-            DebugLog.Info("ResourceExtensions", $"[ResourceExt] GetLocalized error: key='{resourceKey}', err='{ex.Message}'");
+            DebugLog.Info("ResourceExtensions",
+                $"[ResourceExt] GetLocalized error: key='{resourceKey}', err='{ex.Message}'");
             return resourceKey;
         }
     }

@@ -137,7 +137,8 @@ public sealed partial class GameUpdateService
                         byte[] buffer = new byte[ChunkDownloader.BufferSize];
                         long offset = chunk.ChunkOnFileOffset;
 
-                        using (FileStream chunkFile = new(chunkPath, FileMode.Open, FileAccess.Read, FileShare.ReadWrite))
+                        using (FileStream chunkFile = new(chunkPath, FileMode.Open, FileAccess.Read,
+                                   FileShare.ReadWrite))
                         {
                             using var decompressor = new DecompressionStream(chunkFile);
                             while (true)
@@ -223,14 +224,16 @@ public sealed partial class GameUpdateService
                             while (remaining > 0)
                             {
                                 int read = await localFile
-                                    .ReadAsync(buffer.AsMemory(0, (int)Math.Min(buffer.Length, remaining)), context.Token)
+                                    .ReadAsync(buffer.AsMemory(0, (int)Math.Min(buffer.Length, remaining)),
+                                        context.Token)
                                     .ConfigureAwait(false);
                                 if (read <= 0)
                                 {
                                     return false;
                                 }
 
-                                await targetFile.WriteAsync(buffer.AsMemory(0, read), context.Token).ConfigureAwait(false);
+                                await targetFile.WriteAsync(buffer.AsMemory(0, read), context.Token)
+                                    .ConfigureAwait(false);
                                 remaining -= read;
                             }
                         }

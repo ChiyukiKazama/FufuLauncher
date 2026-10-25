@@ -17,7 +17,10 @@ internal static class McpToolCatalog
 {
     private const string EmptySchema = """{"type":"object","properties":{},"additionalProperties":false}""";
 
-    public static IReadOnlyList<McpToolDefinition> All { get; } =
+    public static IReadOnlyList<McpToolDefinition> All
+    {
+        get;
+    } =
     [
         new("list_plugins", McpToolCategories.Plugins, "McpTool_ListPlugins", "McpTool_ListPluginsCaption",
             "List every plugin installed under the launcher Plugins directory, including official launcher plugins (FuFuPlugin / YuanShen-UnlockerLite) and third-party plugins. Returns folder id, display name, enabled state, config path and version.",

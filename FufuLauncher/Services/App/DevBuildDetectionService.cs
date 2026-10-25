@@ -30,7 +30,7 @@ namespace FufuLauncher.Services
             HasChecked = true;
 
             DebugLog.Info("DevBuildDetectionService", $"[DevBuildDetection] IsDevBuild={IsDevBuild}, " +
-                            $"Local version={AppVersionHelper.NumericVersion}, server version={serverVersion}");
+                                                      $"Local version={AppVersionHelper.NumericVersion}, server version={serverVersion}");
             return Task.FromResult(IsDevBuild);
         }
     }

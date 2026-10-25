@@ -231,31 +231,31 @@
 
                                 <controls:ItemRarityBackground CornerRadius="14,14,0,0"
                                                                Rarity="{x:Bind Rank, Mode=OneWay}">
-                                <Grid>
-                                    <Image Source="{Binding ImageUrl}" Stretch="UniformToFill"
-                                           helpers:ImageFadeInHelper.IsFadeInEnabled="True" />
-                                    <Image Source="{Binding ElementUrl}" Width="22" Height="22"
-                                           HorizontalAlignment="Left" VerticalAlignment="Top" Margin="6"
-                                           helpers:ImageFadeInHelper.IsFadeInEnabled="True" />
-                                    <Border HorizontalAlignment="Right" VerticalAlignment="Top" Margin="6"
-                                            CornerRadius="9" Padding="6,1"
-                                            Background="{Binding PityStatusBrush}"
-                                            Visibility="{Binding PityStatus, Converter={StaticResource PityStatusToVisibilityConverter}}">
-                                        <TextBlock Text="{Binding PityStatusText}" FontSize="9" Foreground="White"
-                                                   FontWeight="SemiBold" />
-                                    </Border>
-                                    <Border VerticalAlignment="Bottom" HorizontalAlignment="Right" Margin="0,0,8,8"
-                                            CornerRadius="11" Padding="8,2"
-                                            Background="#B3000000">
-                                        <StackPanel Orientation="Horizontal" Spacing="2" VerticalAlignment="Center">
-                                            <TextBlock Text="{x:Bind Count}" FontWeight="Bold" FontSize="14"
-                                                       Foreground="{Binding Count, Converter={StaticResource CountToColorConverter}}" />
-                                            <TextBlock Text="{helpers:Loc Key=GachaAnalysis_Pulls}" FontSize="10"
-                                                       Foreground="#CCFFFFFF"
-                                                       VerticalAlignment="Bottom" Margin="0,0,0,1" />
-                                        </StackPanel>
-                                    </Border>
-                                </Grid>
+                                    <Grid>
+                                        <Image Source="{Binding ImageUrl}" Stretch="UniformToFill"
+                                               helpers:ImageFadeInHelper.IsFadeInEnabled="True" />
+                                        <Image Source="{Binding ElementUrl}" Width="22" Height="22"
+                                               HorizontalAlignment="Left" VerticalAlignment="Top" Margin="6"
+                                               helpers:ImageFadeInHelper.IsFadeInEnabled="True" />
+                                        <Border HorizontalAlignment="Right" VerticalAlignment="Top" Margin="6"
+                                                CornerRadius="9" Padding="6,1"
+                                                Background="{Binding PityStatusBrush}"
+                                                Visibility="{Binding PityStatus, Converter={StaticResource PityStatusToVisibilityConverter}}">
+                                            <TextBlock Text="{Binding PityStatusText}" FontSize="9" Foreground="White"
+                                                       FontWeight="SemiBold" />
+                                        </Border>
+                                        <Border VerticalAlignment="Bottom" HorizontalAlignment="Right" Margin="0,0,8,8"
+                                                CornerRadius="11" Padding="8,2"
+                                                Background="#B3000000">
+                                            <StackPanel Orientation="Horizontal" Spacing="2" VerticalAlignment="Center">
+                                                <TextBlock Text="{x:Bind Count}" FontWeight="Bold" FontSize="14"
+                                                           Foreground="{Binding Count, Converter={StaticResource CountToColorConverter}}" />
+                                                <TextBlock Text="{helpers:Loc Key=GachaAnalysis_Pulls}" FontSize="10"
+                                                           Foreground="#CCFFFFFF"
+                                                           VerticalAlignment="Bottom" Margin="0,0,0,1" />
+                                            </StackPanel>
+                                        </Border>
+                                    </Grid>
                                 </controls:ItemRarityBackground>
 
                                 <StackPanel Grid.Row="1" Padding="8,6,8,8" Spacing="4">
@@ -1054,23 +1054,27 @@
                                                           BorderBrush="{ThemeResource CardStrokeColorDefaultBrush}"
                                                           BorderThickness="1" Shadow="{StaticResource SharedShadow}"
                                                           Translation="0,0,8">
-                                                        <controls:ItemRarityBackground CornerRadius="6" Rarity="{Binding Rank}">
-                                                        <Grid>
-                                                        <Image Source="{Binding ImgSrc}" Stretch="UniformToFill"
-                                                               Margin="0,0,0,24"
-                                                               helpers:ImageFadeInHelper.IsFadeInEnabled="True" />
-                                                        <Image Source="{Binding ElementSrc}" Width="18" Height="18"
-                                                               HorizontalAlignment="Left" VerticalAlignment="Top"
-                                                               Margin="4"
-                                                               helpers:ImageFadeInHelper.IsFadeInEnabled="True" />
-                                                        <Grid VerticalAlignment="Bottom" Height="24"
-                                                              Background="{ThemeResource CardBackgroundFillColorSecondaryBrush}">
-                                                            <TextBlock Text="{x:Bind Name}" FontSize="11"
-                                                                       HorizontalAlignment="Center"
-                                                                       VerticalAlignment="Center"
-                                                                       TextTrimming="CharacterEllipsis" />
-                                                        </Grid>
-                                                    </Grid>
+                                                        <controls:ItemRarityBackground CornerRadius="6"
+                                                                Rarity="{Binding Rank}">
+                                                            <Grid>
+                                                                <Image Source="{Binding ImgSrc}"
+                                                                       Stretch="UniformToFill"
+                                                                       Margin="0,0,0,24"
+                                                                       helpers:ImageFadeInHelper.IsFadeInEnabled="True" />
+                                                                <Image Source="{Binding ElementSrc}" Width="18"
+                                                                       Height="18"
+                                                                       HorizontalAlignment="Left"
+                                                                       VerticalAlignment="Top"
+                                                                       Margin="4"
+                                                                       helpers:ImageFadeInHelper.IsFadeInEnabled="True" />
+                                                                <Grid VerticalAlignment="Bottom" Height="24"
+                                                                      Background="{ThemeResource CardBackgroundFillColorSecondaryBrush}">
+                                                                    <TextBlock Text="{x:Bind Name}" FontSize="11"
+                                                                               HorizontalAlignment="Center"
+                                                                               VerticalAlignment="Center"
+                                                                               TextTrimming="CharacterEllipsis" />
+                                                                </Grid>
+                                                            </Grid>
                                                         </controls:ItemRarityBackground>
                                                     </Grid>
                                                 </DataTemplate>
@@ -1091,19 +1095,21 @@
                                                           BorderBrush="{ThemeResource CardStrokeColorDefaultBrush}"
                                                           BorderThickness="1" Shadow="{StaticResource SharedShadow}"
                                                           Translation="0,0,8">
-                                                        <controls:ItemRarityBackground CornerRadius="6" Rarity="{Binding Rank}">
-                                                        <Grid>
-                                                        <Image Source="{Binding ImgSrc}" Stretch="UniformToFill"
-                                                               Margin="0,0,0,24"
-                                                               helpers:ImageFadeInHelper.IsFadeInEnabled="True" />
-                                                        <Grid VerticalAlignment="Bottom" Height="24"
-                                                              Background="{ThemeResource CardBackgroundFillColorSecondaryBrush}">
-                                                            <TextBlock Text="{x:Bind Name}" FontSize="11"
-                                                                       HorizontalAlignment="Center"
-                                                                       VerticalAlignment="Center"
-                                                                       TextTrimming="CharacterEllipsis" />
-                                                        </Grid>
-                                                    </Grid>
+                                                        <controls:ItemRarityBackground CornerRadius="6"
+                                                                Rarity="{Binding Rank}">
+                                                            <Grid>
+                                                                <Image Source="{Binding ImgSrc}"
+                                                                       Stretch="UniformToFill"
+                                                                       Margin="0,0,0,24"
+                                                                       helpers:ImageFadeInHelper.IsFadeInEnabled="True" />
+                                                                <Grid VerticalAlignment="Bottom" Height="24"
+                                                                      Background="{ThemeResource CardBackgroundFillColorSecondaryBrush}">
+                                                                    <TextBlock Text="{x:Bind Name}" FontSize="11"
+                                                                               HorizontalAlignment="Center"
+                                                                               VerticalAlignment="Center"
+                                                                               TextTrimming="CharacterEllipsis" />
+                                                                </Grid>
+                                                            </Grid>
                                                         </controls:ItemRarityBackground>
                                                     </Grid>
                                                 </DataTemplate>

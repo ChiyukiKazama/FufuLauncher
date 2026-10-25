@@ -74,11 +74,10 @@ public static class CycleChallengeTime
             return true;
         }
 
-        // 日期部分本身带 '-'，必须从时间部分（空格或 'T' 之后）开始找偏移符号
+
         var timeStart = text.IndexOfAny([' ', 'T']);
         if (timeStart < 0)
         {
-            // 纯日期（2026-10-15）没有时区偏移
             return false;
         }
 

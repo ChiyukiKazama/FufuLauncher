@@ -126,7 +126,8 @@ public static class CodeSignatureVerifier
         }
         catch (Exception ex)
         {
-            DebugLog.Info("CodeSignatureVerifier", $"[CodeSignatureVerifier] Failed to read signing certificate {filePath}: {ex.Message}");
+            DebugLog.Info("CodeSignatureVerifier",
+                $"[CodeSignatureVerifier] Failed to read signing certificate {filePath}: {ex.Message}");
             return null;
         }
     }

@@ -53,7 +53,8 @@ namespace FufuLauncher.Services.GameAnnouncement
 
                 if (!response.IsSuccessStatusCode)
                 {
-                    DebugLog.Info("GameAnnouncementImageService", $"[GameAnnouncementImageService] Image download failed {url} -> {(int)response.StatusCode}");
+                    DebugLog.Info("GameAnnouncementImageService",
+                        $"[GameAnnouncementImageService] Image download failed {url} -> {(int)response.StatusCode}");
                     return null;
                 }
 
@@ -72,7 +73,8 @@ namespace FufuLauncher.Services.GameAnnouncement
             }
             catch (Exception ex)
             {
-                DebugLog.Info("GameAnnouncementImageService", $"[GameAnnouncementImageService] Image download error {url}: {ex.Message}");
+                DebugLog.Info("GameAnnouncementImageService",
+                    $"[GameAnnouncementImageService] Image download error {url}: {ex.Message}");
                 return null;
             }
         }

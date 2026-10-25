@@ -72,7 +72,8 @@ public class LocalSettingsRepository
         }
         catch (Exception ex)
         {
-            DebugLog.Info("LocalSettingsRepository", $"LocalSettingsRepository: Database migration exception - {ex.Message}");
+            DebugLog.Info("LocalSettingsRepository",
+                $"LocalSettingsRepository: Database migration exception - {ex.Message}");
 
             try
             {
@@ -85,7 +86,8 @@ public class LocalSettingsRepository
             }
             catch (Exception ex2)
             {
-                DebugLog.Info("LocalSettingsRepository", $"LocalSettingsRepository: Failed to create migration history fallback - {ex2.Message}");
+                DebugLog.Info("LocalSettingsRepository",
+                    $"LocalSettingsRepository: Failed to create migration history fallback - {ex2.Message}");
             }
         }
     }
@@ -99,7 +101,8 @@ public class LocalSettingsRepository
         }
         catch (Exception ex)
         {
-            DebugLog.Info("LocalSettingsRepository", $"LocalSettingsRepository: Failed to load settings - {ex.Message}");
+            DebugLog.Info("LocalSettingsRepository",
+                $"LocalSettingsRepository: Failed to load settings - {ex.Message}");
             return new Dictionary<string, string>();
         }
     }
@@ -131,7 +134,8 @@ public class LocalSettingsRepository
         }
         catch (Exception ex)
         {
-            DebugLog.Info("LocalSettingsRepository", $"LocalSettingsRepository: Failed to load all settings - {ex.Message}");
+            DebugLog.Info("LocalSettingsRepository",
+                $"LocalSettingsRepository: Failed to load all settings - {ex.Message}");
             return (false, new Dictionary<string, string>());
         }
     }
@@ -171,7 +175,8 @@ public class LocalSettingsRepository
         }
         catch (Exception ex)
         {
-            DebugLog.Info("LocalSettingsRepository", $"LocalSettingsRepository: Failed to delete setting - {ex.Message}");
+            DebugLog.Info("LocalSettingsRepository",
+                $"LocalSettingsRepository: Failed to delete setting - {ex.Message}");
             return false;
         }
     }
@@ -185,7 +190,8 @@ public class LocalSettingsRepository
         }
         catch (Exception ex)
         {
-            DebugLog.Info("LocalSettingsRepository", $"LocalSettingsRepository: Failed to load entities - {ex.Message}");
+            DebugLog.Info("LocalSettingsRepository",
+                $"LocalSettingsRepository: Failed to load entities - {ex.Message}");
             return new List<SettingEntity>();
         }
     }

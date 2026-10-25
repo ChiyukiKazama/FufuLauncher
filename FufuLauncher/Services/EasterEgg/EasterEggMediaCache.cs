@@ -52,7 +52,8 @@ public static class EasterEggMediaCache
             }
             catch (Exception ex)
             {
-                DebugLog.Info("EasterEggMediaCache", $"[EasterEggMediaCache] Failed to await download {url}: {ex.Message}");
+                DebugLog.Info("EasterEggMediaCache",
+                    $"[EasterEggMediaCache] Failed to await download {url}: {ex.Message}");
                 return null;
             }
         }
@@ -128,7 +129,8 @@ public static class EasterEggMediaCache
                     }
                     catch (Exception delayError)
                     {
-                        DebugLog.Info("EasterEggMediaCache", $"[EasterEggMediaCache] Retry delay failed: {delayError.Message}");
+                        DebugLog.Info("EasterEggMediaCache",
+                            $"[EasterEggMediaCache] Retry delay failed: {delayError.Message}");
                         break;
                     }
                 }
@@ -141,7 +143,8 @@ public static class EasterEggMediaCache
                 return filePath;
             }
 
-            DebugLog.Info("EasterEggMediaCache", $"[EasterEggMediaCache] Giving up download {url}: {lastError?.Message}");
+            DebugLog.Info("EasterEggMediaCache",
+                $"[EasterEggMediaCache] Giving up download {url}: {lastError?.Message}");
             return null;
         }
         catch (Exception ex)
@@ -215,7 +218,8 @@ public static class EasterEggMediaCache
         }
         catch (Exception ex)
         {
-            DebugLog.Info("EasterEggMediaCache", $"[EasterEggMediaCache] Failed to inspect cache file {path}: {ex.Message}");
+            DebugLog.Info("EasterEggMediaCache",
+                $"[EasterEggMediaCache] Failed to inspect cache file {path}: {ex.Message}");
             return false;
         }
     }

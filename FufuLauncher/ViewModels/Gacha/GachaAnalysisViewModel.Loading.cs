@@ -49,7 +49,8 @@ public partial class GachaAnalysisViewModel
             }
 
             var uids = QueryKnownUidsFromDb();
-            DebugLog.Info("GachaAnalysisViewModel.Loading", $"[Gacha] QueryKnownUids returned {uids.Count} UIDs: [{string.Join(", ", uids)}]");
+            DebugLog.Info("GachaAnalysisViewModel.Loading",
+                $"[Gacha] QueryKnownUids returned {uids.Count} UIDs: [{string.Join(", ", uids)}]");
 
             string lastUid = "";
             try
@@ -82,7 +83,8 @@ public partial class GachaAnalysisViewModel
             LoadGachaLogsFromDb(_currentUid);
         }
 
-        DebugLog.Info("GachaAnalysisViewModel.Loading", $"[Gacha] Load complete - {uids.Count} UIDs, metadata entries: {metadataCount}");
+        DebugLog.Info("GachaAnalysisViewModel.Loading",
+            $"[Gacha] Load complete - {uids.Count} UIDs, metadata entries: {metadataCount}");
         if (uids.Count > 0 || account != null)
         {
             App.MainWindow.DispatcherQueue.TryEnqueue(() =>
@@ -139,7 +141,8 @@ public partial class GachaAnalysisViewModel
 
     private void SaveGachaDataAsync()
     {
-        DebugLog.Info("GachaAnalysisViewModel.Loading", $"[Gacha] SaveGachaDataAsync: start, _currentUid={_currentUid}");
+        DebugLog.Info("GachaAnalysisViewModel.Loading",
+            $"[Gacha] SaveGachaDataAsync: start, _currentUid={_currentUid}");
         SaveGachaLogsToDb();
         RefreshKnownUids();
         DebugLog.Info("GachaAnalysisViewModel.Loading", "[Gacha] SaveGachaDataAsync: done");
@@ -228,7 +231,8 @@ public partial class GachaAnalysisViewModel
             }
             catch (Exception ex)
             {
-                DebugLog.Info("GachaAnalysisViewModel.Loading", $"[Gacha] Failed to refresh gacha analysis UI: {ex.Message}");
+                DebugLog.Info("GachaAnalysisViewModel.Loading",
+                    $"[Gacha] Failed to refresh gacha analysis UI: {ex.Message}");
             }
         });
     }

@@ -60,7 +60,8 @@ public partial class AccountViewModel
 
             if (myVersion != _loadVersion || _isDisposed || _accountManager.ActiveAccountId != activeId)
             {
-                DebugLog.Info("AccountViewModel.UserInfo", $"[LoadUserInfo][{entry.Id}] Result stale (v{myVersion}→{_loadVersion}), discarded");
+                DebugLog.Info("AccountViewModel.UserInfo",
+                    $"[LoadUserInfo][{entry.Id}] Result stale (v{myVersion}→{_loadVersion}), discarded");
                 return false;
             }
 
@@ -111,7 +112,8 @@ public partial class AccountViewModel
                     ? "Account_LoggedIn".GetLocalized()
                     : "Account_LoggedInNoRole".GetLocalized();
             });
-            DebugLog.Info("AccountViewModel.UserInfo", $"[LoadUserInfo] User info updated, HasBoundRole={hasBoundRole}");
+            DebugLog.Info("AccountViewModel.UserInfo",
+                $"[LoadUserInfo] User info updated, HasBoundRole={hasBoundRole}");
             return true;
         }
         catch (Exception ex)

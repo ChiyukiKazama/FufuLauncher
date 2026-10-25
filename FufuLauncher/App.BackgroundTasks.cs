@@ -55,7 +55,8 @@ public partial class App
 
         if (!result.ShouldTerminate) return false;
 
-        DebugLog.Info("App.BackgroundTasks", $"[BanCheck] !!! TERMINATING - {result.Outcome} (UID: {result.Uid ?? "n/a"})");
+        DebugLog.Info("App.BackgroundTasks",
+            $"[BanCheck] !!! TERMINATING - {result.Outcome} (UID: {result.Uid ?? "n/a"})");
 
         var message = string.Format(
             "BanCheck_KilledMessage".GetLocalized(),
@@ -175,7 +176,8 @@ public partial class App
     {
         try
         {
-            DebugLog.Info("App.BackgroundTasks", "[Background] Background tasks started, waiting for main window render...");
+            DebugLog.Info("App.BackgroundTasks",
+                "[Background] Background tasks started, waiting for main window render...");
             await Task.Delay(500);
 
             DebugLog.Info("App.BackgroundTasks", "[Background] Preparing to dispatch to UI thread...");
@@ -338,7 +340,8 @@ public partial class App
 
             if (result.ShouldShowUpdate)
             {
-                DebugLog.Info("App.BackgroundTasks", $"Preparing to show update window, version: {result.ServerVersion}, preview: {result.IsPreview}");
+                DebugLog.Info("App.BackgroundTasks",
+                    $"Preparing to show update window, version: {result.ServerVersion}, preview: {result.IsPreview}");
                 DebugLog.Info("App.BackgroundTasks", $"[App] Dynamic update announcement URL: {result.UpdateInfoUrl}");
 
                 MainWindow.Activate();

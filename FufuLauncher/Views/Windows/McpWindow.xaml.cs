@@ -21,7 +21,10 @@ public sealed partial class McpWindow : Window
 {
     private static McpWindow? _current;
 
-    public McpSettingsViewModel ViewModel { get; }
+    public McpSettingsViewModel ViewModel
+    {
+        get;
+    }
 
     public static void ShowOrActivate()
     {

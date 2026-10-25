@@ -313,7 +313,8 @@ internal static class CookieVault
                 }
                 catch (Exception ex)
                 {
-                    DebugLog.Info("CookieVault", $"[CookieVault] Failed to overwrite Cookie encryption key: {ex.Message}");
+                    DebugLog.Info("CookieVault",
+                        $"[CookieVault] Failed to overwrite Cookie encryption key: {ex.Message}");
                 }
 
                 File.Delete(keyPath);
@@ -369,7 +370,8 @@ internal static class CookieVault
 
                         try
                         {
-                            var payload = BuildKeyFileV2(parsed.KeyId, keyBytes, parsed.Version == LegacyKeyFileVersion);
+                            var payload = BuildKeyFileV2(parsed.KeyId, keyBytes,
+                                parsed.Version == LegacyKeyFileVersion);
                             try
                             {
                                 WriteKeyFile(keyPath, payload, overwrite: true);
@@ -397,7 +399,8 @@ internal static class CookieVault
             }
             catch (Exception ex)
             {
-                DebugLog.Info("CookieVault", $"[CookieVault] Failed to upgrade Cookie encryption key protection: {ex.Message}");
+                DebugLog.Info("CookieVault",
+                    $"[CookieVault] Failed to upgrade Cookie encryption key protection: {ex.Message}");
             }
         }
     }
@@ -413,7 +416,9 @@ internal static class CookieVault
                 {
                     return LoadKey(dataDir);
                 }
-                catch (CookieVaultException ex) when (ex.Error is CookieVaultError.KeyMissing or CookieVaultError.KeyInvalid or CookieVaultError.KeyDecryptFailed)
+                catch (CookieVaultException ex) when (ex.Error is CookieVaultError.KeyMissing
+                                                          or CookieVaultError.KeyInvalid
+                                                          or CookieVaultError.KeyDecryptFailed)
                 {
                     QuarantineKeyFile(keyPath);
                 }
@@ -629,7 +634,8 @@ internal static class CookieVault
                 }
                 catch (Exception ex) when (ex is CryptographicException or PlatformNotSupportedException)
                 {
-                    DebugLog.Info("CookieVault", $"[CookieVault] DPAPI protection failed, enabling HWID protection: {ex.Message}");
+                    DebugLog.Info("CookieVault",
+                        $"[CookieVault] DPAPI protection failed, enabling HWID protection: {ex.Message}");
                 }
             }
 
@@ -833,11 +839,13 @@ internal static class CookieVault
 
             string quarantinePath = keyPath + ".invalid-" + DateTime.Now.ToString("yyyyMMddHHmmssfff");
             File.Move(keyPath, quarantinePath);
-            DebugLog.Info("CookieVault", $"[CookieVault] Quarantined undecryptable Cookie encryption key: {Path.GetFileName(quarantinePath)}");
+            DebugLog.Info("CookieVault",
+                $"[CookieVault] Quarantined undecryptable Cookie encryption key: {Path.GetFileName(quarantinePath)}");
         }
         catch (Exception ex)
         {
-            DebugLog.Info("CookieVault", $"[CookieVault] Failed to quarantine undecryptable Cookie encryption key: {ex.Message}");
+            DebugLog.Info("CookieVault",
+                $"[CookieVault] Failed to quarantine undecryptable Cookie encryption key: {ex.Message}");
             try
             {
                 if (File.Exists(keyPath))
@@ -922,12 +930,41 @@ internal static class CookieVault
 
     private sealed class ParsedKeyFile
     {
-        public byte Version { get; init; }
-        public byte[] KeyId { get; init; } = Array.Empty<byte>();
-        public byte[]? DpapiBlob { get; set; }
-        public byte[]? HwidNonce { get; set; }
-        public byte[]? HwidTag { get; set; }
-        public byte[]? HwidCipher { get; set; }
+        public byte Version
+        {
+            get;
+            init;
+        }
+
+        public byte[] KeyId
+        {
+            get;
+            init;
+        } = Array.Empty<byte>();
+
+        public byte[]? DpapiBlob
+        {
+            get;
+            set;
+        }
+
+        public byte[]? HwidNonce
+        {
+            get;
+            set;
+        }
+
+        public byte[]? HwidTag
+        {
+            get;
+            set;
+        }
+
+        public byte[]? HwidCipher
+        {
+            get;
+            set;
+        }
 
         public void Clear()
         {
@@ -946,28 +983,60 @@ internal static class CookieVault
 internal sealed class CookieFileEnvelope
 {
     [JsonPropertyName("format")]
-    public string Format { get; set; } = string.Empty;
+    public string Format
+    {
+        get;
+        set;
+    } = string.Empty;
 
     [JsonPropertyName("version")]
-    public int Version { get; set; }
+    public int Version
+    {
+        get;
+        set;
+    }
 
     [JsonPropertyName("algorithm")]
-    public string Algorithm { get; set; } = string.Empty;
+    public string Algorithm
+    {
+        get;
+        set;
+    } = string.Empty;
 
     [JsonPropertyName("keyProtection")]
-    public string KeyProtection { get; set; } = string.Empty;
+    public string KeyProtection
+    {
+        get;
+        set;
+    } = string.Empty;
 
     [JsonPropertyName("keyId")]
-    public string KeyId { get; set; } = string.Empty;
+    public string KeyId
+    {
+        get;
+        set;
+    } = string.Empty;
 
     [JsonPropertyName("nonce")]
-    public string Nonce { get; set; } = string.Empty;
+    public string Nonce
+    {
+        get;
+        set;
+    } = string.Empty;
 
     [JsonPropertyName("tag")]
-    public string Tag { get; set; } = string.Empty;
+    public string Tag
+    {
+        get;
+        set;
+    } = string.Empty;
 
     [JsonPropertyName("ciphertext")]
-    public string Ciphertext { get; set; } = string.Empty;
+    public string Ciphertext
+    {
+        get;
+        set;
+    } = string.Empty;
 }
 
 internal sealed class CookieVaultException : Exception
@@ -984,5 +1053,8 @@ internal sealed class CookieVaultException : Exception
         Error = error;
     }
 
-    public CookieVaultError Error { get; }
+    public CookieVaultError Error
+    {
+        get;
+    }
 }

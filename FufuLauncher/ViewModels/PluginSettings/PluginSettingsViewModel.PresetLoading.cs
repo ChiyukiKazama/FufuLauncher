@@ -136,7 +136,8 @@ public partial class PluginSettingsViewModel
             }
             catch (Exception ex)
             {
-                DebugLog.Info("PluginSettingsViewModel.PresetLoading", $"[PluginSettings] Preset read failed: {file}: {ex}");
+                DebugLog.Info("PluginSettingsViewModel.PresetLoading",
+                    $"[PluginSettings] Preset read failed: {file}: {ex}");
             }
         }
 

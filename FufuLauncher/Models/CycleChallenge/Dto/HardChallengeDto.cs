@@ -163,7 +163,7 @@ public sealed class HardChallengeBestDto
         set;
     }
 
-    /// <summary>最佳用时（秒）。</summary>
+
     [JsonPropertyName("second")]
     public int? Second
     {
@@ -171,7 +171,7 @@ public sealed class HardChallengeBestDto
         set;
     }
 
-    /// <summary>难度徽章图标名，如 <c>UI_LeyLineChallenge_Medal_5</c>（可能形如 "A,B"）。</summary>
+
     [JsonPropertyName("icon")]
     public string? Icon
     {
@@ -180,10 +180,8 @@ public sealed class HardChallengeBestDto
     }
 }
 
-/// <summary>单个关卡。</summary>
 public sealed class HardChallengeChallengeDto
 {
-    /// <summary>关卡（敌人）名称。</summary>
     [JsonPropertyName("name")]
     public string? Name
     {
@@ -191,7 +189,7 @@ public sealed class HardChallengeChallengeDto
         set;
     }
 
-    /// <summary>关卡用时（秒）。</summary>
+
     [JsonPropertyName("second")]
     public int? Second
     {
@@ -199,7 +197,7 @@ public sealed class HardChallengeChallengeDto
         set;
     }
 
-    /// <summary>出战队伍。</summary>
+
     [JsonPropertyName("teams")]
     public List<HardChallengeAvatarDto>? Teams
     {
@@ -207,7 +205,7 @@ public sealed class HardChallengeChallengeDto
         set;
     }
 
-    /// <summary>最佳输出角色（最强一击 / 最高总伤害）。</summary>
+
     [JsonPropertyName("best_avatar")]
     public List<HardChallengeBestAvatarDto>? BestAvatars
     {
@@ -215,7 +213,7 @@ public sealed class HardChallengeChallengeDto
         set;
     }
 
-    /// <summary>怪物信息（对象，不是数组）。</summary>
+
     [JsonPropertyName("monster")]
     public HardChallengeMonsterDto? Monster
     {
@@ -224,10 +222,8 @@ public sealed class HardChallengeChallengeDto
     }
 }
 
-/// <summary>队伍角色。</summary>
 public sealed class HardChallengeAvatarDto
 {
-    /// <summary>角色 ID。</summary>
     [JsonPropertyName("avatar_id")]
     public int? AvatarId
     {
@@ -235,7 +231,7 @@ public sealed class HardChallengeAvatarDto
         set;
     }
 
-    /// <summary>角色名。</summary>
+
     [JsonPropertyName("name")]
     public string? Name
     {
@@ -243,7 +239,7 @@ public sealed class HardChallengeAvatarDto
         set;
     }
 
-    /// <summary>元素名（如 Pyro / Hydro，国际化字符串）。</summary>
+
     [JsonPropertyName("element")]
     public string? Element
     {
@@ -251,7 +247,7 @@ public sealed class HardChallengeAvatarDto
         set;
     }
 
-    /// <summary>头像绝对 URL。</summary>
+
     [JsonPropertyName("image")]
     [JsonConverter(typeof(FlexibleStringConverter))]
     public string? Image
@@ -260,7 +256,7 @@ public sealed class HardChallengeAvatarDto
         set;
     }
 
-    /// <summary>角色等级。</summary>
+
     [JsonPropertyName("level")]
     public int? Level
     {
@@ -268,7 +264,7 @@ public sealed class HardChallengeAvatarDto
         set;
     }
 
-    /// <summary>稀有度（4 / 5）。</summary>
+
     [JsonPropertyName("rarity")]
     public int? Rarity
     {
@@ -276,7 +272,7 @@ public sealed class HardChallengeAvatarDto
         set;
     }
 
-    /// <summary>命座数（接口字段名是 rank，实际含义为命座）。</summary>
+
     [JsonPropertyName("rank")]
     public int? Rank
     {
@@ -285,10 +281,8 @@ public sealed class HardChallengeAvatarDto
     }
 }
 
-/// <summary>最佳输出角色条目。</summary>
 public sealed class HardChallengeBestAvatarDto
 {
-    /// <summary>角色 ID。</summary>
     [JsonPropertyName("avatar_id")]
     public int? AvatarId
     {
@@ -296,7 +290,7 @@ public sealed class HardChallengeBestAvatarDto
         set;
     }
 
-    /// <summary>侧头像绝对 URL。</summary>
+
     [JsonPropertyName("side_icon")]
     [JsonConverter(typeof(FlexibleStringConverter))]
     public string? SideIcon
@@ -305,7 +299,7 @@ public sealed class HardChallengeBestAvatarDto
         set;
     }
 
-    /// <summary>数值字符串（最强一击伤害 / 最高总伤害）。</summary>
+
     [JsonPropertyName("dps")]
     [JsonConverter(typeof(FlexibleStringConverter))]
     public string? Dps
@@ -314,7 +308,7 @@ public sealed class HardChallengeBestAvatarDto
         set;
     }
 
-    /// <summary>1 = 最强一击，2 = 最高总伤害。</summary>
+
     [JsonPropertyName("type")]
     public int? Type
     {
@@ -323,10 +317,8 @@ public sealed class HardChallengeBestAvatarDto
     }
 }
 
-/// <summary>怪物信息。</summary>
 public sealed class HardChallengeMonsterDto
 {
-    /// <summary>怪物名。</summary>
     [JsonPropertyName("name")]
     public string? Name
     {
@@ -334,7 +326,7 @@ public sealed class HardChallengeMonsterDto
         set;
     }
 
-    /// <summary>怪物等级。</summary>
+
     [JsonPropertyName("level")]
     public int? Level
     {
@@ -342,7 +334,7 @@ public sealed class HardChallengeMonsterDto
         set;
     }
 
-    /// <summary>怪物图标绝对 URL。</summary>
+
     [JsonPropertyName("icon")]
     [JsonConverter(typeof(FlexibleStringConverter))]
     public string? Icon
@@ -351,7 +343,7 @@ public sealed class HardChallengeMonsterDto
         set;
     }
 
-    /// <summary>怪物描述（数组，元素含 &lt;color=#RRGGBBAA&gt; 富文本与空串占位）。</summary>
+
     [JsonPropertyName("desc")]
     public List<string>? Descriptions
     {
@@ -359,7 +351,7 @@ public sealed class HardChallengeMonsterDto
         set;
     }
 
-    /// <summary>怪物标签（如「受到…伤害提升」）。</summary>
+
     [JsonPropertyName("tags")]
     public List<HardChallengeMonsterTagDto>? Tags
     {
@@ -367,7 +359,7 @@ public sealed class HardChallengeMonsterDto
         set;
     }
 
-    /// <summary>怪物 ID。</summary>
+
     [JsonPropertyName("monster_id")]
     public int? MonsterId
     {
@@ -376,10 +368,8 @@ public sealed class HardChallengeMonsterDto
     }
 }
 
-/// <summary>怪物标签。</summary>
 public sealed class HardChallengeMonsterTagDto
 {
-    /// <summary>标签类型。</summary>
     [JsonPropertyName("type")]
     public int? Type
     {
@@ -387,7 +377,7 @@ public sealed class HardChallengeMonsterTagDto
         set;
     }
 
-    /// <summary>标签描述。</summary>
+
     [JsonPropertyName("desc")]
     public string? Description
     {
@@ -396,10 +386,8 @@ public sealed class HardChallengeMonsterTagDto
     }
 }
 
-/// <summary>上榜角色。</summary>
 public sealed class HardChallengeBlingAvatarDto
 {
-    /// <summary>角色 ID。</summary>
     [JsonPropertyName("avatar_id")]
     public int? AvatarId
     {
@@ -407,7 +395,7 @@ public sealed class HardChallengeBlingAvatarDto
         set;
     }
 
-    /// <summary>角色名。</summary>
+
     [JsonPropertyName("name")]
     public string? Name
     {
@@ -415,7 +403,7 @@ public sealed class HardChallengeBlingAvatarDto
         set;
     }
 
-    /// <summary>元素名。</summary>
+
     [JsonPropertyName("element")]
     public string? Element
     {
@@ -423,7 +411,7 @@ public sealed class HardChallengeBlingAvatarDto
         set;
     }
 
-    /// <summary>头像绝对 URL。</summary>
+
     [JsonPropertyName("image")]
     [JsonConverter(typeof(FlexibleStringConverter))]
     public string? Image
@@ -432,7 +420,7 @@ public sealed class HardChallengeBlingAvatarDto
         set;
     }
 
-    /// <summary>稀有度。</summary>
+
     [JsonPropertyName("rarity")]
     public int? Rarity
     {
@@ -440,7 +428,7 @@ public sealed class HardChallengeBlingAvatarDto
         set;
     }
 
-    /// <summary>是否最终上榜。</summary>
+
     [JsonPropertyName("is_plus")]
     public bool? IsPlus
     {
@@ -449,10 +437,8 @@ public sealed class HardChallengeBlingAvatarDto
     }
 }
 
-/// <summary>官方链接（展示层不使用）。</summary>
 public sealed class HardChallengeLinksDto
 {
-    /// <summary>阵容链接。</summary>
     [JsonPropertyName("lineup_link")]
     public string? LineupLink
     {
@@ -460,7 +446,7 @@ public sealed class HardChallengeLinksDto
         set;
     }
 
-    /// <summary>游玩链接。</summary>
+
     [JsonPropertyName("play_link")]
     public string? PlayLink
     {
@@ -469,10 +455,8 @@ public sealed class HardChallengeLinksDto
     }
 }
 
-/// <summary>接口给出的日期时间对象（服务器时区，按原样展示，不进行时区换算）。</summary>
 public sealed class HardChallengeDateTimeDto
 {
-    /// <summary>年。</summary>
     [JsonPropertyName("year")]
     public int? Year
     {
@@ -480,7 +464,7 @@ public sealed class HardChallengeDateTimeDto
         set;
     }
 
-    /// <summary>月。</summary>
+
     [JsonPropertyName("month")]
     public int? Month
     {
@@ -488,7 +472,7 @@ public sealed class HardChallengeDateTimeDto
         set;
     }
 
-    /// <summary>日。</summary>
+
     [JsonPropertyName("day")]
     public int? Day
     {
@@ -496,7 +480,7 @@ public sealed class HardChallengeDateTimeDto
         set;
     }
 
-    /// <summary>时。</summary>
+
     [JsonPropertyName("hour")]
     public int? Hour
     {
@@ -504,7 +488,7 @@ public sealed class HardChallengeDateTimeDto
         set;
     }
 
-    /// <summary>分。</summary>
+
     [JsonPropertyName("minute")]
     public int? Minute
     {
@@ -512,7 +496,7 @@ public sealed class HardChallengeDateTimeDto
         set;
     }
 
-    /// <summary>秒。</summary>
+
     [JsonPropertyName("second")]
     public int? Second
     {

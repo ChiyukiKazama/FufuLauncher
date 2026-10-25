@@ -1232,7 +1232,8 @@
                                         <TextBlock Style="{StaticResource RowCaptionStyle}"
                                                    Text="{helpers:Loc Key=BackgroundAntialiasStrengthCaption}" />
                                     </StackPanel>
-                                    <StackPanel Grid.Column="2" Style="{StaticResource RowSubRowStyle}" Margin="16,0,0,0">
+                                    <StackPanel Grid.Column="2" Style="{StaticResource RowSubRowStyle}"
+                                                Margin="16,0,0,0">
                                         <Slider x:Name="BackgroundAntialiasStrengthSlider"
                                                 Width="220" Minimum="0" Maximum="100" StepFrequency="1"
                                                 IsEnabled="{x:Bind ViewModel.IsBackgroundImageAntialiasEnabled, Mode=OneWay}"

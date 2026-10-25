@@ -392,7 +392,8 @@ public partial class GameLauncherService
                             finally
                             {
                                 _registrySnapshot.RestoreSnapshot();
-                                DebugLog.Info("GameLauncherService.Launch", "[LaunchFlow] Game exited, registry snapshot restored");
+                                DebugLog.Info("GameLauncherService.Launch",
+                                    "[LaunchFlow] Game exited, registry snapshot restored");
                             }
                         });
                     }

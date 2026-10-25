@@ -250,7 +250,8 @@ public partial class AccountManager
 
                     if (_accountList.Accounts.Any(a => a.Id == accountId))
                     {
-                        DebugLog.Info("AccountManager.Migration", $"[AccountManager] Account {accountId} already exists, migration confirmed");
+                        DebugLog.Info("AccountManager.Migration",
+                            $"[AccountManager] Account {accountId} already exists, migration confirmed");
                         processed.Add(stuid);
                         migratedConfigFiles.Add(configFile);
                         continue;

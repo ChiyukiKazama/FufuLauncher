@@ -69,7 +69,8 @@ public partial class AccountViewModel
             var loginWindow = new LoginQrWindow();
             var (cookies, serverType) = await loginWindow.ShowAndWaitAsync();
 
-            DebugLog.Info("AccountViewModel.Operations", $"[LoginAsync] Login succeeded, cookies: {cookies.Count}, server: {serverType}");
+            DebugLog.Info("AccountViewModel.Operations",
+                $"[LoginAsync] Login succeeded, cookies: {cookies.Count}, server: {serverType}");
 
             var entry = await _accountManager.AddAccountAsync(cookies, serverType,
                 nickname: "Account_AddAccount".GetLocalized());
@@ -163,7 +164,8 @@ public partial class AccountViewModel
             var loginWindow = new LoginQrWindow();
             var (cookies, serverType) = await loginWindow.ShowAndWaitAsync();
 
-            DebugLog.Info("AccountViewModel.Operations", $"[AddNewAccount] Login succeeded, cookies: {cookies.Count}, server: {serverType}");
+            DebugLog.Info("AccountViewModel.Operations",
+                $"[AddNewAccount] Login succeeded, cookies: {cookies.Count}, server: {serverType}");
 
             var entry = await _accountManager.AddAccountAsync(cookies, serverType,
                 nickname: "Account_AddAccount".GetLocalized());

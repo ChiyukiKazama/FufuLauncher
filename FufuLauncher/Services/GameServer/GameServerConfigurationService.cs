@@ -82,7 +82,10 @@ public sealed class GameServerConfigurationService
         }
         finally
         {
-            if (File.Exists(temporary)) { File.Delete(temporary); }
+            if (File.Exists(temporary))
+            {
+                File.Delete(temporary);
+            }
         }
     }
 
@@ -103,9 +106,17 @@ public sealed class GameServerConfigurationService
             string trimmed = lines[index].Trim();
             if (trimmed.StartsWith('[') && trimmed.EndsWith(']'))
             {
-                if (inGeneral) { generalEnd = index; }
+                if (inGeneral)
+                {
+                    generalEnd = index;
+                }
+
                 inGeneral = trimmed[1..^1].Trim().Equals("General", StringComparison.OrdinalIgnoreCase);
-                if (inGeneral) { generalEnd = lines.Count; }
+                if (inGeneral)
+                {
+                    generalEnd = lines.Count;
+                }
+
                 continue;
             }
 

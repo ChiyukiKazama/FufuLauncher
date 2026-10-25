@@ -259,8 +259,14 @@ namespace FufuLauncher.Services
                 var moduleHandle = curModule != null ? GetModuleHandle(curModule.ModuleName) : IntPtr.Zero;
                 _keyboardHookId = SetWindowsHookEx(WH_KEYBOARD_LL, _keyboardHookCallback, moduleHandle, 0);
                 _mouseHookId = SetWindowsHookEx(WH_MOUSE_LL, _mouseHookCallback, moduleHandle, 0);
-                DebugLog.Info("AutoClickerService", _keyboardHookId == IntPtr.Zero ? "[AutoClicker] Keyboard hook install failed" : "[AutoClicker] Keyboard hook installed");
-                DebugLog.Info("AutoClickerService", _mouseHookId == IntPtr.Zero ? "[AutoClicker] Mouse hook install failed" : "[AutoClicker] Mouse hook installed");
+                DebugLog.Info("AutoClickerService",
+                    _keyboardHookId == IntPtr.Zero
+                        ? "[AutoClicker] Keyboard hook install failed"
+                        : "[AutoClicker] Keyboard hook installed");
+                DebugLog.Info("AutoClickerService",
+                    _mouseHookId == IntPtr.Zero
+                        ? "[AutoClicker] Mouse hook install failed"
+                        : "[AutoClicker] Mouse hook installed");
 
                 if (_keyboardHookId != IntPtr.Zero || _mouseHookId != IntPtr.Zero)
                 {

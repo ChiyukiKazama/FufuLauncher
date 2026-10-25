@@ -87,7 +87,8 @@ public sealed partial class PluginSettingsPage
                 }
                 catch (Exception ex)
                 {
-                    DebugLog.Info("PluginSettingsPage.FpsPlugin", $"Failed to force-remove FPS plugin files: {ex.Message}");
+                    DebugLog.Info("PluginSettingsPage.FpsPlugin",
+                        $"Failed to force-remove FPS plugin files: {ex.Message}");
                 }
 
                 await PerformFpsPluginRepairAsync(showUI: false);

@@ -33,7 +33,8 @@ public sealed partial class AchievementWindow
                         _ = HandleIncomingFile(context).ContinueWith(t =>
                         {
                             if (t.IsFaulted)
-                                DebugLog.Info("AchievementWindow.Import", $"Failed to handle request: {t.Exception?.InnerException?.Message}");
+                                DebugLog.Info("AchievementWindow.Import",
+                                    $"Failed to handle request: {t.Exception?.InnerException?.Message}");
                         }, TaskContinuationOptions.OnlyOnFaulted);
                     }
                     catch

@@ -186,7 +186,8 @@ namespace FufuLauncher.ViewModels
 
                     if (!string.IsNullOrEmpty(folder))
                     {
-                        DebugLog.Info("GameSettingsViewModel", $"[GameInfoPage] User selected program file: '{path}', extracted directory: '{folder}'");
+                        DebugLog.Info("GameSettingsViewModel",
+                            $"[GameInfoPage] User selected program file: '{path}', extracted directory: '{folder}'");
 
                         await LoadGameInfoAsync(folder);
                         await _localSettingsService.SaveSettingAsync(GamePathKey, folder);
@@ -204,7 +205,8 @@ namespace FufuLauncher.ViewModels
             }
             catch (Exception ex)
             {
-                DebugLog.Info("GameSettingsViewModel", $"Path selection failed: {ex.Message}\nStack trace: {ex.StackTrace}");
+                DebugLog.Info("GameSettingsViewModel",
+                    $"Path selection failed: {ex.Message}\nStack trace: {ex.StackTrace}");
                 await ShowError(string.Format("Blank_SelectPathFailed_Format".GetLocalized(), ex.Message));
             }
         }

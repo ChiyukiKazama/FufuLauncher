@@ -103,7 +103,8 @@ public partial class MainViewModel
             }
 
             PanelBackgroundBrush = new SolidColorBrush(baseColor) { Opacity = _panelOpacityValue };
-            DebugLog.Info("MainViewModel.Ui", $"[MainViewModel] Background updated - theme: {currentTheme}, opacity: {_panelOpacityValue}");
+            DebugLog.Info("MainViewModel.Ui",
+                $"[MainViewModel] Background updated - theme: {currentTheme}, opacity: {_panelOpacityValue}");
         }
         catch (Exception ex)
         {

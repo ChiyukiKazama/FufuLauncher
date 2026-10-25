@@ -239,10 +239,11 @@
                                             <ColumnDefinition Width="*" />
                                             <ColumnDefinition Width="Auto" />
                                         </Grid.ColumnDefinitions>
-                                        <TextBox Text="{x:Bind ViewModel.CustomToken, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
-                                                 FontFamily="Consolas"
-                                                 FontSize="12"
-                                                 VerticalAlignment="Center" />
+                                        <TextBox
+                                            Text="{x:Bind ViewModel.CustomToken, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                                            FontFamily="Consolas"
+                                            FontSize="12"
+                                            VerticalAlignment="Center" />
                                         <Button Grid.Column="1"
                                                 Content="{helpers:Loc Key=Mcp_Save}"
                                                 Click="OnSaveCustomTokenClick" />
@@ -301,13 +302,14 @@
                                 <StackPanel Spacing="6">
                                     <TextBlock Text="{helpers:Loc Key=Mcp_IpRulesTitle}"
                                                Style="{StaticResource RowTitleStyle}" />
-                                    <TextBox Text="{x:Bind ViewModel.IpRulesText, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
-                                             AcceptsReturn="True"
-                                             TextWrapping="Wrap"
-                                             Height="96"
-                                             FontFamily="Consolas"
-                                             FontSize="12"
-                                             LostFocus="OnIpRulesLostFocus" />
+                                    <TextBox
+                                        Text="{x:Bind ViewModel.IpRulesText, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                                        AcceptsReturn="True"
+                                        TextWrapping="Wrap"
+                                        Height="96"
+                                        FontFamily="Consolas"
+                                        FontSize="12"
+                                        LostFocus="OnIpRulesLostFocus" />
                                     <TextBlock Text="{helpers:Loc Key=Mcp_IpRulesCaption}"
                                                Style="{StaticResource RowCaptionStyle}" />
                                     <TextBlock Text="{helpers:Loc Key=Mcp_IpRulesEmpty}"

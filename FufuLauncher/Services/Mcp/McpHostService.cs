@@ -68,7 +68,10 @@ public sealed class McpHostService
 
     public event EventHandler? StatusChanged;
 
-    public McpAuditLog Audit { get; } = new();
+    public McpAuditLog Audit
+    {
+        get;
+    } = new();
 
     public bool IsEnabled
     {

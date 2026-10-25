@@ -59,7 +59,8 @@ internal static class McpIpFilter
             return true;
         }
 
-        foreach (var entry in text.Split(Separators, StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries))
+        foreach (var entry in text.Split(Separators,
+                     StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries))
         {
             if (TryParseRule(entry, out var rule))
             {

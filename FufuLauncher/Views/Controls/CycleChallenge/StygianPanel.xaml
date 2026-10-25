@@ -1,4 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
+
 <UserControl
     x:Class="FufuLauncher.Views.Controls.CycleChallenge.StygianPanel"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
@@ -59,7 +60,7 @@
     </UserControl.Resources>
 
     <StackPanel Padding="0,0,0,8" Spacing="12">
-        
+
         <StackPanel
             Padding="24"
             HorizontalAlignment="Center"
@@ -84,10 +85,10 @@
                 TextWrapping="Wrap"
                 Visibility="{x:Bind Display.HasStateDetail, Mode=OneTime, Converter={StaticResource BoolToVisibilityConverter}}" />
         </StackPanel>
-        
+
         <StackPanel Spacing="12"
                     Visibility="{x:Bind Display.ShowContent, Mode=OneTime, Converter={StaticResource BoolToVisibilityConverter}}">
-            
+
             <StackPanel Spacing="2">
                 <StackPanel
                     Orientation="Horizontal"
@@ -104,7 +105,7 @@
                     Text="{x:Bind Display.PeriodText, Mode=OneTime}"
                     Visibility="{x:Bind Display.HasPeriod, Mode=OneTime, Converter={StaticResource BoolToVisibilityConverter}}" />
             </StackPanel>
-            
+
             <StackPanel Orientation="Horizontal" Spacing="8">
                 <primitives:ToggleButton
                     x:Name="SoloChip"
@@ -124,7 +125,7 @@
                     Text="{helpers:Loc Key=Stygian_NoCoopData}"
                     Visibility="{x:Bind ShowNoCoopHint, Mode=OneTime, Converter={StaticResource BoolToVisibilityConverter}}" />
             </StackPanel>
-            
+
             <Grid ColumnSpacing="12">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="*" />
@@ -163,13 +164,13 @@
                     </StackPanel>
                 </Border>
             </Grid>
-            
+
             <TextBlock
                 HorizontalAlignment="Center"
                 Foreground="{ThemeResource TextFillColorSecondaryBrush}"
                 Text="{x:Bind Mode.EmptyText, Mode=OneTime}"
                 Visibility="{x:Bind ShowModeEmpty, Mode=OneTime, Converter={StaticResource BoolToVisibilityConverter}}" />
-            
+
             <StackPanel Spacing="8"
                         Visibility="{x:Bind Mode.HasChallenges, Mode=OneTime, Converter={StaticResource BoolToVisibilityConverter}}">
                 <TextBlock Style="{StaticResource SectionTitleStyle}" Text="{helpers:Loc Key=Stygian_Stage}" />
@@ -181,7 +182,7 @@
                         <DataTemplate x:DataType="models:StygianChallenge">
                             <Border Style="{StaticResource StageCardStyle}">
                                 <StackPanel Spacing="10">
-                                    
+
                                     <Grid ColumnSpacing="12">
                                         <Grid.ColumnDefinitions>
                                             <ColumnDefinition Width="Auto" />
@@ -213,7 +214,7 @@
                                             <TextBlock HorizontalAlignment="Right" Text="{x:Bind TimeText}" />
                                         </StackPanel>
                                     </Grid>
-                                    
+
                                     <RichTextBlock
                                         x:Name="MonsterDescriptionText"
                                         FontSize="12"
@@ -222,7 +223,7 @@
                                         Tag="{x:Bind Monster}"
                                         TextWrapping="Wrap"
                                         Visibility="{x:Bind Monster.HasDescriptions, Converter={StaticResource BoolToVisibilityConverter}}" />
-                                    
+
                                     <StackPanel Spacing="6"
                                                 Visibility="{x:Bind HasTeam, Converter={StaticResource BoolToVisibilityConverter}}">
                                         <TextBlock Style="{StaticResource KpiLabelStyle}"
@@ -246,7 +247,7 @@
                                             </ItemsControl.ItemTemplate>
                                         </ItemsControl>
                                     </StackPanel>
-                                    
+
                                     <StackPanel Spacing="6"
                                                 Visibility="{x:Bind HasBestAvatars, Converter={StaticResource BoolToVisibilityConverter}}">
                                         <TextBlock Style="{StaticResource KpiLabelStyle}"
@@ -282,7 +283,7 @@
                     </ItemsRepeater.ItemTemplate>
                 </ItemsRepeater>
             </StackPanel>
-            
+
             <Border Style="{StaticResource SectionCardStyle}"
                     Visibility="{x:Bind Display.HasBlings, Mode=OneTime, Converter={StaticResource BoolToVisibilityConverter}}">
                 <StackPanel Spacing="10">

@@ -151,7 +151,6 @@ public class ScrapedMetadata
         get;
         set;
     }
-
 }
 
 public class GachaKpiItem

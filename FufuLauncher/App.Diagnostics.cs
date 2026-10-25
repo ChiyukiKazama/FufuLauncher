@@ -40,7 +40,8 @@ public partial class App
             || baseEx is ObjectDisposedException
             || baseEx is OperationCanceledException)
         {
-            DebugLog.Info("App.Diagnostics", $"[UnobservedTask] Ignored background exception: {baseEx.GetType().Name}: {baseEx.Message}");
+            DebugLog.Info("App.Diagnostics",
+                $"[UnobservedTask] Ignored background exception: {baseEx.GetType().Name}: {baseEx.Message}");
             return;
         }
 

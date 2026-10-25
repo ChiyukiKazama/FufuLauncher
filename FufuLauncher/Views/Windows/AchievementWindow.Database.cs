@@ -55,7 +55,8 @@ public sealed partial class AchievementWindow
         }
         catch (IOException ex)
         {
-            DebugLog.Info("AchievementWindow.Database", $"[AchievementWindow] Failed to read achievements file ({jsonPath}): {ex.Message}");
+            DebugLog.Info("AchievementWindow.Database",
+                $"[AchievementWindow] Failed to read achievements file ({jsonPath}): {ex.Message}");
             return;
         }
 
@@ -66,7 +67,8 @@ public sealed partial class AchievementWindow
         }
         catch (JsonException ex)
         {
-            DebugLog.Info("AchievementWindow.Database", $"[AchievementWindow] Failed to parse achievements JSON ({jsonPath}): {ex.Message}");
+            DebugLog.Info("AchievementWindow.Database",
+                $"[AchievementWindow] Failed to parse achievements JSON ({jsonPath}): {ex.Message}");
             return;
         }
 

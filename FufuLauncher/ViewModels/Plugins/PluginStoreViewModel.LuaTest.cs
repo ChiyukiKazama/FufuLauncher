@@ -23,7 +23,8 @@ public partial class PluginStoreViewModel
 
         if (App.MainWindow?.DispatcherQueue is not { } dispatcherQueue)
         {
-            DebugLog.Info("PluginStoreViewModel.LuaTest", "[PluginStoreVM] Cannot execute Lua test: MainWindow or DispatcherQueue is null");
+            DebugLog.Info("PluginStoreViewModel.LuaTest",
+                "[PluginStoreVM] Cannot execute Lua test: MainWindow or DispatcherQueue is null");
             return;
         }
 
@@ -33,7 +34,8 @@ public partial class PluginStoreViewModel
             {
                 if (App.MainWindow?.Content?.XamlRoot is not { } xamlRoot)
                 {
-                    DebugLog.Info("PluginStoreViewModel.LuaTest", "[PluginStoreVM] Cannot execute Lua test: XamlRoot is null");
+                    DebugLog.Info("PluginStoreViewModel.LuaTest",
+                        "[PluginStoreVM] Cannot execute Lua test: XamlRoot is null");
                     dialogCompleted.TrySetResult(null);
                     return;
                 }
@@ -165,7 +167,8 @@ public partial class PluginStoreViewModel
 
         if (App.MainWindow?.DispatcherQueue is not { } dispatcherQueue)
         {
-            DebugLog.Info("PluginStoreViewModel.LuaTest", "[PluginStoreVM] Cannot show security warning: MainWindow or DispatcherQueue is null");
+            DebugLog.Info("PluginStoreViewModel.LuaTest",
+                "[PluginStoreVM] Cannot show security warning: MainWindow or DispatcherQueue is null");
             return false;
         }
 
@@ -175,7 +178,8 @@ public partial class PluginStoreViewModel
             {
                 if (App.MainWindow?.Content?.XamlRoot is not { } xamlRoot)
                 {
-                    DebugLog.Info("PluginStoreViewModel.LuaTest", "[PluginStoreVM] Cannot show security warning: XamlRoot is null");
+                    DebugLog.Info("PluginStoreViewModel.LuaTest",
+                        "[PluginStoreVM] Cannot show security warning: XamlRoot is null");
                     tcs.TrySetResult(false);
                     return;
                 }
@@ -202,7 +206,8 @@ public partial class PluginStoreViewModel
 
         if (!enqueued)
         {
-            DebugLog.Info("PluginStoreViewModel.LuaTest", "[PluginStoreVM] Failed to enqueue security warning to DispatcherQueue");
+            DebugLog.Info("PluginStoreViewModel.LuaTest",
+                "[PluginStoreVM] Failed to enqueue security warning to DispatcherQueue");
             return false;
         }
 
@@ -215,7 +220,8 @@ public partial class PluginStoreViewModel
 
         if (App.MainWindow?.DispatcherQueue is not { } dispatcherQueue)
         {
-            DebugLog.Info("PluginStoreViewModel.LuaTest", "[PluginStoreVM] Cannot show Lua test result: MainWindow or DispatcherQueue is null");
+            DebugLog.Info("PluginStoreViewModel.LuaTest",
+                "[PluginStoreVM] Cannot show Lua test result: MainWindow or DispatcherQueue is null");
             return;
         }
 
@@ -225,7 +231,8 @@ public partial class PluginStoreViewModel
             {
                 if (App.MainWindow?.Content?.XamlRoot is not { } xamlRoot)
                 {
-                    DebugLog.Info("PluginStoreViewModel.LuaTest", "[PluginStoreVM] Cannot show Lua test result: XamlRoot is null");
+                    DebugLog.Info("PluginStoreViewModel.LuaTest",
+                        "[PluginStoreVM] Cannot show Lua test result: XamlRoot is null");
                     tcs.TrySetResult(true);
                     return;
                 }
@@ -301,7 +308,8 @@ public partial class PluginStoreViewModel
                     }
                     catch (Exception ex)
                     {
-                        DebugLog.Info("PluginStoreViewModel.LuaTest", $"[PluginStoreVM] Failed to open log file: {ex.Message}");
+                        DebugLog.Info("PluginStoreViewModel.LuaTest",
+                            $"[PluginStoreVM] Failed to open log file: {ex.Message}");
                     }
                 }
             }
@@ -317,7 +325,8 @@ public partial class PluginStoreViewModel
 
         if (!enqueued)
         {
-            DebugLog.Info("PluginStoreViewModel.LuaTest", "[PluginStoreVM] Failed to enqueue Lua test result to DispatcherQueue");
+            DebugLog.Info("PluginStoreViewModel.LuaTest",
+                "[PluginStoreVM] Failed to enqueue Lua test result to DispatcherQueue");
             return;
         }
 

@@ -130,7 +130,8 @@
                         Style="{StaticResource ModeTabButtonStyle}"
                         Tag="SpiralAbyss">
                         <StackPanel Orientation="Horizontal" Spacing="8">
-                            <Image Width="18" Height="18" Source="ms-appx:///Assets/CycleChallenge/Icons/SpiralAbyss.png" />
+                            <Image Width="18" Height="18"
+                                   Source="ms-appx:///Assets/CycleChallenge/Icons/SpiralAbyss.png" />
                             <TextBlock Text="{helpers:Loc Key=CycleChallenge_TabAbyss}" />
                         </StackPanel>
                     </ToggleButton>
@@ -141,7 +142,8 @@
                         Style="{StaticResource ModeTabButtonStyle}"
                         Tag="Theater">
                         <StackPanel Orientation="Horizontal" Spacing="8">
-                            <Image Width="18" Height="18" Source="ms-appx:///Assets/CycleChallenge/Icons/RoleCombat.png" />
+                            <Image Width="18" Height="18"
+                                   Source="ms-appx:///Assets/CycleChallenge/Icons/RoleCombat.png" />
                             <TextBlock Text="{helpers:Loc Key=CycleChallenge_TabTheater}" />
                         </StackPanel>
                     </ToggleButton>
@@ -152,7 +154,8 @@
                         Style="{StaticResource ModeTabButtonStyle}"
                         Tag="Stygian">
                         <StackPanel Orientation="Horizontal" Spacing="8">
-                            <Image Width="18" Height="18" Source="ms-appx:///Assets/CycleChallenge/Icons/HardChallenge.png" />
+                            <Image Width="18" Height="18"
+                                   Source="ms-appx:///Assets/CycleChallenge/Icons/HardChallenge.png" />
                             <TextBlock Text="{helpers:Loc Key=CycleChallenge_TabStygian}" />
                         </StackPanel>
                     </ToggleButton>

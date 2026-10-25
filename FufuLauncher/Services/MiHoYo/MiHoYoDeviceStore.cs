@@ -149,7 +149,8 @@ public sealed class MiHoYoDeviceStore
         }
         catch (JsonException ex)
         {
-            DebugLog.Info("MiHoYoDeviceStore", $"[MiHoYoDevice] Failed to parse content, treating as unavailable: {ex.Message}");
+            DebugLog.Info("MiHoYoDeviceStore",
+                $"[MiHoYoDevice] Failed to parse content, treating as unavailable: {ex.Message}");
             return null;
         }
     }

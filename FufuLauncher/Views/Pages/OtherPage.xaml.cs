@@ -54,11 +54,13 @@ namespace FufuLauncher.Views
                         ViewModel.IsRecordingStopKey)
                     {
                         content.KeyDown += GlobalKeyDown;
-                        DebugLog.Info("OtherPage", "[OtherPage] Key recording enabled, global key events registered on Window.Content");
+                        DebugLog.Info("OtherPage",
+                            "[OtherPage] Key recording enabled, global key events registered on Window.Content");
                     }
                     else
                     {
-                        DebugLog.Info("OtherPage", "[OtherPage] Key recording disabled, global key events unregistered");
+                        DebugLog.Info("OtherPage",
+                            "[OtherPage] Key recording disabled, global key events unregistered");
                     }
                 }
             }

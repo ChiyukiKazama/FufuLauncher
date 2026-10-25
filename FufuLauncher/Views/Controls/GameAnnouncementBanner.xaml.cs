@@ -91,7 +91,8 @@ namespace FufuLauncher.Views
             }
             catch (Exception ex)
             {
-                DebugLog.Info("GameAnnouncementBanner", $"[GameAnnouncementBanner] Failed to apply rounded clip: {ex.Message}");
+                DebugLog.Info("GameAnnouncementBanner",
+                    $"[GameAnnouncementBanner] Failed to apply rounded clip: {ex.Message}");
             }
         }
 

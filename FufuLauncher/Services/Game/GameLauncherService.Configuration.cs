@@ -19,7 +19,8 @@ public partial class GameLauncherService
         {
             var savedPath = GetGamePath();
             bool exists = !string.IsNullOrEmpty(savedPath) && Directory.Exists(savedPath);
-            DebugLog.Info("GameLauncherService.Configuration", $"[LaunchService] Checking path: '{savedPath}', exists: {exists}, length: {savedPath?.Length}");
+            DebugLog.Info("GameLauncherService.Configuration",
+                $"[LaunchService] Checking path: '{savedPath}', exists: {exists}, length: {savedPath?.Length}");
             return exists;
         }
         catch (Exception ex)
@@ -92,7 +93,8 @@ public partial class GameLauncherService
     public async Task SetIsCustomLaunchParametersEnabledAsync(bool enabled)
     {
         await _localSettingsService.SaveSettingAsync(IsCustomLaunchParametersEnabledKey, enabled);
-        DebugLog.Info("GameLauncherService.Configuration", $"[LaunchService] Saved custom parameter enabled state: {enabled}");
+        DebugLog.Info("GameLauncherService.Configuration",
+            $"[LaunchService] Saved custom parameter enabled state: {enabled}");
     }
 
     public async Task<bool> GetUsingHoyolabAccountAsync()
@@ -104,7 +106,8 @@ public partial class GameLauncherService
     public async Task SetUsingHoyolabAccountAsync(bool value)
     {
         await _localSettingsService.SaveSettingAsync(UsingHoyolabAccountKey, value);
-        DebugLog.Info("GameLauncherService.Configuration", $"[LaunchService] Saved Miyoushe account launch option: {value}");
+        DebugLog.Info("GameLauncherService.Configuration",
+            $"[LaunchService] Saved Miyoushe account launch option: {value}");
     }
 
     private async Task ApplyGenshinHDRConfigAsync(StringBuilder logBuilder)
@@ -146,14 +149,16 @@ public partial class GameLauncherService
                     {
                         if (args.Length > 0) args.Append(' ');
                         args.Append(customParams);
-                        DebugLog.Info("GameLauncherService.Configuration", $"[LaunchService] Using custom arguments: '{customParams}'");
+                        DebugLog.Info("GameLauncherService.Configuration",
+                            $"[LaunchService] Using custom arguments: '{customParams}'");
                     }
                 }
             }
         }
         else
         {
-            DebugLog.Info("GameLauncherService.Configuration", "[LaunchService] Game launch arguments disabled, skipping custom arguments");
+            DebugLog.Info("GameLauncherService.Configuration",
+                "[LaunchService] Game launch arguments disabled, skipping custom arguments");
         }
 
         if (!string.IsNullOrEmpty(authTicket))

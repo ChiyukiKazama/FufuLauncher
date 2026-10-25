@@ -78,7 +78,8 @@ public sealed class DeviceFpService
             string? issued = await RegisterAsync(identity, token).ConfigureAwait(false);
             if (string.IsNullOrEmpty(issued))
             {
-                DebugLog.Info("DeviceFpService", "[DeviceFp] Registration returned no fingerprint, returning fingerprint-less identity");
+                DebugLog.Info("DeviceFpService",
+                    "[DeviceFp] Registration returned no fingerprint, returning fingerprint-less identity");
                 return identity;
             }
 
@@ -136,7 +137,8 @@ public sealed class DeviceFpService
 
             using var resp = await _httpClient.SendAsync(req, token).ConfigureAwait(false);
             string json = await resp.Content.ReadAsStringAsync(token).ConfigureAwait(false);
-            DebugLog.Info("DeviceFpService", $"[DeviceFp] getFp status code: {(int)resp.StatusCode}, response: {Truncate(json, 300)}");
+            DebugLog.Info("DeviceFpService",
+                $"[DeviceFp] getFp status code: {(int)resp.StatusCode}, response: {Truncate(json, 300)}");
 
             return ParseFingerprint(json);
         }

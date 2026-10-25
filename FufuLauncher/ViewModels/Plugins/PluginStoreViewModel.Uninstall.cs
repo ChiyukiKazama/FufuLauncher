@@ -56,7 +56,8 @@ public partial class PluginStoreViewModel
                     }
                     catch (CaptchaRequiredException captchaEx)
                     {
-                        DebugLog.Info("PluginStoreViewModel.Uninstall", $"[PluginStoreVM] Uninstall captcha required: {captchaEx.VerifyUrl}");
+                        DebugLog.Info("PluginStoreViewModel.Uninstall",
+                            $"[PluginStoreVM] Uninstall captcha required: {captchaEx.VerifyUrl}");
                         item.InstallStatusText = "PluginStoreCaptchaRequired".GetLocalized();
 
                         var dlToken = await ShowGeetestCaptchaAsync(captchaEx.VerifyUrl);
@@ -70,11 +71,13 @@ public partial class PluginStoreViewModel
 
                         item.DlToken = dlToken;
                         attempt++;
-                        DebugLog.Info("PluginStoreViewModel.Uninstall", $"[PluginStoreVM] Uninstall: got dl_token, retrying (attempt {attempt})...");
+                        DebugLog.Info("PluginStoreViewModel.Uninstall",
+                            $"[PluginStoreVM] Uninstall: got dl_token, retrying (attempt {attempt})...");
                     }
                     catch (PrivatePluginAccessException privEx)
                     {
-                        DebugLog.Info("PluginStoreViewModel.Uninstall", $"[PluginStoreVM] Uninstall private access required: {privEx.Message}");
+                        DebugLog.Info("PluginStoreViewModel.Uninstall",
+                            $"[PluginStoreVM] Uninstall private access required: {privEx.Message}");
                         item.InstallStatusText = "PluginStorePrivateAccessRequired".GetLocalized();
 
                         var accessKey = await ShowPrivateAccessDialogAsync(item);
@@ -92,7 +95,8 @@ public partial class PluginStoreViewModel
                     catch (InvalidOperationException ex) when (ex.Message.Contains("download") ||
                                                                ex.Message.Contains("Download"))
                     {
-                        DebugLog.Info("PluginStoreViewModel.Uninstall", $"[PluginStoreVM] Uninstall download error (may need captcha): {ex.Message}");
+                        DebugLog.Info("PluginStoreViewModel.Uninstall",
+                            $"[PluginStoreVM] Uninstall download error (may need captcha): {ex.Message}");
                         attempt++;
                         if (attempt >= maxCaptchaRetries)
                         {
@@ -111,7 +115,8 @@ public partial class PluginStoreViewModel
 
                 if (luaSuccess)
                 {
-                    DebugLog.Info("PluginStoreViewModel.Uninstall", "[PluginStoreVM] Lua uninstall script completed successfully");
+                    DebugLog.Info("PluginStoreViewModel.Uninstall",
+                        "[PluginStoreVM] Lua uninstall script completed successfully");
                 }
             }
 
@@ -119,7 +124,8 @@ public partial class PluginStoreViewModel
             if (Directory.Exists(pluginDir))
             {
                 Directory.Delete(pluginDir, true);
-                DebugLog.Info("PluginStoreViewModel.Uninstall", $"[PluginStoreVM] Deleted plugin directory: {pluginDir}");
+                DebugLog.Info("PluginStoreViewModel.Uninstall",
+                    $"[PluginStoreVM] Deleted plugin directory: {pluginDir}");
             }
 
             item.State = StorePluginState.Available;
@@ -148,12 +154,14 @@ public partial class PluginStoreViewModel
             if (Directory.Exists(pluginDir))
             {
                 Directory.Delete(pluginDir, true);
-                DebugLog.Info("PluginStoreViewModel.Uninstall", $"[PluginStoreVM] Cleaned up partial install: {pluginDir}");
+                DebugLog.Info("PluginStoreViewModel.Uninstall",
+                    $"[PluginStoreVM] Cleaned up partial install: {pluginDir}");
             }
         }
         catch (Exception ex)
         {
-            DebugLog.Info("PluginStoreViewModel.Uninstall", $"[PluginStoreVM] Failed to clean up plugin dir: {ex.Message}");
+            DebugLog.Info("PluginStoreViewModel.Uninstall",
+                $"[PluginStoreVM] Failed to clean up plugin dir: {ex.Message}");
         }
     }
 

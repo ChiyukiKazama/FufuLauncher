@@ -77,7 +77,8 @@ namespace FufuLauncher.Services
                 if (handle == IntPtr.Zero)
                 {
                     int errorCode = Marshal.GetLastWin32Error();
-                    DebugLog.Info("LauncherService", $"Failed to load {DllName}. File exists but dependencies are missing or architecture mismatched. Win32 error code: {errorCode}");
+                    DebugLog.Info("LauncherService",
+                        $"Failed to load {DllName}. File exists but dependencies are missing or architecture mismatched. Win32 error code: {errorCode}");
                     IsLauncherDllLoaded = false;
                     DllLoadError = LauncherDllLoadError.LoadFailed;
                     return;

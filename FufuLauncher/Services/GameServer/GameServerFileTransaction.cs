@@ -5,7 +5,6 @@ Licensed under the MIT License.
 
 namespace FufuLauncher.Services.GameServer;
 
-// Keep original files on the same volume until all SDK files and config.ini have been committed.
 internal sealed class GameServerFileTransaction : IDisposable
 {
     private readonly string _gameDir;
@@ -19,7 +18,10 @@ internal sealed class GameServerFileTransaction : IDisposable
         Directory.CreateDirectory(WorkDir);
     }
 
-    public string WorkDir { get; }
+    public string WorkDir
+    {
+        get;
+    }
 
     public static string ResolvePath(string root, string relativePath)
     {
@@ -31,7 +33,7 @@ internal sealed class GameServerFileTransaction : IDisposable
             throw new InvalidDataException($"Invalid game resource path: {relativePath}");
         }
 
-        // Do not follow a junction/symlink outside the selected game directory.
+
         for (string? current = fullPath; current is not null; current = Path.GetDirectoryName(current))
         {
             if ((File.Exists(current) || Directory.Exists(current)) &&
@@ -117,13 +119,13 @@ internal sealed class GameServerFileTransaction : IDisposable
         {
             try
             {
-                // A failed atomic move leaves the original file intact, possibly still locked.
                 if (!snapshot.Changed)
                 {
                     if (snapshot.Backup is not null && File.GetAttributes(path) != snapshot.Attributes)
                     {
                         File.SetAttributes(path, snapshot.Attributes);
                     }
+
                     continue;
                 }
 
@@ -159,9 +161,16 @@ internal sealed class GameServerFileTransaction : IDisposable
     {
         if (!_preserveBackup)
         {
-            try { Directory.Delete(WorkDir, true); }
-            catch (IOException) { }
-            catch (UnauthorizedAccessException) { }
+            try
+            {
+                Directory.Delete(WorkDir, true);
+            }
+            catch (IOException)
+            {
+            }
+            catch (UnauthorizedAccessException)
+            {
+            }
         }
     }
 
@@ -175,6 +184,10 @@ internal sealed class GameServerFileTransaction : IDisposable
 
     private sealed record Snapshot(string? Backup, FileAttributes Attributes)
     {
-        public bool Changed { get; set; }
+        public bool Changed
+        {
+            get;
+            set;
+        }
     }
 }

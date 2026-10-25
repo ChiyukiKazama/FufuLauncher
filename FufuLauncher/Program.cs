@@ -191,7 +191,8 @@ namespace FufuLauncher
                 }
                 catch (Exception ex)
                 {
-                    DebugLog.Info("Program", $"[Program] Pre-injection trust check exception (continuing injection): {ex.Message}");
+                    DebugLog.Info("Program",
+                        $"[Program] Pre-injection trust check exception (continuing injection): {ex.Message}");
                 }
 
                 var result = launcher.LaunchGameAndInject(gameExePath, dllPath, commandLineArgs, out var errorMessage,

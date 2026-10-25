@@ -15,10 +15,6 @@ using FufuLauncher.Services;
 
 namespace FufuLauncher.Services.CycleChallenge;
 
-/// <summary>
-/// 周期挑战编排：请求 API → 解析期次/摘要 → 同键覆盖入库；失败时回退本地缓存。
-/// 存储唯一键 (Uid, Mode, ScheduleId)，Payload 为单期 JSON（剧诗/危战为 data[] 中的一项）。
-/// </summary>
 public sealed class CycleChallengeService
 {
     private const string ApiVersion = "cn-2.112.0/os-2.54.0";
@@ -32,7 +28,7 @@ public sealed class CycleChallengeService
         _repository = repository;
     }
 
-    /// <summary>从本地缓存读取（不做网络请求）。</summary>
+
     public ChallengeLoadResult LoadFromCache(ChallengeMode mode, SelectedGameRole role, string? scheduleId)
     {
         var periods = _repository.GetPeriods(role.Role.game_uid, mode);
@@ -65,7 +61,7 @@ public sealed class CycleChallengeService
         };
     }
 
-    /// <summary>请求 API 并覆盖写入；失败回退缓存。深境螺旋需要 schedule_type=1/2 两次请求。</summary>
+
     public async Task<ChallengeLoadResult> RefreshAsync(
         ChallengeMode mode, SelectedGameRole role, CancellationToken token)
     {
@@ -85,7 +81,6 @@ public sealed class CycleChallengeService
                     var response = await _api.GetSpiralAbyssAsync(role, schedule, token).ConfigureAwait(false);
                     if (response.Success)
                     {
-                        // 深渊会请求 schedule_type=1/2 两期：优先保留“有楼层数据”的那一期
                         if (preferredAbyssResponse is null
                             || (!HasAbyssData(preferredAbyssResponse.DataJson)
                                 && HasAbyssData(response.DataJson)))
@@ -99,8 +94,8 @@ public sealed class CycleChallengeService
                         }
                         catch (Exception ex)
                         {
-                            // 写缓存失败不能让成功的 API 响应变成错误页
-                            DebugLog.Info("CycleChallengeService", $"[CycleChallengeService] Failed to write Abyss cache: {ex.Message}");
+                            DebugLog.Info("CycleChallengeService",
+                                $"[CycleChallengeService] Failed to write Abyss cache: {ex.Message}");
                             saveFailed = true;
                             freshPanelPayload ??= BuildFreshPanelPayload(mode, response.DataJson, isUnlock: true);
                             freshScheduleId ??= TryGetFreshScheduleId(mode, response.DataJson);
@@ -126,7 +121,8 @@ public sealed class CycleChallengeService
                     }
                     catch (Exception ex)
                     {
-                        DebugLog.Info("CycleChallengeService", $"[CycleChallengeService] Failed to write Theater cache: {ex.Message}");
+                        DebugLog.Info("CycleChallengeService",
+                            $"[CycleChallengeService] Failed to write Theater cache: {ex.Message}");
                         saveFailed = true;
                         freshPanelPayload ??= BuildFreshPanelPayload(mode, response.DataJson, isUnlock);
                         freshScheduleId ??= TryGetFreshScheduleId(mode, response.DataJson);
@@ -152,7 +148,8 @@ public sealed class CycleChallengeService
                     }
                     catch (Exception ex)
                     {
-                        DebugLog.Info("CycleChallengeService", $"[CycleChallengeService] Failed to write Stygian Onslaught cache: {ex.Message}");
+                        DebugLog.Info("CycleChallengeService",
+                            $"[CycleChallengeService] Failed to write Stygian Onslaught cache: {ex.Message}");
                         saveFailed = true;
                         freshPanelPayload ??= BuildFreshPanelPayload(mode, response.DataJson, isUnlock);
                         freshScheduleId ??= TryGetFreshScheduleId(mode, response.DataJson);
@@ -167,7 +164,7 @@ public sealed class CycleChallengeService
             }
         }
 
-        // 深渊：两次请求中优先使用“有楼层数据”的响应作为写缓存失败的兜底 payload
+
         if (mode == ChallengeMode.SpiralAbyss
             && saveFailed
             && preferredAbyssResponse is not null)
@@ -186,16 +183,14 @@ public sealed class CycleChallengeService
         }
         catch (Exception ex) when (saveFailed && freshPanelPayload is not null)
         {
-            // API 已成功、只是缓存不可读：保留旧期次列表并让面板直接使用本次新数据
             DebugLog.Info("CycleChallengeService", $"[CycleChallengeService] Failed to read cache: {ex.Message}");
             periods = periodsBefore;
             latest = null;
         }
 
-        // 写缓存失败但 API 成功：直接返回本次拉取的新数据，避免误报错误或展示旧缓存
+
         if (saveFailed && freshPanelPayload is not null)
         {
-            // 期次标签必须与本次新 payload 一致；若缓存期次列表里还没有该期次，补一个仅含 ID 的项
             string activeScheduleId = freshScheduleId ?? latest?.ScheduleId ?? string.Empty;
             periods = EnsureFreshPeriodPresent(periods, role, mode, activeScheduleId);
 
@@ -222,7 +217,7 @@ public sealed class CycleChallengeService
             };
         }
 
-        // 有失败但仍有缓存：标记为缓存态 + 携带失败原因
+
         var flagCache = failures.Count > 0 && periodsBefore.Count > 0;
         return new ChallengeLoadResult
         {
@@ -289,7 +284,6 @@ public sealed class CycleChallengeService
                  root.TryGetProperty("data", out var inner) &&
                  inner.ValueKind is JsonValueKind.Array)
         {
-            // 剧诗/危战响应形如 { retcode, message, data: { data: [...], is_unlock, links } }
             array = inner;
             if (root.TryGetProperty("is_unlock", out _))
             {
@@ -388,10 +382,7 @@ public sealed class CycleChallengeService
         });
     }
 
-    /// <summary>
-    /// 写缓存失败时，把本次 API 的 data 节点转换为面板可直接解析的 payload：
-    /// 深渊 data 本身就是对象；剧诗/危战需要补回 retcode/message/is_unlock 外壳。
-    /// </summary>
+
     private static string? BuildFreshPanelPayload(ChallengeMode mode, string? dataJson, bool isUnlock)
     {
         if (string.IsNullOrWhiteSpace(dataJson))
@@ -429,12 +420,13 @@ public sealed class CycleChallengeService
         }
         catch (JsonException ex)
         {
-            DebugLog.Info("CycleChallengeService", $"[CycleChallengeService] Failed to build temp payload: {ex.Message}");
+            DebugLog.Info("CycleChallengeService",
+                $"[CycleChallengeService] Failed to build temp payload: {ex.Message}");
             return null;
         }
     }
 
-    /// <summary>深渊 data 中是否包含非空 floors（用于在两个请求结果里挑选有数据的一期）。</summary>
+
     private static bool HasAbyssData(string? dataJson)
     {
         if (string.IsNullOrWhiteSpace(dataJson))
@@ -453,12 +445,13 @@ public sealed class CycleChallengeService
         }
         catch (JsonException ex)
         {
-            DebugLog.Info("CycleChallengeService", $"[CycleChallengeService] Failed to determine Abyss floors: {ex.Message}");
+            DebugLog.Info("CycleChallengeService",
+                $"[CycleChallengeService] Failed to determine Abyss floors: {ex.Message}");
             return false;
         }
     }
 
-    /// <summary>尝试从本次 API data 节点中解析真实期次 ID（深渊 schedule_id；剧诗/危战取首项 schedule_id）。</summary>
+
     private static string? TryGetFreshScheduleId(ChallengeMode mode, string? dataJson)
     {
         if (string.IsNullOrWhiteSpace(dataJson))
@@ -490,7 +483,7 @@ public sealed class CycleChallengeService
                 return NullIfBlank(GetString(root, "schedule_id"));
             }
 
-            // 剧诗/危战：完整 data 节点可能再包一层 data[]
+
             if (root.TryGetProperty("data", out var data) && data.ValueKind is JsonValueKind.Array)
             {
                 if (data.GetArrayLength() == 0)
@@ -519,14 +512,15 @@ public sealed class CycleChallengeService
         }
         catch (JsonException ex)
         {
-            DebugLog.Info("CycleChallengeService", $"[CycleChallengeService] Failed to parse fresh period IDs: {ex.Message}");
+            DebugLog.Info("CycleChallengeService",
+                $"[CycleChallengeService] Failed to parse fresh period IDs: {ex.Message}");
             return null;
         }
     }
 
     private static string? NullIfBlank(string? value) => string.IsNullOrWhiteSpace(value) ? null : value;
 
-    /// <summary>写缓存失败时，保证下拉列表包含本次新数据对应的期次（日期未知时留空）。</summary>
+
     private static IReadOnlyList<ChallengePeriod> EnsureFreshPeriodPresent(
         IReadOnlyList<ChallengePeriod> periods, SelectedGameRole role, ChallengeMode mode, string scheduleId)
     {
@@ -544,10 +538,7 @@ public sealed class CycleChallengeService
         return list;
     }
 
-    /// <summary>
-    /// 剧诗/危战面板按 data[] 结构解析，因此包一层 retcode/message/data，并补回响应根上的 is_unlock；
-    /// 深境螺旋面板直接接收 data 对象（is_unlock 已在 data 内部）。
-    /// </summary>
+
     private static string WrapForPanel(ChallengeMode mode, CycleChallengeRecordEntity record)
     {
         if (mode == ChallengeMode.SpiralAbyss)
@@ -556,10 +547,11 @@ public sealed class CycleChallengeService
         }
 
         var isUnlock = ReadSummaryBool(record.Summary, "is_unlock");
-        return $"{{\"retcode\":0,\"message\":\"OK\",\"is_unlock\":{isUnlock.ToString().ToLowerInvariant()},\"data\":[{record.Payload}]}}";
+        return
+            $"{{\"retcode\":0,\"message\":\"OK\",\"is_unlock\":{isUnlock.ToString().ToLowerInvariant()},\"data\":[{record.Payload}]}}";
     }
 
-    /// <summary>从完整响应 JSON 的根节点读取 is_unlock（剧诗/危战不在 data 内）。</summary>
+
     private static bool ReadIsUnlock(string rawJson)
     {
         if (string.IsNullOrWhiteSpace(rawJson))
@@ -572,7 +564,7 @@ public sealed class CycleChallengeService
             using var document = JsonDocument.Parse(rawJson);
             var root = document.RootElement;
 
-            // 剧诗/危战：is_unlock 在同一层（data 对象内）；深渊：在 data 对象内
+
             if (root.TryGetProperty("is_unlock", out _))
             {
                 return GetBool(root, "is_unlock");
@@ -585,7 +577,7 @@ public sealed class CycleChallengeService
                 return GetBool(data, "is_unlock");
             }
 
-            // 字段缺失默认视为已解锁，避免把正常数据误判为未解锁
+
             return true;
         }
         catch (JsonException)
@@ -594,10 +586,7 @@ public sealed class CycleChallengeService
         }
     }
 
-    /// <summary>
-    /// 选择默认展示的期次：优先最近一期“有数据”的期次（当前期可能尚未参与），
-    /// 全部无数据时退回最新一期。期次仍可在下拉框中手动切换。
-    /// </summary>
+
     private CycleChallengeRecordEntity? PickPreferredRecord(
         string uid, ChallengeMode mode, IReadOnlyList<ChallengePeriod> periods)
     {
@@ -606,7 +595,7 @@ public sealed class CycleChallengeService
             return null;
         }
 
-        // 优先使用期次列表里已带出的摘要（GetPeriods 只查 Summary，不加载大 Payload）
+
         foreach (var period in periods)
         {
             if (ReadSummaryBool(period.Summary, "has_data"))
@@ -618,7 +607,7 @@ public sealed class CycleChallengeService
         return _repository.Get(uid, mode, periods[0].ScheduleId);
     }
 
-    /// <summary>从摘要 JSON 读取布尔字段，缺失时默认 true（避免把正常数据误判为未解锁）。</summary>
+
     private static bool ReadSummaryBool(string? summaryJson, string property)
     {
         if (string.IsNullOrWhiteSpace(summaryJson))
@@ -638,7 +627,7 @@ public sealed class CycleChallengeService
         }
     }
 
-    /// <summary>把接口时间规范化为带 +00:00 的 UTC 字符串入库（展示时再按账号服务器时区换算）。</summary>
+
     private static string? NormalizeTime(JsonElement element, string property)
     {
         if (!element.TryGetProperty(property, out var value))
@@ -658,7 +647,6 @@ public sealed class CycleChallengeService
     private static string? NormalizeScheduleTime(
         JsonElement element, string timeProperty, string dateTimeProperty, CycleChallengeTimeContext context)
     {
-        // 优先 unix 秒（绝对时间）；其次接口的墙上时间对象（按服务器时区解释）
         if (element.TryGetProperty(timeProperty, out var timeValue) &&
             timeValue.ValueKind is JsonValueKind.String &&
             long.TryParse(timeValue.GetString(), out var unix) && unix > 0)
@@ -706,7 +694,8 @@ public sealed class CycleChallengeService
             return CycleChallengeTime.ToUtcStorageString(DateTimeOffset.FromUnixTimeSeconds(unix));
         }
 
-        return DateTimeOffset.TryParse(text, CultureInfo.InvariantCulture, DateTimeStyles.AssumeUniversal, out var parsed)
+        return DateTimeOffset.TryParse(text, CultureInfo.InvariantCulture, DateTimeStyles.AssumeUniversal,
+            out var parsed)
             ? CycleChallengeTime.ToUtcStorageString(parsed)
             : null;
     }

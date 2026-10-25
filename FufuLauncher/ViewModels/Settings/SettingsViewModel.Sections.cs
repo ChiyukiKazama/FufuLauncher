@@ -169,7 +169,8 @@ public partial class SettingsViewModel
         }
         catch (Exception ex)
         {
-            DebugLog.Info("SettingsViewModel.Sections", $"SettingsViewModel: section {sectionId} load exception - {ex.Message}");
+            DebugLog.Info("SettingsViewModel.Sections",
+                $"SettingsViewModel: section {sectionId} load exception - {ex.Message}");
         }
         finally
         {
@@ -197,7 +198,8 @@ public partial class SettingsViewModel
         }
         catch (Exception ex)
         {
-            DebugLog.Info("SettingsViewModel.Sections", $"SettingsViewModel: section {sectionId} load failed - {ex.Message}");
+            DebugLog.Info("SettingsViewModel.Sections",
+                $"SettingsViewModel: section {sectionId} load failed - {ex.Message}");
         }
         finally
         {
@@ -221,7 +223,8 @@ public partial class SettingsViewModel
             }
             catch (Exception ex)
             {
-                DebugLog.Info("SettingsViewModel.Sections", $"SettingsViewModel: section {sectionId} UI refresh exception - {ex.Message}");
+                DebugLog.Info("SettingsViewModel.Sections",
+                    $"SettingsViewModel: section {sectionId} UI refresh exception - {ex.Message}");
             }
         }
     }

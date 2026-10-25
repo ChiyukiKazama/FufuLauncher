@@ -41,7 +41,8 @@ namespace FufuLauncher.Services.Background
         {
             try
             {
-                DebugLog.Info("HoyoverseContentService", $"HoyoverseContentService: Requesting announcement content for {server}");
+                DebugLog.Info("HoyoverseContentService",
+                    $"HoyoverseContentService: Requesting announcement content for {server}");
 
                 var apiUrl = server switch
                 {
@@ -64,7 +65,8 @@ namespace FufuLauncher.Services.Background
 
                 if (result?.Retcode != 0)
                 {
-                    DebugLog.Info("HoyoverseContentService", $"HoyoverseContentService: API error code {result?.Retcode}");
+                    DebugLog.Info("HoyoverseContentService",
+                        $"HoyoverseContentService: API error code {result?.Retcode}");
                     return null;
                 }
 
@@ -72,7 +74,8 @@ namespace FufuLauncher.Services.Background
             }
             catch (Exception ex)
             {
-                DebugLog.Info("HoyoverseContentService", $"HoyoverseContentService: Request failed - {ex.GetType().Name}: {ex.Message}");
+                DebugLog.Info("HoyoverseContentService",
+                    $"HoyoverseContentService: Request failed - {ex.GetType().Name}: {ex.Message}");
                 return null;
             }
         }

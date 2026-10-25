@@ -76,7 +76,8 @@ public static class DailyNoteParser
 {
     public static DailyNoteCardData Parse(string json)
     {
-        DebugLog.Info("DailyNoteParser", $"[DailyNoteParser] Parsing JSON: {json?.Substring(0, Math.Min(200, json?.Length ?? 0))}...");
+        DebugLog.Info("DailyNoteParser",
+            $"[DailyNoteParser] Parsing JSON: {json?.Substring(0, Math.Min(200, json?.Length ?? 0))}...");
 
 
         using var doc = JsonDocument.Parse(json);

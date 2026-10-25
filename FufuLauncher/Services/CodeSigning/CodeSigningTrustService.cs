@@ -218,7 +218,8 @@ public sealed class CodeSigningTrustService
         }
         catch (Exception ex)
         {
-            DebugLog.Info("CodeSigningTrustService", $"[TrustService] Failed to read pinned root certificate: {ex.Message}");
+            DebugLog.Info("CodeSigningTrustService",
+                $"[TrustService] Failed to read pinned root certificate: {ex.Message}");
             return null;
         }
     }
@@ -327,7 +328,8 @@ public sealed class CodeSigningTrustService
                 state.RootThumbprintSha256 = package.RootThumbprintSha256;
                 WriteInstallState(state);
                 userManaged = true;
-                DebugLog.Info("CodeSigningTrustService", "[TrustService] adopted the current-user scope as managed by this app");
+                DebugLog.Info("CodeSigningTrustService",
+                    "[TrustService] adopted the current-user scope as managed by this app");
             }
         }
         else
@@ -438,7 +440,8 @@ public sealed class CodeSigningTrustService
         }
         catch (Exception ex)
         {
-            DebugLog.Info("CodeSigningTrustService", $"[TrustService] Failed to query certificate store ({storeName}/{scope}): {ex.Message}");
+            DebugLog.Info("CodeSigningTrustService",
+                $"[TrustService] Failed to query certificate store ({storeName}/{scope}): {ex.Message}");
             return false;
         }
     }
@@ -471,7 +474,8 @@ public sealed class CodeSigningTrustService
         }, ref denied, ref lastError);
 
         var scopeText = scope == TrustStoreScope.CurrentUser ? "current user" : "machine";
-        DebugLog.Info("CodeSigningTrustService", $"[TrustService] install for {scope}: added={added}, denied={denied}, error={lastError}");
+        DebugLog.Info("CodeSigningTrustService",
+            $"[TrustService] install for {scope}: added={added}, denied={denied}, error={lastError}");
 
         if (denied)
         {
@@ -605,7 +609,8 @@ public sealed class CodeSigningTrustService
         }, ref denied, ref lastError);
 
         var scopeText = scope == TrustStoreScope.CurrentUser ? "current user" : "machine";
-        DebugLog.Info("CodeSigningTrustService", $"[TrustService] uninstall for {scope}: removed={removed}, denied={denied}, error={lastError}");
+        DebugLog.Info("CodeSigningTrustService",
+            $"[TrustService] uninstall for {scope}: removed={removed}, denied={denied}, error={lastError}");
 
         if (denied)
         {
@@ -754,7 +759,8 @@ public sealed class CodeSigningTrustService
             Directory.Move(staging, targetDirectory);
 
             GetPackage(forceReload: true);
-            DebugLog.Info("CodeSigningTrustService", $"[TrustService] Trust package updated from {url} to {targetDirectory}");
+            DebugLog.Info("CodeSigningTrustService",
+                $"[TrustService] Trust package updated from {url} to {targetDirectory}");
 
             return new TrustOperationResult
             {
@@ -775,7 +781,8 @@ public sealed class CodeSigningTrustService
             }
             catch (Exception ex)
             {
-                DebugLog.Info("CodeSigningTrustService", $"[TrustService] Failed to clean temporary directory: {ex.Message}");
+                DebugLog.Info("CodeSigningTrustService",
+                    $"[TrustService] Failed to clean temporary directory: {ex.Message}");
             }
         }
     }

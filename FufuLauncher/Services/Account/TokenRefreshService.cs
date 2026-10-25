@@ -77,12 +77,16 @@ public class TokenRefreshService : IDisposable
                 bool? isValid = await CheckCookieValidAsync(cookieStr);
                 if (isValid != false)
                 {
-                    DebugLog.Info("TokenRefreshService", isValid == true ? "Cookie still valid, no refresh needed" : "Cannot confirm cookie validity, keeping current credentials");
+                    DebugLog.Info("TokenRefreshService",
+                        isValid == true
+                            ? "Cookie still valid, no refresh needed"
+                            : "Cannot confirm cookie validity, keeping current credentials");
                     return null;
                 }
             }
 
-            DebugLog.Info("TokenRefreshService", isManual ? "Manual cookie refresh triggered..." : "Cookie expired, starting refresh...");
+            DebugLog.Info("TokenRefreshService",
+                isManual ? "Manual cookie refresh triggered..." : "Cookie expired, starting refresh...");
 
             WeakReferenceMessenger.Default.Send(new NotificationMessage(
                 "Token_RefreshTitle".GetLocalized(),

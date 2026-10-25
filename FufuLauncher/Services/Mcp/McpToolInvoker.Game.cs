@@ -148,7 +148,8 @@ public sealed partial class McpToolInvoker
         var clientIsOversea = ResolveClientIsOversea(snapshot);
         if (clientIsOversea == null)
         {
-            throw new McpToolException("Cannot determine whether the installed client is Chinese or oversea; switch cancelled.");
+            throw new McpToolException(
+                "Cannot determine whether the installed client is Chinese or oversea; switch cancelled.");
         }
 
         if (clientIsOversea != scheme.IsOversea)

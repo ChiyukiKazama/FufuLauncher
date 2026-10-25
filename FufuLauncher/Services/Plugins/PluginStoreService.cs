@@ -253,7 +253,8 @@ public class PluginStoreService
     {
         try
         {
-            DebugLog.Info("PluginStoreService", $"[PluginStoreService] Fetching categories: {ApiEndpoints.PluginStoreCategoriesUrl}");
+            DebugLog.Info("PluginStoreService",
+                $"[PluginStoreService] Fetching categories: {ApiEndpoints.PluginStoreCategoriesUrl}");
             var url = ApiEndpoints.PluginStoreCategoriesUrl;
             var lang = GetCurrentLang();
             if (!string.IsNullOrEmpty(lang))
@@ -264,7 +265,8 @@ public class PluginStoreService
         }
         catch (HttpRequestException ex) when (ex.InnerException is System.Net.Sockets.SocketException)
         {
-            DebugLog.Info("PluginStoreService", $"[PluginStoreService] Server unreachable for categories, using defaults");
+            DebugLog.Info("PluginStoreService",
+                $"[PluginStoreService] Server unreachable for categories, using defaults");
             return new List<PluginStoreCategory>();
         }
         catch (TaskCanceledException)
@@ -334,7 +336,8 @@ public class PluginStoreService
 
         try
         {
-            DebugLog.Info("PluginStoreService", $"[PluginStoreService] Requesting download token for plugin {pluginId}");
+            DebugLog.Info("PluginStoreService",
+                $"[PluginStoreService] Requesting download token for plugin {pluginId}");
             var json = JsonSerializer.Serialize(body, JsonOptions);
             var content = new StringContent(json, Encoding.UTF8, "application/json");
             var response = await _httpClient.PostAsync(url, content);
@@ -343,7 +346,8 @@ public class PluginStoreService
             var result = DeserializeResponse<DownloadTokenResponse>(responseBody);
             if (result?.Retcode == 0 && result.Data != null)
             {
-                DebugLog.Info("PluginStoreService", $"[PluginStoreService] Download token obtained: {result.Data.DlToken[..8]}...");
+                DebugLog.Info("PluginStoreService",
+                    $"[PluginStoreService] Download token obtained: {result.Data.DlToken[..8]}...");
                 return result.Data;
             }
 
@@ -372,7 +376,8 @@ public class PluginStoreService
 
         try
         {
-            DebugLog.Info("PluginStoreService", $"[PluginStoreService] Requesting private access for plugin {pluginId}");
+            DebugLog.Info("PluginStoreService",
+                $"[PluginStoreService] Requesting private access for plugin {pluginId}");
             var json = JsonSerializer.Serialize(body, JsonOptions);
             var content = new StringContent(json, Encoding.UTF8, "application/json");
             var response = await _httpClient.PostAsync(url, content);
@@ -381,7 +386,8 @@ public class PluginStoreService
             var result = DeserializeResponse<PrivateAccessResponse>(responseBody);
             if (result?.Retcode == 0 && result.Data != null)
             {
-                DebugLog.Info("PluginStoreService", $"[PluginStoreService] Private access granted for plugin {pluginId}");
+                DebugLog.Info("PluginStoreService",
+                    $"[PluginStoreService] Private access granted for plugin {pluginId}");
                 if (result.Data.Plugin != null)
                     NormalizePluginUrls(result.Data.Plugin);
                 return result.Data;
@@ -555,7 +561,8 @@ public class PluginStoreService
                     }
                     catch (Exception ex)
                     {
-                        DebugLog.Info("PluginStoreService", $"[PluginStoreService] Failed to delete bad file: {ex.Message}");
+                        DebugLog.Info("PluginStoreService",
+                            $"[PluginStoreService] Failed to delete bad file: {ex.Message}");
                     }
 
                     throw new HashMismatchException("PluginStoreHashMismatch".GetLocalized());
@@ -578,21 +585,24 @@ public class PluginStoreService
         }
         catch (OperationCanceledException)
         {
-            DebugLog.Info("PluginStoreService", $"[PluginStoreService] Download cancelled, cleaning up partial file: {destinationPath}");
+            DebugLog.Info("PluginStoreService",
+                $"[PluginStoreService] Download cancelled, cleaning up partial file: {destinationPath}");
             try
             {
                 File.Delete(destinationPath);
             }
             catch (Exception ex)
             {
-                DebugLog.Info("PluginStoreService", $"[PluginStoreService] Failed to delete partial file: {ex.Message}");
+                DebugLog.Info("PluginStoreService",
+                    $"[PluginStoreService] Failed to delete partial file: {ex.Message}");
             }
 
             throw;
         }
         catch (HttpRequestException ex) when (ex.InnerException is System.Net.Sockets.SocketException)
         {
-            DebugLog.Info("PluginStoreService", $"[PluginStoreService] Server unreachable during file download: {ex.Message}");
+            DebugLog.Info("PluginStoreService",
+                $"[PluginStoreService] Server unreachable during file download: {ex.Message}");
             throw new InvalidOperationException("PluginStoreDownloadFileFailed".GetLocalized(), ex);
         }
         catch (Exception ex)

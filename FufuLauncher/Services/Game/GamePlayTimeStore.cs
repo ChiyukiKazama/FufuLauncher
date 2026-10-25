@@ -324,20 +324,48 @@ public sealed class GamePlayTimeStore
 
 internal sealed class GamePlayTimeDocument
 {
-    public int SchemaVersion { get; set; }
+    public int SchemaVersion
+    {
+        get;
+        set;
+    }
 
-    public string StorageKey { get; set; } = string.Empty;
+    public string StorageKey
+    {
+        get;
+        set;
+    } = string.Empty;
 
-    public string? LastPlayDate { get; set; }
+    public string? LastPlayDate
+    {
+        get;
+        set;
+    }
 
-    public DateTimeOffset UpdatedAt { get; set; }
+    public DateTimeOffset UpdatedAt
+    {
+        get;
+        set;
+    }
 
-    public Dictionary<string, long> DailyPlayTimeSeconds { get; set; } = new();
+    public Dictionary<string, long> DailyPlayTimeSeconds
+    {
+        get;
+        set;
+    } = new();
 }
 
 internal sealed class LegacyGamePlayTimeConfig
 {
-    public Dictionary<string, long>? GamePlayTimeData { get; set; }
+    public Dictionary<string, long>? GamePlayTimeData
+    {
+        get;
+        set;
+    }
 
-    public string? LastPlayDate { get; set; }
+    public string? LastPlayDate
+    {
+        get;
+        set;
+    }
 }

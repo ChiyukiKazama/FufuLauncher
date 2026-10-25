@@ -158,7 +158,8 @@ public partial class MainViewModel
                     PreferVideoBackground = false;
                     await _localSettingsService.SaveSettingAsync("PreferVideoBackground", false);
                     await _localSettingsService.SaveSettingAsync("UserPreferVideoBackground", false);
-                    DebugLog.Info("MainViewModel.Background", $"[MainViewModel] Version changed ({lastVersionStr} -> {currentVersion}), switched animated background to static");
+                    DebugLog.Info("MainViewModel.Background",
+                        $"[MainViewModel] Version changed ({lastVersionStr} -> {currentVersion}), switched animated background to static");
                 }
             }
 
@@ -166,7 +167,8 @@ public partial class MainViewModel
         }
         catch (Exception ex)
         {
-            DebugLog.Info("MainViewModel.Background", $"[MainViewModel] Version-change background switch check failed: {ex.Message}");
+            DebugLog.Info("MainViewModel.Background",
+                $"[MainViewModel] Version-change background switch check failed: {ex.Message}");
         }
     }
 

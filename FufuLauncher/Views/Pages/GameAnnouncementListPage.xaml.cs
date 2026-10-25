@@ -37,7 +37,8 @@ public sealed partial class GameAnnouncementListPage : Page
         }
         catch (Exception ex)
         {
-            DebugLog.Info("GameAnnouncementListPage", $"[GameAnnouncementListPage] Failed to initialize announcements: {ex.Message}");
+            DebugLog.Info("GameAnnouncementListPage",
+                $"[GameAnnouncementListPage] Failed to initialize announcements: {ex.Message}");
         }
     }
 

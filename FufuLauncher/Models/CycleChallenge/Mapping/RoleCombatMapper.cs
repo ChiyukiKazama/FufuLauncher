@@ -11,32 +11,11 @@ using FufuLauncher.Services.CycleChallenge;
 
 namespace FufuLauncher.Models.CycleChallenge.Mapping;
 
-/// 映射规则（已用真实 Starward 缓存库校准）：
-/// <list type="bullet">
-///     <item>KPI 的徽记数只认 <c>stat.medal_num</c>，<c>get_medal_round_list</c> 求和与徽记数不一致，仅作逐幕兜底；</item>
-///     <item><c>heraldry</c> 与 <c>difficulty_id</c> 恒等，纹章图标按 heraldry 取 <c>UI_RoleCombat_Medal_S_{n}</c>；</item>
-///     <item>逐幕列表按接口顺序渲染，不按 round_id 去重（塔罗轮会复用幕号）；</item>
-///     <item>
-///         塔罗图标：<c>is_tarot=true</c> 且 <c>is_get_medal=true</c> → Tarot_04，否则 Tarot_05；
-///         <c>tarot_serial_no</c> 只用于标题文案（I / II），不作为图标映射依据；
-///     </item>
-///     <item><c>finish_time</c> 是 unix 秒字符串（完成时刻），逐幕「用时」按相邻完成时刻差值推算；</item>
-///     <item>任意可选字段缺失 / 为 null 都返回占位文案，不抛异常。</item>
-/// </list>
-/// </para>
-/// </summary>
 public static class RoleCombatMapper
 {
-    /// <summary>
-    ///     相邻两幕完成时刻差值超过该阈值时视为「中途休息 / 跨天」，不再展示为用时。
-    ///     接口只给完成时刻（unix 秒），没有真正意义上的单幕战斗用时，只能做保守推算。
-    /// </summary>
     private static readonly TimeSpan MaxRoundDuration = TimeSpan.FromMinutes(30);
 
-    /// <summary>解析单期 payload 并映射为展示模型（解析失败抛 <see cref="JsonException" />，由控件兜底）。</summary>
-    /// <param name="payloadJson">服务层给出的单期 payload（完整响应 / data 节点 / 单期对象均可）。</param>
-    /// <param name="region">角色区服（cn_* 展示 UTC+8，其它展示 UTC）。</param>
-    /// <returns>展示模型；无数据时返回对应空态。</returns>
+
     public static RoleCombatDisplay Parse(string? payloadJson, string? region = null)
     {
         if (string.IsNullOrWhiteSpace(payloadJson))
@@ -54,11 +33,7 @@ public static class RoleCombatMapper
         return Map(entry, envelope.IsUnlock, region);
     }
 
-    /// <summary>DTO → 展示模型。</summary>
-    /// <param name="entry">单期剧诗数据。</param>
-    /// <param name="isUnlock">外层 is_unlock；null 表示接口未给出（按已解锁处理）。</param>
-    /// <param name="region">角色区服（决定时间展示时区）。</param>
-    /// <returns>展示模型。</returns>
+
     public static RoleCombatDisplay Map(RoleCombatEntryDto? entry, bool? isUnlock, string? region = null)
     {
         var context = CycleChallengeTime.CreateContext(region);
@@ -111,10 +86,7 @@ public static class RoleCombatMapper
         };
     }
 
-    /// <summary>
-    ///     只有汇总、没有逐幕明细（has_detail_data=false）时仍然展示 KPI，避免整页空着。
-    ///     此时状态仍为 Content，只是 Rounds 为空。
-    /// </summary>
+
     private static RoleCombatDisplay BuildSummaryOnly(RoleCombatEntryDto entry, CycleChallengeTimeContext context)
     {
         var stat = entry.Stat ?? entry.Detail?.DetailStat;
@@ -146,7 +118,7 @@ public static class RoleCombatMapper
         var medalRoundList = stat?.GetMedalRoundList;
         var result = new List<TheaterRound>(roundsData.Count);
 
-        // 逐幕「用时」：以上一幕（或本期开始）的完成时刻为起点做差值；首幕不显示（跨度过大不可信）
+
         long? lastFinishUnix = null;
 
         for (var index = 0; index < roundsData.Count; index++)
@@ -202,9 +174,7 @@ public static class RoleCombatMapper
         return result;
     }
 
-    /// <summary>
-    ///     最佳记录文案（参考 Hutao）：有圣牌完成数时「第 X 幕 圣牌 Y」，否则仅「第 X 幕」。
-    /// </summary>
+
     private static string FormatMaxRound(RoleCombatStatDto? stat, RoleCombatEntryDto entry)
     {
         var maxRound = stat?.MaxRoundId ?? entry.MaxRoundId;
@@ -214,9 +184,7 @@ public static class RoleCombatMapper
             : string.Format("Theater_RoundTitle".GetLocalized(), maxRound);
     }
 
-    /// <summary>
-    ///     「挑战星章」概览图标（参考 Hutao）：普通幕用星章（获得 Star1 / 未获得 Star2），塔罗轮用塔罗牌图标。
-    /// </summary>
+
     private static List<TheaterMedalIcon> MapMedalIcons(List<TheaterRound> rounds)
     {
         if (rounds.Count == 0)
@@ -278,7 +246,7 @@ public static class RoleCombatMapper
                 continue;
             }
 
-            // 敌人名为空的条目（如尚未遭遇）没有展示价值，直接跳过
+
             if (string.IsNullOrWhiteSpace(enemy.Name) && string.IsNullOrWhiteSpace(enemy.Icon))
             {
                 continue;
@@ -290,7 +258,7 @@ public static class RoleCombatMapper
         return result;
     }
 
-    /// <summary>映射神秘收获 / 普通祝福条目。</summary>
+
     private static List<TheaterBuff> MapBuffs(List<RoleCombatBuffDto>? buffs)
     {
         if (buffs is null || buffs.Count == 0)
@@ -319,7 +287,7 @@ public static class RoleCombatMapper
         return result;
     }
 
-    /// <summary>映射辉彩祝福（含各等级效果文本）。</summary>
+
     private static List<TheaterSplendourBuff> MapSplendourBuffs(RoleCombatSplendourBuffDto? splendour)
     {
         if (splendour?.Buffs is null || splendour.Buffs.Count == 0)
@@ -365,7 +333,7 @@ public static class RoleCombatMapper
         return result;
     }
 
-    /// <summary>接口的 desc 可能返回字面量 <c>\n</c>（反斜杠 + n），统一转换为真实换行。</summary>
+
     private static string NormalizeRichText(string? text) =>
         string.IsNullOrEmpty(text) ? string.Empty : text.Replace("\\n", "\n", StringComparison.Ordinal);
 
@@ -379,7 +347,7 @@ public static class RoleCombatMapper
         var totalUseTime = fight.TotalUseTime ?? 0;
         var isShow = fight.IsShowBattleStats ?? false;
 
-        // 接口在没有战斗统计时会给出 total_use_time=0 且四个统计字段为 null，此时整块隐藏
+
         if (!isShow && totalUseTime <= 0)
         {
             return null;
@@ -417,7 +385,7 @@ public static class RoleCombatMapper
             ParseValue(avatar.Value));
     }
 
-    /// <summary>把接口的数值字符串解析为整数；空串 / 非数字按 0 处理。</summary>
+
     private static long ParseValue(string? value)
     {
         if (string.IsNullOrWhiteSpace(value))
@@ -430,7 +398,7 @@ public static class RoleCombatMapper
             : 0;
     }
 
-    /// <summary>解析 unix 秒字符串（不合法返回 null）。</summary>
+
     private static long? ParseUnixSeconds(string? raw)
     {
         if (string.IsNullOrWhiteSpace(raw))
@@ -444,7 +412,7 @@ public static class RoleCombatMapper
             : null;
     }
 
-    /// <summary>标题：普通幕「第 N 幕」，塔罗轮「圣牌挑战 {罗马数字}」。</summary>
+
     private static string FormatRoundTitle(RoleCombatRoundDto round, bool isTarot)
     {
         if (!isTarot)
@@ -458,7 +426,7 @@ public static class RoleCombatMapper
             : "Theater_TarotTitleShort".GetLocalized();
     }
 
-    /// <summary>完成时间：优先 finish_date_time 对象（服务器时区），否则回退 unix 秒转本地时间。</summary>
+
     private static string FormatFinishTime(RoleCombatRoundDto round, CycleChallengeTimeContext context)
     {
         if (round.FinishDateTime is { } dateTime
@@ -490,7 +458,7 @@ public static class RoleCombatMapper
             CycleChallengeTime.FormatUnix(unix.Value, "MM-dd HH:mm", context));
     }
 
-    /// <summary>期次时间范围：优先 unix 秒，其次 schedule 的日期时间对象。</summary>
+
     private static string FormatPeriod(
         RoleCombatScheduleDto? schedule, RoleCombatEntryDto entry, CycleChallengeTimeContext context)
     {
@@ -543,7 +511,7 @@ public static class RoleCombatMapper
         return CycleChallengeTime.FormatUnix(unix.Value, "yyyy.MM.dd", context);
     }
 
-    /// <summary>把秒数格式化为 mm:ss / hh:mm:ss。</summary>
+
     internal static string FormatDuration(long seconds)
     {
         if (seconds <= 0)
@@ -561,7 +529,7 @@ public static class RoleCombatMapper
     private static string FormatNumber(int? value) =>
         value is null ? "--" : (value.Value > 0 ? value.Value.ToString(CultureInfo.InvariantCulture) : "0");
 
-    /// <summary>1 → I、2 → II …（超出 1..20 时回退为阿拉伯数字）。</summary>
+
     private static string ToRoman(int value)
     {
         string[] romans =

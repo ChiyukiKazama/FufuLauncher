@@ -17,7 +17,8 @@ public sealed partial class SettingsPage
     private void SettingsNavigationView_SelectionChanged(NavigationView sender,
         NavigationViewSelectionChangedEventArgs args)
     {
-        DebugLog.Info("SettingsPage.Navigation", "SettingsNav.SelectionChanged", $"tag={(args.SelectedItem as NavigationViewItem)?.Tag} navigating={_isNavigatingFromMenu}");
+        DebugLog.Info("SettingsPage.Navigation", "SettingsNav.SelectionChanged",
+            $"tag={(args.SelectedItem as NavigationViewItem)?.Tag} navigating={_isNavigatingFromMenu}");
         if (_isNavigatingFromMenu) return;
 
         if (args.SelectedItem is NavigationViewItem selectedItem &&
@@ -108,7 +109,8 @@ public sealed partial class SettingsPage
 
     private void BringElementIntoView(FrameworkElement element, bool animate = true)
     {
-        DebugLog.Info("SettingsPage.Navigation", "SettingsNav.BringIntoView", $"element={element?.Name} animate={animate}");
+        DebugLog.Info("SettingsPage.Navigation", "SettingsNav.BringIntoView",
+            $"element={element?.Name} animate={animate}");
         if (element == null) return;
 
         var bringIntoViewOptions = new BringIntoViewOptions

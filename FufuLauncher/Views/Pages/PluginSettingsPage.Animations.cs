@@ -154,7 +154,8 @@ public sealed partial class PluginSettingsPage
             }
             catch (Exception ex)
             {
-                DebugLog.Info("PluginSettingsPage.Animations", $"[PluginSettings] Animation preference read failed: {ex}");
+                DebugLog.Info("PluginSettingsPage.Animations",
+                    $"[PluginSettings] Animation preference read failed: {ex}");
             }
         }
 

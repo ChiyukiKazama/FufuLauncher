@@ -37,8 +37,7 @@ public static class FileLockHelper
         public uint AppStatus;
         public uint SessionId;
 
-        [MarshalAs(UnmanagedType.Bool)]
-        public bool Restartable;
+        [MarshalAs(UnmanagedType.Bool)] public bool Restartable;
     }
 
     [DllImport("rstrtmgr.dll", CharSet = CharSet.Unicode)]

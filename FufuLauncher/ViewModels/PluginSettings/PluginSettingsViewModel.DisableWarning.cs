@@ -111,7 +111,8 @@ public partial class PluginSettingsViewModel
         }
         catch (Exception ex)
         {
-            DebugLog.Info("PluginSettingsViewModel.DisableWarning", $"[PluginConfig] Failed to read disable-warning confirmations: {ex.Message}");
+            DebugLog.Info("PluginSettingsViewModel.DisableWarning",
+                $"[PluginConfig] Failed to read disable-warning confirmations: {ex.Message}");
         }
 
         return result;

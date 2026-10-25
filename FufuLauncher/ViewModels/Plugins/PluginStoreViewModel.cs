@@ -269,7 +269,8 @@ public partial class PluginStoreViewModel : INotifyPropertyChanged
         }
         catch (Exception ex)
         {
-            DebugLog.Info("PluginStoreViewModel", $"[PluginStoreVM] Failed to load mirror acceleration setting: {ex.Message}");
+            DebugLog.Info("PluginStoreViewModel",
+                $"[PluginStoreVM] Failed to load mirror acceleration setting: {ex.Message}");
         }
     }
 

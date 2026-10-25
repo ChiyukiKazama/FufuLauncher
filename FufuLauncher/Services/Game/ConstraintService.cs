@@ -101,7 +101,8 @@ namespace FufuLauncher.Services
             }
             catch (Exception ex)
             {
-                DebugLog.Info("ConstraintService", $"[PolicyConstraint] Failed to read restriction state: {ex.Message}");
+                DebugLog.Info("ConstraintService",
+                    $"[PolicyConstraint] Failed to read restriction state: {ex.Message}");
             }
 
             lock (_stateLock)
@@ -351,7 +352,8 @@ namespace FufuLauncher.Services
             }
             catch (Exception ex)
             {
-                DebugLog.Info("ConstraintService", $"[PolicyConstraint] Failed to auto-deploy lightweight plugin: {ex.Message}");
+                DebugLog.Info("ConstraintService",
+                    $"[PolicyConstraint] Failed to auto-deploy lightweight plugin: {ex.Message}");
             }
 
             LightweightPluginService.DisableMainPluginIfPresent();

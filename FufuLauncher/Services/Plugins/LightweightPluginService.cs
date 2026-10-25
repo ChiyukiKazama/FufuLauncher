@@ -97,7 +97,8 @@ namespace FufuLauncher.Services
             }
             catch (Exception ex)
             {
-                DebugLog.Info("LightweightPluginService", $"[LightweightMode] Failed to read mode setting: {ex.Message}");
+                DebugLog.Info("LightweightPluginService",
+                    $"[LightweightMode] Failed to read mode setting: {ex.Message}");
             }
 
             lock (_stateLock)
@@ -147,7 +148,8 @@ namespace FufuLauncher.Services
             }
             catch (Exception ex)
             {
-                DebugLog.Info("LightweightPluginService", $"[LightweightMode] Failed to disable main plugin: {ex.Message}");
+                DebugLog.Info("LightweightPluginService",
+                    $"[LightweightMode] Failed to disable main plugin: {ex.Message}");
             }
         }
 
@@ -166,7 +168,8 @@ namespace FufuLauncher.Services
             }
             catch (Exception ex)
             {
-                DebugLog.Info("LightweightPluginService", $"[LightweightMode] Failed to enable main plugin: {ex.Message}");
+                DebugLog.Info("LightweightPluginService",
+                    $"[LightweightMode] Failed to enable main plugin: {ex.Message}");
             }
 
             return false;
@@ -187,7 +190,8 @@ namespace FufuLauncher.Services
             }
             catch (Exception ex)
             {
-                DebugLog.Info("LightweightPluginService", $"[LightweightMode] Failed to enable lite plugin: {ex.Message}");
+                DebugLog.Info("LightweightPluginService",
+                    $"[LightweightMode] Failed to enable lite plugin: {ex.Message}");
             }
 
             return false;
@@ -205,7 +209,8 @@ namespace FufuLauncher.Services
             }
             catch (Exception ex)
             {
-                DebugLog.Info("LightweightPluginService", $"[LightweightMode] Failed to disable lite plugin: {ex.Message}");
+                DebugLog.Info("LightweightPluginService",
+                    $"[LightweightMode] Failed to disable lite plugin: {ex.Message}");
             }
 
             return false;
@@ -222,7 +227,8 @@ namespace FufuLauncher.Services
             }
             catch (Exception ex)
             {
-                DebugLog.Info("LightweightPluginService", $"[LightweightMode] Failed to delete lite plugin directory: {ex.Message}");
+                DebugLog.Info("LightweightPluginService",
+                    $"[LightweightMode] Failed to delete lite plugin directory: {ex.Message}");
             }
 
             if (Directory.Exists(LitePluginDir))
@@ -296,7 +302,8 @@ namespace FufuLauncher.Services
             }
             catch (Exception ex)
             {
-                DebugLog.Info("LightweightPluginService", $"[LightweightMode] Failed to clean lite plugin directory on startup: {ex.Message}");
+                DebugLog.Info("LightweightPluginService",
+                    $"[LightweightMode] Failed to clean lite plugin directory on startup: {ex.Message}");
             }
 
             if (Directory.Exists(LitePluginDir))
@@ -339,7 +346,8 @@ namespace FufuLauncher.Services
                         catch (Exception ex) when (!cancellationToken.IsCancellationRequested)
                         {
                             lastError = ex;
-                            DebugLog.Info("LightweightPluginService", $"[LightweightMode] Download failed {url}: {ex.Message}");
+                            DebugLog.Info("LightweightPluginService",
+                                $"[LightweightMode] Download failed {url}: {ex.Message}");
                         }
                     }
 
@@ -412,7 +420,8 @@ namespace FufuLauncher.Services
                 }
                 catch (Exception ex)
                 {
-                    DebugLog.Info("LightweightPluginService", $"[LightweightMode] Failed to clean temporary files: {ex.Message}");
+                    DebugLog.Info("LightweightPluginService",
+                        $"[LightweightMode] Failed to clean temporary files: {ex.Message}");
                 }
             }
         }
@@ -468,7 +477,8 @@ namespace FufuLauncher.Services
             }
             catch (Exception ex)
             {
-                DebugLog.Info("LightweightPluginService", $"[LightweightMode] Failed to parse latest release: {ex.Message}");
+                DebugLog.Info("LightweightPluginService",
+                    $"[LightweightMode] Failed to parse latest release: {ex.Message}");
             }
 
             return null;

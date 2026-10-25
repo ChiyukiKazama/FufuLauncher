@@ -123,7 +123,8 @@ public partial class LuaPluginInstaller
             }
             catch (Exception ex)
             {
-                DebugLog.Info("LuaPluginInstaller.Pipeline", $"[LuaInstaller] Failed to clean temporary archive: {ex.Message}");
+                DebugLog.Info("LuaPluginInstaller.Pipeline",
+                    $"[LuaInstaller] Failed to clean temporary archive: {ex.Message}");
             }
         }
 
@@ -167,7 +168,8 @@ public partial class LuaPluginInstaller
             }
             catch (InterpreterException ex)
             {
-                DebugLog.Info("LuaPluginInstaller.Pipeline", $"[LuaInstaller] Failed to inject Lua helpers: {ex.Message}");
+                DebugLog.Info("LuaPluginInstaller.Pipeline",
+                    $"[LuaInstaller] Failed to inject Lua helpers: {ex.Message}");
             }
 
             try

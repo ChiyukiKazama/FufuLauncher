@@ -138,7 +138,8 @@ public partial class ControlPanelViewModel : ObservableObject
                         }
                         catch (Exception ex)
                         {
-                            DebugLog.Info("ControlPanelViewModel", $"Game monitor inner dispatch exception: {ex.Message}");
+                            DebugLog.Info("ControlPanelViewModel",
+                                $"Game monitor inner dispatch exception: {ex.Message}");
                         }
                     });
                 }

@@ -184,7 +184,8 @@ public sealed partial class GameSettingsPage
 
         if (XamlRoot == null)
         {
-            DebugLog.Info("GameSettingsPage.GamePath", "[Debug] Critical: XamlRoot is null! Dialog cannot be shown, returning.");
+            DebugLog.Info("GameSettingsPage.GamePath",
+                "[Debug] Critical: XamlRoot is null! Dialog cannot be shown, returning.");
             return;
         }
 
@@ -215,13 +216,15 @@ public sealed partial class GameSettingsPage
             }
             else
             {
-                DebugLog.Info("GameSettingsPage.GamePath", "[Debug] User clicked manual select, calling PickGameFolderAsync()");
+                DebugLog.Info("GameSettingsPage.GamePath",
+                    "[Debug] User clicked manual select, calling PickGameFolderAsync()");
                 await PickGameFolderAsync();
             }
         }
         catch (Exception ex)
         {
-            DebugLog.Info("GameSettingsPage.GamePath", $"[Debug] ShowAutoPathDialog failed (possibly conflicting dialogs): {ex.Message}\n{ex.StackTrace}");
+            DebugLog.Info("GameSettingsPage.GamePath",
+                $"[Debug] ShowAutoPathDialog failed (possibly conflicting dialogs): {ex.Message}\n{ex.StackTrace}");
         }
     }
 

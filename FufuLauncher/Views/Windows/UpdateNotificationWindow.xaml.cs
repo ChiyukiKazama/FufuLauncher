@@ -469,7 +469,8 @@ public sealed partial class UpdateNotificationWindow : WindowEx
             }
             catch (Exception ex)
             {
-                DebugLog.Info("UpdateNotificationWindow", $"[UpdateNotificationWindow] Failed to read CDN settings: {ex.Message}");
+                DebugLog.Info("UpdateNotificationWindow",
+                    $"[UpdateNotificationWindow] Failed to read CDN settings: {ex.Message}");
             }
 
             var startInfo = new ProcessStartInfo

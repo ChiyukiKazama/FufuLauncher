@@ -12,18 +12,42 @@ namespace FufuLauncher.Services.Mcp;
 
 internal sealed class McpHttpRequest
 {
-    public string Method { get; init; } = "GET";
+    public string Method
+    {
+        get;
+        init;
+    } = "GET";
 
-    public string Path { get; init; } = "/";
+    public string Path
+    {
+        get;
+        init;
+    } = "/";
 
-    public string RawQuery { get; init; } = string.Empty;
+    public string RawQuery
+    {
+        get;
+        init;
+    } = string.Empty;
 
-    public IReadOnlyDictionary<string, string> Headers { get; init; } =
+    public IReadOnlyDictionary<string, string> Headers
+    {
+        get;
+        init;
+    } =
         new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase);
 
-    public byte[] Body { get; init; } = Array.Empty<byte>();
+    public byte[] Body
+    {
+        get;
+        init;
+    } = Array.Empty<byte>();
 
-    public IPAddress? RemoteAddress { get; init; }
+    public IPAddress? RemoteAddress
+    {
+        get;
+        init;
+    }
 
     public string? Header(string name) => Headers.TryGetValue(name, out var value) ? value : null;
 
@@ -55,13 +79,29 @@ internal sealed class McpHttpResponse
 {
     private static readonly IReadOnlyDictionary<string, string> NoExtraHeaders = new Dictionary<string, string>();
 
-    public int StatusCode { get; init; } = 200;
+    public int StatusCode
+    {
+        get;
+        init;
+    } = 200;
 
-    public string ContentType { get; init; } = McpJson.ContentType;
+    public string ContentType
+    {
+        get;
+        init;
+    } = McpJson.ContentType;
 
-    public string Body { get; init; } = string.Empty;
+    public string Body
+    {
+        get;
+        init;
+    } = string.Empty;
 
-    public IReadOnlyDictionary<string, string> Headers { get; init; } = NoExtraHeaders;
+    public IReadOnlyDictionary<string, string> Headers
+    {
+        get;
+        init;
+    } = NoExtraHeaders;
 
     public static McpHttpResponse Json(int statusCode, string body,
         IReadOnlyDictionary<string, string>? headers = null) =>

@@ -23,7 +23,10 @@ public sealed partial class CycleChallengePage : Page
         Unloaded += OnUnloaded;
     }
 
-    public CycleChallengeViewModel ViewModel { get; }
+    public CycleChallengeViewModel ViewModel
+    {
+        get;
+    }
 
     private void OnLoaded(object sender, RoutedEventArgs e)
     {
@@ -126,7 +129,6 @@ public sealed partial class CycleChallengePage : Page
 
         if (!hasPayload)
         {
-            // 无数据时折叠所有面板，避免旧账号/旧模式的内容残留在空态下面
             AbyssHost.Visibility = Visibility.Collapsed;
             TheaterHost.Visibility = Visibility.Collapsed;
             StygianHost.Visibility = Visibility.Collapsed;

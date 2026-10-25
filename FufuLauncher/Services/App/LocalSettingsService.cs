@@ -126,7 +126,8 @@ namespace FufuLauncher.Services
             }
             catch (Exception ex)
             {
-                DebugLog.Info("LocalSettingsService", $"LocalSettingsService: background full load error - {ex.Message}");
+                DebugLog.Info("LocalSettingsService",
+                    $"LocalSettingsService: background full load error - {ex.Message}");
             }
             finally
             {
@@ -154,7 +155,8 @@ namespace FufuLauncher.Services
             }
             catch (Exception ex)
             {
-                DebugLog.Info("LocalSettingsService", $"LocalSettingsService: failed to create config directory - {ex.Message}");
+                DebugLog.Info("LocalSettingsService",
+                    $"LocalSettingsService: failed to create config directory - {ex.Message}");
 
 
                 if (!_dirErrorNotified)
@@ -174,7 +176,8 @@ namespace FufuLauncher.Services
             var (success, all) = await _repository.TryGetAllSettingsAsync();
             if (!success)
             {
-                DebugLog.Info("LocalSettingsService", "LocalSettingsService: full load failed, continuing with lazy load");
+                DebugLog.Info("LocalSettingsService",
+                    "LocalSettingsService: full load failed, continuing with lazy load");
                 return;
             }
 
@@ -194,7 +197,8 @@ namespace FufuLauncher.Services
                         if (!string.Equals(existing, value, StringComparison.Ordinal))
                         {
                             kept++;
-                            SettingsLog.Write($"LocalSettingsService: in-memory value of '{key}' differs from snapshot, keeping in-memory value");
+                            SettingsLog.Write(
+                                $"LocalSettingsService: in-memory value of '{key}' differs from snapshot, keeping in-memory value");
                         }
 
                         continue;
@@ -226,7 +230,8 @@ namespace FufuLauncher.Services
                     var (success, all) = await _repository.TryGetAllSettingsAsync();
                     if (!success)
                     {
-                        DebugLog.Info("LocalSettingsService", "LocalSettingsService: reload after full table replace failed, cache left unchanged");
+                        DebugLog.Info("LocalSettingsService",
+                            "LocalSettingsService: reload after full table replace failed, cache left unchanged");
                         return false;
                     }
 
@@ -242,7 +247,8 @@ namespace FufuLauncher.Services
                         _lastLoadFailureUtc = null;
                     }
 
-                    DebugLog.Info("LocalSettingsService", $"LocalSettingsService: cache rebuilt from database, {all.Count} entries");
+                    DebugLog.Info("LocalSettingsService",
+                        $"LocalSettingsService: cache rebuilt from database, {all.Count} entries");
                     return true;
                 }
                 finally
@@ -418,7 +424,8 @@ namespace FufuLauncher.Services
                 bool deleted = await _repository.DeleteSettingAsync(key);
                 if (!deleted)
                 {
-                    DebugLog.Info("LocalSettingsService", $"LocalSettingsService: delete of '{key}' had no effect, cache unchanged");
+                    DebugLog.Info("LocalSettingsService",
+                        $"LocalSettingsService: delete of '{key}' had no effect, cache unchanged");
                     return;
                 }
 

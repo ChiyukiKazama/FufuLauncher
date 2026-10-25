@@ -109,7 +109,8 @@ public class MirrorSiteProvider
 
             var config = JsonSerializer.Deserialize<MirrorSiteConfig>(File.ReadAllText(ConfigPath), JsonOptions);
             config ??= new MirrorSiteConfig();
-            DebugLog.Info("MirrorSiteProvider", $"[MirrorSiteProvider] Loaded {config.Mirrors.Count} mirror(s), probe: {config.ProbeUrl}");
+            DebugLog.Info("MirrorSiteProvider",
+                $"[MirrorSiteProvider] Loaded {config.Mirrors.Count} mirror(s), probe: {config.ProbeUrl}");
             return config;
         }
         catch (Exception ex)

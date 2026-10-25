@@ -125,7 +125,7 @@ public sealed record SpiralAbyssFloor(
         ? $"{Star.ToString(CultureInfo.InvariantCulture)}/{MaxStar.ToString(CultureInfo.InvariantCulture)}"
         : Star.ToString(CultureInfo.InvariantCulture);
 
-    /// <summary>深境螺旋星级图标（只读实例属性，供 x:Bind 使用；值来自 <see cref="CycleChallengeIcons.AbyssStar"/>）。</summary>
+
     public string AbyssStar => CycleChallengeIcons.AbyssStar();
 
 

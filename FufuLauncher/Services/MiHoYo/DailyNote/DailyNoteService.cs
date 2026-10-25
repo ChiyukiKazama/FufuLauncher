@@ -158,7 +158,8 @@ public sealed class DailyNoteService
         var captchaDisabledJson = await localSettingsService.ReadSettingAsync("IsCaptchaPopupDisabled");
         if (captchaDisabledJson != null && Convert.ToBoolean(captchaDisabledJson))
         {
-            DebugLog.Info("DailyNoteService", "[DailyNoteService] Risk-control captcha prompt disabled by user, skipping verification");
+            DebugLog.Info("DailyNoteService",
+                "[DailyNoteService] Risk-control captcha prompt disabled by user, skipping verification");
             return fallback;
         }
 

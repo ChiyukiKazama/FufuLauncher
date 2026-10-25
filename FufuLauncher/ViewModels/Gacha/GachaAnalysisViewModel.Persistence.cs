@@ -152,7 +152,8 @@ public partial class GachaAnalysisViewModel
     {
         if (string.IsNullOrEmpty(_currentUid))
         {
-            DebugLog.Info("GachaAnalysisViewModel.Persistence", "[Gacha] SaveGachaLogsToDb: _currentUid is empty, skipping save");
+            DebugLog.Info("GachaAnalysisViewModel.Persistence",
+                "[Gacha] SaveGachaLogsToDb: _currentUid is empty, skipping save");
             return;
         }
 
@@ -160,7 +161,8 @@ public partial class GachaAnalysisViewModel
         {
             var totalBefore = _cachedCharacterLogs.Count + _cachedWeaponLogs.Count + _cachedChronicledLogs.Count +
                               _cachedNoviceLogs.Count + _cachedStandardLogs.Count;
-            DebugLog.Info("GachaAnalysisViewModel.Persistence", $"[Gacha] SaveGachaLogsToDb: saving UID={_currentUid}, {totalBefore} records total");
+            DebugLog.Info("GachaAnalysisViewModel.Persistence",
+                $"[Gacha] SaveGachaLogsToDb: saving UID={_currentUid}, {totalBefore} records total");
 
             var allLogs = new List<GachaLogEntity>();
             AddLogItems(allLogs, _cachedCharacterLogs);

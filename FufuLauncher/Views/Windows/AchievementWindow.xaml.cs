@@ -70,7 +70,8 @@ public sealed partial class AchievementWindow : Window, INotifyPropertyChanged
         }
         catch (Exception ex)
         {
-            DebugLog.Info("AchievementWindow", $"[ExceptionMarker] Failed to create archives save folder: {ex.Message}");
+            DebugLog.Info("AchievementWindow",
+                $"[ExceptionMarker] Failed to create archives save folder: {ex.Message}");
             _archivesDir = docPath;
         }
 

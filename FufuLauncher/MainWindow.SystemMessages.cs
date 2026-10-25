@@ -113,7 +113,8 @@ public sealed partial class MainWindow
         }
         catch (Exception ex)
         {
-            DebugLog.Info("MainWindow.SystemMessages", $"[Announcement] Scheduled announcement check failed: {ex.Message}");
+            DebugLog.Info("MainWindow.SystemMessages",
+                $"[Announcement] Scheduled announcement check failed: {ex.Message}");
         }
     }
 

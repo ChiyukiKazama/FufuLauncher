@@ -38,7 +38,7 @@ public sealed class GameServerConverter
         ArgumentNullException.ThrowIfNull(currentScheme);
         ArgumentNullException.ThrowIfNull(targetScheme);
 
-        // Official CN and Bilibili share the same client resources. Only their channel SDK differs.
+
         if (currentScheme.IsOversea == targetScheme.IsOversea)
         {
             await _gameChannelSdkService.SwitchSchemeAsync(gameDir, targetScheme, log, token,

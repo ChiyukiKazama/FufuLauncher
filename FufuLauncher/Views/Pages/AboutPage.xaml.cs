@@ -97,7 +97,8 @@ public sealed partial class AboutPage : Page
                             errorMessage = messageElement.GetString();
                         }
 
-                        DebugLog.Info("AboutPage", $"[LoadContributorsAsync] Failed to get contributors ({apiUrl}): {errorMessage}");
+                        DebugLog.Info("AboutPage",
+                            $"[LoadContributorsAsync] Failed to get contributors ({apiUrl}): {errorMessage}");
                         continue;
                     }
 
@@ -129,7 +130,8 @@ public sealed partial class AboutPage : Page
                 }
                 catch (Exception ex)
                 {
-                    DebugLog.Info("AboutPage", $"[LoadContributorsAsync] Failed to get contributors ({apiUrl}): {ex.Message}");
+                    DebugLog.Info("AboutPage",
+                        $"[LoadContributorsAsync] Failed to get contributors ({apiUrl}): {ex.Message}");
                 }
             }
 

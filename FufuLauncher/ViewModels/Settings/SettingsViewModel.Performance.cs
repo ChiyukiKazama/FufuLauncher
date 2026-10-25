@@ -80,14 +80,16 @@ public partial class SettingsViewModel
     partial void OnIsBetterGIIntegrationEnabledChanged(bool value)
     {
         if (_isInitializing) return;
-        DebugLog.Info("SettingsViewModel.Performance", $"SettingsViewModel: BetterGI integration setting changed to {value}");
+        DebugLog.Info("SettingsViewModel.Performance",
+            $"SettingsViewModel: BetterGI integration setting changed to {value}");
         _ = _localSettingsService.SaveSettingAsync("IsBetterGIIntegrationEnabled", value);
     }
 
     partial void OnIsBetterGICloseOnExitEnabledChanged(bool value)
     {
         if (_isInitializing) return;
-        DebugLog.Info("SettingsViewModel.Performance", $"SettingsViewModel: BetterGI exit-with-game setting changed to {value}");
+        DebugLog.Info("SettingsViewModel.Performance",
+            $"SettingsViewModel: BetterGI exit-with-game setting changed to {value}");
         _ = _localSettingsService.SaveSettingAsync("IsBetterGICloseOnExitEnabled", value);
     }
 

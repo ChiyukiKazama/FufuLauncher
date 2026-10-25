@@ -235,7 +235,8 @@ namespace FufuLauncher.ViewModels
 
                 App.FirstRunSelectedLanguage = language;
 
-                DebugLog.Info("LanguageSelectionViewModel", $"[LangSelect] Language confirmed: {language}, culture='{culture}'");
+                DebugLog.Info("LanguageSelectionViewModel",
+                    $"[LangSelect] Language confirmed: {language}, culture='{culture}'");
             }
             catch (Exception ex)
             {

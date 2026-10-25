@@ -15,6 +15,7 @@ namespace FufuLauncher.Views;
 public sealed partial class MainPage
 {
     private bool _serverSwitchInProgress;
+
     #region 常规服/B服切换
 
     private async void SwitchToBilibili_Click(object sender, RoutedEventArgs e)
@@ -29,7 +30,11 @@ public sealed partial class MainPage
 
     private async Task PrepareAndSwitchServer(bool toBilibili)
     {
-        if (_serverSwitchInProgress) { return; }
+        if (_serverSwitchInProgress)
+        {
+            return;
+        }
+
         _serverSwitchInProgress = true;
         try
         {
@@ -40,7 +45,10 @@ public sealed partial class MainPage
             if (!string.IsNullOrEmpty(gameDir))
             {
                 gameDir = gameDir.Trim('"').Trim();
-                if (File.Exists(gameDir)) { gameDir = Path.GetDirectoryName(gameDir); }
+                if (File.Exists(gameDir))
+                {
+                    gameDir = Path.GetDirectoryName(gameDir);
+                }
             }
 
             if (string.IsNullOrEmpty(gameDir) || !Directory.Exists(gameDir))
@@ -116,7 +124,11 @@ public sealed partial class MainPage
             await dialogOperation;
         }
 
-        if (failure is OperationCanceledException) { return; }
+        if (failure is OperationCanceledException)
+        {
+            return;
+        }
+
         if (failure is not null)
         {
             await ShowDialog("Home_SwitchFailed".GetLocalized(), failure.Message);

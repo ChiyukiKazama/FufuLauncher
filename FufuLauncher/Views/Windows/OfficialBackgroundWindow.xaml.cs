@@ -153,7 +153,8 @@ public sealed partial class OfficialBackgroundWindow : Window
         }
         catch (Exception ex)
         {
-            DebugLog.Info("OfficialBackgroundWindow", $"[OfficialBgWindow] Failed to apply background material: {ex.Message}");
+            DebugLog.Info("OfficialBackgroundWindow",
+                $"[OfficialBgWindow] Failed to apply background material: {ex.Message}");
         }
     }
 
@@ -170,7 +171,8 @@ public sealed partial class OfficialBackgroundWindow : Window
         }
         catch (Exception ex)
         {
-            DebugLog.Info("OfficialBackgroundWindow", $"[OfficialBgWindow] Failed to attach preview player: {ex.Message}");
+            DebugLog.Info("OfficialBackgroundWindow",
+                $"[OfficialBgWindow] Failed to attach preview player: {ex.Message}");
         }
     }
 
@@ -222,7 +224,8 @@ public sealed partial class OfficialBackgroundWindow : Window
         }
         catch (Exception ex)
         {
-            DebugLog.Info("OfficialBackgroundWindow", $"[OfficialBgWindow] Failed to detach preview player: {ex.Message}");
+            DebugLog.Info("OfficialBackgroundWindow",
+                $"[OfficialBgWindow] Failed to detach preview player: {ex.Message}");
         }
 
         ViewModel.Cleanup();

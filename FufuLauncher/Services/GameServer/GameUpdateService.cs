@@ -260,7 +260,6 @@ public sealed partial class GameUpdateService
             string chunksDir = Path.Combine(gameDir, ChunksDirectoryName);
             if (status.Blocks is not { Count: > 0 })
             {
-                // Older status files lack block identities; keep their original completion check.
                 int fileCount = Directory.Exists(chunksDir) ? Directory.GetFiles(chunksDir).Length : 0;
                 return fileCount - 1 == status.TotalBlocks;
             }

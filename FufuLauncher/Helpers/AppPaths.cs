@@ -150,7 +150,8 @@ public static class AppPaths
             if (!ArePathsOverlapping(oldDataDir, newDataDir))
                 dataMovedOk = MoveDirectoryContents(oldDataDir, newDataDir);
             else
-                DebugLog.Info("AppPaths", $"[AppPaths] Skipping data migration: source and target directories overlap {oldDataDir} <-> {newDataDir}");
+                DebugLog.Info("AppPaths",
+                    $"[AppPaths] Skipping data migration: source and target directories overlap {oldDataDir} <-> {newDataDir}");
         }
 
         if (!string.Equals(oldCacheDir, newCacheDir, StringComparison.OrdinalIgnoreCase))
@@ -158,7 +159,8 @@ public static class AppPaths
             if (!ArePathsOverlapping(oldCacheDir, newCacheDir))
                 cacheMovedOk = MoveDirectoryContents(oldCacheDir, newCacheDir);
             else
-                DebugLog.Info("AppPaths", $"[AppPaths] Skipping cache migration: source and target directories overlap {oldCacheDir} <-> {newCacheDir}");
+                DebugLog.Info("AppPaths",
+                    $"[AppPaths] Skipping cache migration: source and target directories overlap {oldCacheDir} <-> {newCacheDir}");
         }
 
         _dataDir = newDataDir;
@@ -306,7 +308,8 @@ public static class AppPaths
 
             if (IsSubdirectoryOf(destDir, sourceDir))
             {
-                DebugLog.Info("AppPaths", $"[AppPaths] Aborting migration: target is a subdirectory of source {sourceDir} -> {destDir}");
+                DebugLog.Info("AppPaths",
+                    $"[AppPaths] Aborting migration: target is a subdirectory of source {sourceDir} -> {destDir}");
                 return false;
             }
 
@@ -406,7 +409,8 @@ public static class AppPaths
         catch (Exception ex)
         {
             var defaultData = Path.Combine(RootDir, "Data");
-            DebugLog.Info("AppPaths", $"[AppPaths] Data directory unavailable, fell back to default: {_dataDir} -> {defaultData} ({ex.Message})");
+            DebugLog.Info("AppPaths",
+                $"[AppPaths] Data directory unavailable, fell back to default: {_dataDir} -> {defaultData} ({ex.Message})");
             MissingDataDir = _dataDir;
             _dataDir = defaultData;
 
@@ -439,7 +443,8 @@ public static class AppPaths
         catch (Exception ex)
         {
             var defaultCache = Path.Combine(RootDir, "Cache");
-            DebugLog.Info("AppPaths", $"[AppPaths] Cache directory unavailable, fell back to default: {_cacheDir} -> {defaultCache} ({ex.Message})");
+            DebugLog.Info("AppPaths",
+                $"[AppPaths] Cache directory unavailable, fell back to default: {_cacheDir} -> {defaultCache} ({ex.Message})");
             MissingCacheDir = _cacheDir;
             _cacheDir = defaultCache;
 

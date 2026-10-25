@@ -204,7 +204,8 @@ public class GachaService
                         if (requireComplete)
                             throw new GachaFetchException($"祈愿记录获取失败（返回码 {response?.Retcode}），请稍后重试。",
                                 response?.Retcode);
-                        DebugLog.Info("GachaService", $"[Gacha] type={gachaType} page={page} retries exhausted, skipping");
+                        DebugLog.Info("GachaService",
+                            $"[Gacha] type={gachaType} page={page} retries exhausted, skipping");
                         break;
                     }
 
@@ -213,7 +214,8 @@ public class GachaService
 
                     if (response?.Data?.List == null || response.Data.List.Count == 0)
                     {
-                        DebugLog.Info("GachaService", $"[Gacha] type={gachaType} page={page} returned empty list, ending normally");
+                        DebugLog.Info("GachaService",
+                            $"[Gacha] type={gachaType} page={page} returned empty list, ending normally");
                         reachedEnd = true;
                         break;
                     }
@@ -242,7 +244,8 @@ public class GachaService
                         if (reachedBoundary)
                         {
                             reachedKnown = true;
-                            DebugLog.Info("GachaService", $"[Gacha] type={gachaType} incremental update reached known record boundary, ending early");
+                            DebugLog.Info("GachaService",
+                                $"[Gacha] type={gachaType} incremental update reached known record boundary, ending early");
                         }
                         else
                         {

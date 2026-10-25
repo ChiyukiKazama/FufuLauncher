@@ -80,7 +80,8 @@ namespace FufuLauncher.Services.GameAnnouncement
 
                 if (listResponse?.Retcode != 0 || listResponse.Data is null)
                 {
-                    DebugLog.Info("GameAnnouncementService", $"[GameAnnouncementService] Announcement list API returned error code {listResponse?.Retcode}");
+                    DebugLog.Info("GameAnnouncementService",
+                        $"[GameAnnouncementService] Announcement list API returned error code {listResponse?.Retcode}");
                     return null;
                 }
 
@@ -119,7 +120,8 @@ namespace FufuLauncher.Services.GameAnnouncement
             }
             catch (Exception ex)
             {
-                DebugLog.Info("GameAnnouncementService", $"[GameAnnouncementService] Failed to fetch announcements: {ex.GetType().Name}: {ex.Message}");
+                DebugLog.Info("GameAnnouncementService",
+                    $"[GameAnnouncementService] Failed to fetch announcements: {ex.GetType().Name}: {ex.Message}");
                 return null;
             }
         }

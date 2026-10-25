@@ -87,13 +87,15 @@ public partial class AccountManager
         }
         catch (Exception ex) when (ex is IOException or UnauthorizedAccessException)
         {
-            DebugLog.Info("AccountManager.Cookies", $"[AccountManager] Failed to read cookie file {Path.GetFileName(path)}: {ex.Message}");
+            DebugLog.Info("AccountManager.Cookies",
+                $"[AccountManager] Failed to read cookie file {Path.GetFileName(path)}: {ex.Message}");
             RemoveUnreadableCookieFile(path);
             return null;
         }
         catch (Exception ex)
         {
-            DebugLog.Info("AccountManager.Cookies", $"[AccountManager] Failed to read cookie file {Path.GetFileName(path)}: {ex.Message}");
+            DebugLog.Info("AccountManager.Cookies",
+                $"[AccountManager] Failed to read cookie file {Path.GetFileName(path)}: {ex.Message}");
             return null;
         }
 
@@ -125,9 +127,11 @@ public partial class AccountManager
 
             return new CookieReadResult(cookies, true);
         }
-        catch (Exception ex) when (ex is JsonException or CookieVaultException or CryptographicException or NotSupportedException)
+        catch (Exception ex) when (ex is JsonException or CookieVaultException or CryptographicException
+                                       or NotSupportedException)
         {
-            DebugLog.Info("AccountManager.Cookies", $"[AccountManager] Failed to parse cookie file {Path.GetFileName(path)}: {ex.Message}");
+            DebugLog.Info("AccountManager.Cookies",
+                $"[AccountManager] Failed to parse cookie file {Path.GetFileName(path)}: {ex.Message}");
             RemoveUnreadableCookieFile(path);
             return null;
         }
@@ -141,11 +145,13 @@ public partial class AccountManager
                 return;
 
             File.Delete(path);
-            DebugLog.Info("AccountManager.Cookies", $"[AccountManager] Removed undecryptable cookie file: {Path.GetFileName(path)}");
+            DebugLog.Info("AccountManager.Cookies",
+                $"[AccountManager] Removed undecryptable cookie file: {Path.GetFileName(path)}");
         }
         catch (Exception ex)
         {
-            DebugLog.Info("AccountManager.Cookies", $"[AccountManager] Failed to remove undecryptable cookie file {Path.GetFileName(path)}: {ex.Message}");
+            DebugLog.Info("AccountManager.Cookies",
+                $"[AccountManager] Failed to remove undecryptable cookie file {Path.GetFileName(path)}: {ex.Message}");
         }
     }
 
@@ -195,7 +201,8 @@ public partial class AccountManager
         }
         catch (Exception ex)
         {
-            DebugLog.Info("AccountManager.Cookies", $"[AccountManager] Invalid cookie file path {accountId}: {ex.Message}");
+            DebugLog.Info("AccountManager.Cookies",
+                $"[AccountManager] Invalid cookie file path {accountId}: {ex.Message}");
             return null;
         }
 
@@ -209,6 +216,7 @@ public partial class AccountManager
                 entry.CookieVersion = 0;
                 entry.UpdatedAt = DateTime.Now;
             }
+
             return null;
         }
 
@@ -225,6 +233,7 @@ public partial class AccountManager
                     entry.CookieVersion = 0;
                     entry.UpdatedAt = DateTime.Now;
                 }
+
                 return null;
             }
 
@@ -235,12 +244,14 @@ public partial class AccountManager
                 await WriteCookieFileAsync(path, current.Cookies);
                 entry.CookieVersion = CookieFileVersion;
                 entry.UpdatedAt = DateTime.Now;
-                DebugLog.Info("AccountManager.Cookies", $"[AccountManager] Updated cookie file storage format: {Path.GetFileName(path)}");
+                DebugLog.Info("AccountManager.Cookies",
+                    $"[AccountManager] Updated cookie file storage format: {Path.GetFileName(path)}");
                 return current.Cookies;
             }
             catch (Exception ex)
             {
-                DebugLog.Info("AccountManager.Cookies", $"[AccountManager] Cookie file auto-encryption failed {Path.GetFileName(path)}: {ex.Message}");
+                DebugLog.Info("AccountManager.Cookies",
+                    $"[AccountManager] Cookie file auto-encryption failed {Path.GetFileName(path)}: {ex.Message}");
                 return null;
             }
         }
@@ -281,7 +292,8 @@ public partial class AccountManager
         }
         catch (Exception ex)
         {
-            DebugLog.Info("AccountManager.Cookies", $"[AccountManager] Failed to clean up cookie encryption key: {ex.Message}");
+            DebugLog.Info("AccountManager.Cookies",
+                $"[AccountManager] Failed to clean up cookie encryption key: {ex.Message}");
         }
     }
 }

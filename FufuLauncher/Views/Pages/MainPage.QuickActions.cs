@@ -47,7 +47,8 @@ public sealed partial class MainPage
             }
             else
             {
-                DebugLog.Info("MainPage.QuickActions", "[Announcement] Manual fetch failed: nothing retrieved and no local cache");
+                DebugLog.Info("MainPage.QuickActions",
+                    "[Announcement] Manual fetch failed: nothing retrieved and no local cache");
             }
         }
         catch (Exception ex)

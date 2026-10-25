@@ -35,7 +35,8 @@ public partial class GameLauncherService
         {
             if (cancellationToken.IsCancellationRequested)
             {
-                DebugLog.Info("GameLauncherService.Processes", "[LaunchFlow] User cancelled while waiting for game process");
+                DebugLog.Info("GameLauncherService.Processes",
+                    "[LaunchFlow] User cancelled while waiting for game process");
                 return 0;
             }
 
@@ -45,7 +46,8 @@ public partial class GameLauncherService
             }
             catch (OperationCanceledException)
             {
-                DebugLog.Info("GameLauncherService.Processes", "[LaunchFlow] User cancelled while waiting for game process");
+                DebugLog.Info("GameLauncherService.Processes",
+                    "[LaunchFlow] User cancelled while waiting for game process");
                 return 0;
             }
 
@@ -62,7 +64,8 @@ public partial class GameLauncherService
                     }
                     catch (OperationCanceledException)
                     {
-                        DebugLog.Info("GameLauncherService.Processes", "[LaunchFlow] User cancelled while waiting for game process");
+                        DebugLog.Info("GameLauncherService.Processes",
+                            "[LaunchFlow] User cancelled while waiting for game process");
                         return 0;
                     }
 
@@ -71,7 +74,8 @@ public partial class GameLauncherService
             }
         }
 
-        DebugLog.Info("GameLauncherService.Processes", "[LaunchFlow] Warning: timed out waiting for game executable (1 minute)");
+        DebugLog.Info("GameLauncherService.Processes",
+            "[LaunchFlow] Warning: timed out waiting for game executable (1 minute)");
         return 0;
     }
 
@@ -112,7 +116,8 @@ public partial class GameLauncherService
                     }
 
                     process.Kill();
-                    DebugLog.Info("GameLauncherService.Processes", $"[LaunchFlow] Game process terminated: {process.ProcessName} (PID:{process.Id})");
+                    DebugLog.Info("GameLauncherService.Processes",
+                        $"[LaunchFlow] Game process terminated: {process.ProcessName} (PID:{process.Id})");
                 }
                 catch
                 {
@@ -121,7 +126,8 @@ public partial class GameLauncherService
         }
         catch (Exception ex)
         {
-            DebugLog.Info("GameLauncherService.Processes", $"[LaunchFlow] Failed to clean up game process: {ex.Message}");
+            DebugLog.Info("GameLauncherService.Processes",
+                $"[LaunchFlow] Failed to clean up game process: {ex.Message}");
         }
     }
 

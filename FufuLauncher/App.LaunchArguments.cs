@@ -84,7 +84,8 @@ public partial class App
         }
         catch (Exception ex)
         {
-            DebugLog.Info("App.LaunchArguments", $"[App] Launch-argument triggered game operation failed: {ex.Message}");
+            DebugLog.Info("App.LaunchArguments",
+                $"[App] Launch-argument triggered game operation failed: {ex.Message}");
         }
     }
 

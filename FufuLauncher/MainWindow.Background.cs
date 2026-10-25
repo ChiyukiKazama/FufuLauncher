@@ -33,7 +33,11 @@ public sealed partial class MainWindow
     public event Action<BackgroundRenderResult>? GlobalBackgroundApplied;
     public event Action<ImageSource>? GlobalBackgroundImageAvailable;
 
-    public BackgroundRenderResult? CurrentGlobalBackground { get; private set; }
+    public BackgroundRenderResult? CurrentGlobalBackground
+    {
+        get;
+        private set;
+    }
 
     private async Task LoadBackgroundImageOpacityAsync()
     {
@@ -124,7 +128,8 @@ public sealed partial class MainWindow
         try
         {
             var randomBackgroundEnabledJson = await _localSettingsService.ReadSettingAsync("IsRandomBackgroundEnabled");
-            var isRandomBackgroundEnabled = randomBackgroundEnabledJson != null && Convert.ToBoolean(randomBackgroundEnabledJson);
+            var isRandomBackgroundEnabled =
+                randomBackgroundEnabledJson != null && Convert.ToBoolean(randomBackgroundEnabledJson);
             if (isRandomBackgroundEnabled)
             {
                 var randomTypeJson = await _localSettingsService.ReadSettingAsync("RandomBackgroundType");
@@ -568,7 +573,8 @@ public sealed partial class MainWindow
         }
 
         var applyStarted = Environment.TickCount64;
-        DebugLog.Info("MainWindow.Background", "Bg.Apply.Start", $"version={version} video={result.IsVideo} fallback={result.IsFallback} image={DescribeBackgroundImage(result.ImageSource)}");
+        DebugLog.Info("MainWindow.Background", "Bg.Apply.Start",
+            $"version={version} video={result.IsVideo} fallback={result.IsFallback} image={DescribeBackgroundImage(result.ImageSource)}");
 
         double finalOpacity = 1.0;
         try
@@ -631,7 +637,8 @@ public sealed partial class MainWindow
                 DisposeGlobalBackgroundPlayer();
                 GlobalBackgroundVideo.Visibility = Visibility.Collapsed;
 
-                DebugLog.Info("MainWindow.Background", "Bg.MainSourceSet.Start", DescribeBackgroundImage(result.ImageSource));
+                DebugLog.Info("MainWindow.Background", "Bg.MainSourceSet.Start",
+                    DescribeBackgroundImage(result.ImageSource));
                 GlobalBackgroundImage.Source = result.ImageSource;
                 DebugLog.Info("MainWindow.Background", "Bg.MainSourceSet.Done");
                 if (result.ImageSource != null && !result.IsFallback)

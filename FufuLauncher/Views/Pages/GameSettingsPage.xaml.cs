@@ -87,11 +87,13 @@ public sealed partial class GameSettingsPage : Page
             var savedPath = savedPathObj as string;
 
             DebugLog.Info("GameSettingsPage", $"[Debug] Saved local path: '{savedPath}'");
-            DebugLog.Info("GameSettingsPage", $"[Debug] IsNullOrWhiteSpace result: {string.IsNullOrWhiteSpace(savedPath)}");
+            DebugLog.Info("GameSettingsPage",
+                $"[Debug] IsNullOrWhiteSpace result: {string.IsNullOrWhiteSpace(savedPath)}");
 
             if (!string.IsNullOrWhiteSpace(savedPath))
             {
-                DebugLog.Info("GameSettingsPage", "[Debug] Path not empty, skipping auto-detect and loading existing path.");
+                DebugLog.Info("GameSettingsPage",
+                    "[Debug] Path not empty, skipping auto-detect and loading existing path.");
                 savedPath = savedPath.Trim('"').Trim();
                 PathTextBox.Text = savedPath;
                 await LoadGameInfoAsync(savedPath);

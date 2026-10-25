@@ -104,7 +104,8 @@ namespace FufuLauncher.Services.Background
 
                 if (!string.IsNullOrEmpty(savedHash) && savedHash != currentHash)
                 {
-                    DebugLog.Info("HoyoverseBackgroundService", "HoyoverseBackgroundService: JSON change detected, cleared previous background rotation");
+                    DebugLog.Info("HoyoverseBackgroundService",
+                        "HoyoverseBackgroundService: JSON change detected, cleared previous background rotation");
                     await localSettings.SaveSettingAsync("SelectedOnlineBackgroundUrl", "");
                     await localSettings.SaveSettingAsync("SelectedOnlineBackgroundIsVideo", false);
                 }
@@ -163,7 +164,8 @@ namespace FufuLauncher.Services.Background
             }
             catch (Exception ex)
             {
-                DebugLog.Info("HoyoverseBackgroundService", $"HoyoverseBackgroundService: Request failed - {ex.Message}");
+                DebugLog.Info("HoyoverseBackgroundService",
+                    $"HoyoverseBackgroundService: Request failed - {ex.Message}");
                 return null;
             }
         }
@@ -265,7 +267,8 @@ namespace FufuLauncher.Services.Background
             }
             catch (Exception ex)
             {
-                DebugLog.Info("HoyoverseBackgroundService", $"HoyoverseBackgroundService: Failed to request latest background - {ex.Message}");
+                DebugLog.Info("HoyoverseBackgroundService",
+                    $"HoyoverseBackgroundService: Failed to request latest background - {ex.Message}");
                 return (null, null);
             }
         }

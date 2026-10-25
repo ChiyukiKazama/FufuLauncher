@@ -216,7 +216,8 @@ public sealed partial class PluginSettingsPage : Page
         }
         catch (Exception ex)
         {
-            DebugLog.Info("PluginSettingsPage", $"[PluginSettings] Failed to navigate to signature install: {ex.Message}");
+            DebugLog.Info("PluginSettingsPage",
+                $"[PluginSettings] Failed to navigate to signature install: {ex.Message}");
         }
     }
 

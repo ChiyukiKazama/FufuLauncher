@@ -105,7 +105,8 @@ public sealed class ParallelDownloadService
                 catch (DownloadFailedException ex)
                     when (ex.Reason == DownloadFailureReason.RangeNotSupported && opt.AllowRangeFallback)
                 {
-                    DebugLog.Info("ParallelDownloadService", "[ParallelDownload] Server ignored Range, falling back to single thread");
+                    DebugLog.Info("ParallelDownloadService",
+                        "[ParallelDownload] Server ignored Range, falling back to single thread");
                     TryDelete(resumeStatePath);
                     await DownloadSingleThreadAsync(client, url, workPath, totalSize, opt, progress, ct)
                         .ConfigureAwait(false);
@@ -504,7 +505,8 @@ public sealed class ParallelDownloadService
 
         if (completed.Count > 0 && !IsWorkFileIntact(workPath, totalSize))
         {
-            DebugLog.Info("ParallelDownloadService", "[ParallelDownload] .part file missing or wrong length, discarding resume state");
+            DebugLog.Info("ParallelDownloadService",
+                "[ParallelDownload] .part file missing or wrong length, discarding resume state");
             completed.Clear();
             TryDelete(resumeStatePath);
         }
@@ -996,7 +998,8 @@ public sealed class ParallelDownloadService
                 || state.TotalChunks != totalChunks
                 || !string.Equals(state.UrlHash, ComputeUrlHash(url), StringComparison.OrdinalIgnoreCase))
             {
-                DebugLog.Info("ParallelDownloadService", "[ParallelDownload] Resume state does not match current source or parameters, ignoring");
+                DebugLog.Info("ParallelDownloadService",
+                    "[ParallelDownload] Resume state does not match current source or parameters, ignoring");
                 return new HashSet<int>();
             }
 
@@ -1004,7 +1007,8 @@ public sealed class ParallelDownloadService
         }
         catch (Exception ex)
         {
-            DebugLog.Info("ParallelDownloadService", $"[ParallelDownload] Failed to read resume state, ignoring: {ex.Message}");
+            DebugLog.Info("ParallelDownloadService",
+                $"[ParallelDownload] Failed to read resume state, ignoring: {ex.Message}");
             return new HashSet<int>();
         }
     }

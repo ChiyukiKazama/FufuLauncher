@@ -31,7 +31,8 @@ public sealed partial class PluginConfigPage
             }
             catch (Exception ex)
             {
-                DebugLog.Info("PluginConfigPage.Save", $"[GamepadChoices] Device notifications unavailable: {ex.Message}");
+                DebugLog.Info("PluginConfigPage.Save",
+                    $"[GamepadChoices] Device notifications unavailable: {ex.Message}");
             }
         }
 

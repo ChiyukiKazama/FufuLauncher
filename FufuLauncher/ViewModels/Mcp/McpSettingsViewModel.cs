@@ -49,13 +49,25 @@ public sealed class McpSettingsViewModel : ObservableObject
         _auditChangedHandler = (_, _) => DispatchRefreshAuditSummary();
     }
 
-    public ObservableCollection<McpToolToggleItem> PluginTools { get; } = new();
+    public ObservableCollection<McpToolToggleItem> PluginTools
+    {
+        get;
+    } = new();
 
-    public ObservableCollection<McpToolToggleItem> GameTools { get; } = new();
+    public ObservableCollection<McpToolToggleItem> GameTools
+    {
+        get;
+    } = new();
 
-    public ObservableCollection<McpToolToggleItem> InterfaceTools { get; } = new();
+    public ObservableCollection<McpToolToggleItem> InterfaceTools
+    {
+        get;
+    } = new();
 
-    public ObservableCollection<McpToolToggleItem> SystemTools { get; } = new();
+    public ObservableCollection<McpToolToggleItem> SystemTools
+    {
+        get;
+    } = new();
 
     public bool IsEnabled
     {

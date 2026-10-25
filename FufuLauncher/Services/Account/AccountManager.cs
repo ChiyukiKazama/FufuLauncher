@@ -41,7 +41,8 @@ public partial class AccountManager
         }
         catch (IOException ex)
         {
-            DebugLog.Info("AccountManager", $"[AccountManager] IO error while creating cookies directory: {ex.Message}");
+            DebugLog.Info("AccountManager",
+                $"[AccountManager] IO error while creating cookies directory: {ex.Message}");
         }
 
         _accountList = new AccountList();

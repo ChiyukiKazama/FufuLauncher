@@ -122,12 +122,12 @@
                     </ResourceDictionary.ThemeDictionaries>
 
                     <FontFamily x:Key="ActionIconFont">Segoe Fluent Icons, Segoe MDL2 Assets, Segoe UI Symbol</FontFamily>
-                    
+
                     <CornerRadius x:Key="NavigationViewContentGridCornerRadius">0</CornerRadius>
                     <CornerRadius x:Key="NavigationViewItemCornerRadius">0</CornerRadius>
                     <Thickness x:Key="NavigationViewContentGridBorderThickness">0</Thickness>
                     <Thickness x:Key="NavigationViewBorderThickness">0</Thickness>
-                    
+
                     <Style TargetType="NavigationViewItem">
                         <Setter Property="MinHeight" Value="48" />
                         <Setter Property="Margin" Value="0,1,0,1" />
@@ -243,8 +243,10 @@
                                         <Setter Property="Padding" Value="0" />
                                         <Setter Property="MinWidth" Value="0" />
                                         <Setter Property="MaxWidth" Value="400" />
-                                        <Setter Property="Background" Value="{ThemeResource AcrylicInAppFillColorDefaultBrush}" />
-                                        <Setter Property="BorderBrush" Value="{ThemeResource CardStrokeColorDefaultBrush}" />
+                                        <Setter Property="Background"
+                                                Value="{ThemeResource AcrylicInAppFillColorDefaultBrush}" />
+                                        <Setter Property="BorderBrush"
+                                                Value="{ThemeResource CardStrokeColorDefaultBrush}" />
                                         <Setter Property="BorderThickness" Value="1" />
                                         <Setter Property="CornerRadius" Value="12" />
                                     </Style>

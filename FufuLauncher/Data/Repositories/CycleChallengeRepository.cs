@@ -103,7 +103,6 @@ public sealed class CycleChallengeRepository
     ];
 
 
-    /// <summary>同键覆盖写入（D5：同期刷新最新覆盖旧的）。整个替换在单次 SaveChanges 中完成，避免中途失败丢失旧缓存。</summary>
     public void Upsert(CycleChallengeRecordEntity record)
     {
         EnsureInitialized();

@@ -16,7 +16,7 @@ using FufuLauncher.Services.MiHoYo.Transport;
 
 namespace FufuLauncher.Services.CycleChallenge;
 
-/// <summary>一次战绩请求的原始结果（DataJson 为响应中的 data 节点原文）。</summary>
+
 public sealed record RawChallengeResponse(
     bool Success,
     ChallengeErrorKind Kind,
@@ -25,12 +25,12 @@ public sealed record RawChallengeResponse(
     string? DataJson,
     string RawJson);
 
-/// <summary>
-/// 周期挑战战绩 API 客户端：直接实现 DS2 + x-rpc 头，不修改也不依赖 DailyNoteService 的私有实现。
-/// 端点来源：Snap.Hutao.Remastered ApiEndpoints.csv（spiralAbyss / role_combat / hard_challenge）。
-/// 自愈策略：1034 → 极验（复用 GeetestService，按端点 challenge_path）；10001/-100 → 刷新 cookie 后重试一次；
-/// 国际服剧诗/危战略端点在 event 域名失败时回退 bbs-api-os。
-/// </summary>
+
+
+
+
+
+
 public sealed class GameRecordApiClient
 {
     private const string CnGameRecordBase = "https://api-takumi-record.mihoyo.com/game_record/app/genshin/api";
@@ -103,7 +103,7 @@ public sealed class GameRecordApiClient
         var response = await SendWithFallbackAsync(context, isOversea, apiName, rawQuery, challenge: null, token)
             .ConfigureAwait(false);
 
-        // 1034 风控：CN 走极验后带 x-rpc-challenge 重试一次
+        
         if (response.Kind == ChallengeErrorKind.RiskControlRequired && !isOversea)
         {
             try
@@ -122,11 +122,11 @@ public sealed class GameRecordApiClient
             }
             catch
             {
-                // 验证码流程失败时保留原始 1034 结果
+                
             }
         }
 
-        // 会话失效：刷新 cookie 后重试一次（服务端已拒绝会话，必须强制刷新；OS 账号不走 CN passport）
+        
         if (response.Kind == ChallengeErrorKind.LoginExpired && !isOversea)
         {
             if (await TryRefreshCookiesAsync(role.AccountId, token).ConfigureAwait(false))
@@ -146,7 +146,7 @@ public sealed class GameRecordApiClient
                 }
                 catch
                 {
-                    // 刷新后重建上下文失败时保留原始会话失效结果
+                    
                 }
             }
         }
@@ -154,7 +154,7 @@ public sealed class GameRecordApiClient
         return response;
     }
 
-    /// <summary>按候选基址依次尝试；只有网络错误或 5xx/未知业务错误才换下一个 host。</summary>
+    
     private async Task<RawChallengeResponse> SendWithFallbackAsync(
         AccountContext context, bool isOversea, string apiName, string rawQuery, string? challenge, CancellationToken token)
     {
@@ -320,7 +320,7 @@ public sealed class GameRecordApiClient
         }
         catch (JsonException)
         {
-            // 非 JSON 响应通常是 404/403/风控页；把 HTTP 状态与片段带回 UI，便于定位
+            
             string snippet = json.Length > 60 ? json[..60] : json;
             snippet = snippet.Replace('\r', ' ').Replace('\n', ' ').Trim();
             return Failure(ChallengeErrorKind.ServerError, -1, $"HTTP {statusCode} 非 JSON 响应：{snippet}");
@@ -330,7 +330,7 @@ public sealed class GameRecordApiClient
     private static RawChallengeResponse Failure(ChallengeErrorKind kind, int retcode, string message) =>
         new(false, kind, retcode, message, null, string.Empty);
 
-    /// <summary>DEBUG 构建下的轻量诊断日志（不含 cookie / query），用于排查真实环境端点问题。</summary>
+    
     private static void LogDebug(string line)
     {
 #if DEBUG
@@ -341,7 +341,7 @@ public sealed class GameRecordApiClient
         }
         catch
         {
-            // 诊断日志失败不影响主流程
+            
         }
 #endif
     }

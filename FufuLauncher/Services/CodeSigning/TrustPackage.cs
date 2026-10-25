@@ -318,7 +318,8 @@ public static class TrustPackageLoader
                              string.Equals(pinnedRootThumbprintSha256, rootThumbprint,
                                  StringComparison.OrdinalIgnoreCase);
 
-            DebugLog.Info("TrustPackage", $"[TrustPackage] verified {directory}, root {rootThumbprint}, pinned={matchesPin}");
+            DebugLog.Info("TrustPackage",
+                $"[TrustPackage] verified {directory}, root {rootThumbprint}, pinned={matchesPin}");
 
             return new VerifiedTrustPackage
             {

@@ -51,7 +51,8 @@ public class CommunityCheckinService : ICommunityCheckinService
             var stokenCookie = account.GetStokenCookie();
 
 
-            DebugLog.Info("CommunityCheckinService", $"[CommunityCheckin] Account {account.Nickname}({account.Uid}): fetching task status");
+            DebugLog.Info("CommunityCheckinService",
+                $"[CommunityCheckin] Account {account.Nickname}({account.Uid}): fetching task status");
             var taskState = await GetTaskStateAsync(account.Cookie);
             if (taskState == null)
             {
@@ -65,7 +66,8 @@ public class CommunityCheckinService : ICommunityCheckinService
             int total = GetIntValue(taskState.Value, "total_points");
             var taskFlags = ParseTaskFlags(taskState.Value);
 
-            DebugLog.Info("CommunityCheckinService", $"[CommunityCheckin] Account {account.Uid}: available {canGet}, received {received}, total {total}");
+            DebugLog.Info("CommunityCheckinService",
+                $"[CommunityCheckin] Account {account.Uid}: available {canGet}, received {received}, total {total}");
 
             if (canGet == 0)
             {

@@ -144,12 +144,14 @@ public sealed partial class LoginQrWindow
 
                         if (!enqueued)
                         {
-                            DebugLog.Info("LoginQrWindow.WebPassport", "Cannot dispatch save operation to UI thread, window may be closed.");
+                            DebugLog.Info("LoginQrWindow.WebPassport",
+                                "Cannot dispatch save operation to UI thread, window may be closed.");
                         }
                     }
                     else if (hasLoginToken && !hasAccountId)
                     {
-                        DebugLog.Info("LoginQrWindow.WebPassport", "WebView2 cookie missing account ID (ltuid/stuid), waiting for subsequent events...");
+                        DebugLog.Info("LoginQrWindow.WebPassport",
+                            "WebView2 cookie missing account ID (ltuid/stuid), waiting for subsequent events...");
                     }
                 }
             }

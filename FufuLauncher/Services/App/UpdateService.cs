@@ -53,7 +53,8 @@ public class UpdateService : IUpdateService
             var updateInfo = await FetchManifestAsync();
             if (updateInfo == null)
             {
-                DebugLog.Info("UpdateService", "[UpdateService] Server temporarily unreachable, skipping version check");
+                DebugLog.Info("UpdateService",
+                    "[UpdateService] Server temporarily unreachable, skipping version check");
                 return new UpdateCheckResult { ShouldShowUpdate = false };
             }
 
@@ -106,7 +107,8 @@ public class UpdateService : IUpdateService
                     await _localSettingsService.ReadSettingAsync(LocalSettingsService.LastAnnouncedPreviewVersionKey);
                 var lastPreviewVersion = lastPreviewVersionObj?.ToString() ?? string.Empty;
 
-                DebugLog.Info("UpdateService", $"[UpdateService] Last recorded preview version: '{lastPreviewVersion}'");
+                DebugLog.Info("UpdateService",
+                    $"[UpdateService] Last recorded preview version: '{lastPreviewVersion}'");
 
                 if (previewVersion != lastPreviewVersion)
                 {
@@ -124,7 +126,8 @@ public class UpdateService : IUpdateService
                     };
                 }
 
-                DebugLog.Info("UpdateService", $"[UpdateService] Preview version already shown, skipping duplicate prompt");
+                DebugLog.Info("UpdateService",
+                    $"[UpdateService] Preview version already shown, skipping duplicate prompt");
             }
 
             DebugLog.Info("UpdateService", $"[UpdateService] No update available, skipping");
@@ -229,7 +232,8 @@ public class UpdateService : IUpdateService
         }
         catch (Exception ex)
         {
-            DebugLog.Info("UpdateService", $"[UpdateService] Failed to get update announcement URL: {ex.GetType().Name} - {ex.Message}");
+            DebugLog.Info("UpdateService",
+                $"[UpdateService] Failed to get update announcement URL: {ex.GetType().Name} - {ex.Message}");
         }
 
         return string.Empty;

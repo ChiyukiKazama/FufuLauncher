@@ -209,11 +209,13 @@ public partial class OfficialBackgroundViewModel : ObservableObject
             SummaryText = string.Format("OfficialBgWindow_SummaryFormat".GetLocalized(), serverName, Backgrounds.Count);
             IsCustomBackgroundInEffect = hasCustomBackground;
 
-            DebugLog.Info("OfficialBackgroundViewModel", $"[OfficialBgWindow] Loaded {Backgrounds.Count} official backgrounds ({serverName})");
+            DebugLog.Info("OfficialBackgroundViewModel",
+                $"[OfficialBgWindow] Loaded {Backgrounds.Count} official backgrounds ({serverName})");
         }
         catch (Exception ex)
         {
-            DebugLog.Info("OfficialBackgroundViewModel", $"[OfficialBgWindow] Failed to load official backgrounds: {ex.Message}");
+            DebugLog.Info("OfficialBackgroundViewModel",
+                $"[OfficialBgWindow] Failed to load official backgrounds: {ex.Message}");
             HasLoadError = true;
         }
         finally
@@ -382,7 +384,8 @@ public partial class OfficialBackgroundViewModel : ObservableObject
         }
         catch (Exception ex)
         {
-            DebugLog.Info("OfficialBackgroundViewModel", $"[OfficialBgWindow] Failed to set launcher background: {ex.Message}");
+            DebugLog.Info("OfficialBackgroundViewModel",
+                $"[OfficialBgWindow] Failed to set launcher background: {ex.Message}");
             ShowStatus(string.Format("OfficialBgWindow_SaveFailedFormat".GetLocalized(), ex.Message),
                 InfoBarSeverity.Error);
         }
@@ -545,7 +548,8 @@ public partial class OfficialBackgroundViewModel : ObservableObject
 
     private void OnPreviewMediaFailed(MediaPlayer sender, MediaPlayerFailedEventArgs args)
     {
-        DebugLog.Info("OfficialBackgroundViewModel", $"[OfficialBgWindow] Video preview playback failed: {args.Error} - {args.ErrorMessage}");
+        DebugLog.Info("OfficialBackgroundViewModel",
+            $"[OfficialBgWindow] Video preview playback failed: {args.Error} - {args.ErrorMessage}");
         _dispatcherQueue?.TryEnqueue(() =>
         {
             StopVideoPreview();
@@ -565,7 +569,8 @@ public partial class OfficialBackgroundViewModel : ObservableObject
             }
             catch (Exception ex)
             {
-                DebugLog.Info("OfficialBackgroundViewModel", $"[OfficialBgWindow] Failed to stop preview: {ex.Message}");
+                DebugLog.Info("OfficialBackgroundViewModel",
+                    $"[OfficialBgWindow] Failed to stop preview: {ex.Message}");
             }
         }
 
@@ -606,7 +611,8 @@ public partial class OfficialBackgroundViewModel : ObservableObject
         }
         catch (Exception ex)
         {
-            DebugLog.Info("OfficialBackgroundViewModel", $"[OfficialBgWindow] Failed to release resources: {ex.Message}");
+            DebugLog.Info("OfficialBackgroundViewModel",
+                $"[OfficialBgWindow] Failed to release resources: {ex.Message}");
         }
     }
 

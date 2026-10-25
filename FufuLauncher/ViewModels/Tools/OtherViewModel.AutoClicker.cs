@@ -52,14 +52,16 @@ public partial class OtherViewModel
                 return;
             }
 
-            DebugLog.Info("OtherViewModel.AutoClicker", "[OtherViewModel] Enable request intercepted, showing risk warning");
+            DebugLog.Info("OtherViewModel.AutoClicker",
+                "[OtherViewModel] Enable request intercepted, showing risk warning");
             _ = HandleAutoClickerEnableRequestAsync();
         }
         else
         {
             _autoClickerService.IsEnabled = false;
             _ = SaveSettingsAsync();
-            DebugLog.Info("OtherViewModel.AutoClicker", $"[OtherViewModel] Auto-clicker enabled state changed: {value}");
+            DebugLog.Info("OtherViewModel.AutoClicker",
+                $"[OtherViewModel] Auto-clicker enabled state changed: {value}");
         }
     }
 
@@ -104,7 +106,8 @@ public partial class OtherViewModel
 
         if (!IsAdministrator())
         {
-            DebugLog.Info("OtherViewModel.AutoClicker", "[OtherViewModel] Attempt to enable auto-clicker blocked: no admin privileges");
+            DebugLog.Info("OtherViewModel.AutoClicker",
+                "[OtherViewModel] Attempt to enable auto-clicker blocked: no admin privileges");
             RevertAutoClickerToggle(false);
             _ = ShowAdminRequiredDialogAsync();
             return;

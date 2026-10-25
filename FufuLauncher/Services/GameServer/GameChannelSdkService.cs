@@ -79,7 +79,7 @@ public sealed class GameChannelSdkService
         Action? commitConfiguration, Action<string>? print, CancellationToken token, Action<long>? onBytesTransferred)
     {
         gameDir = Path.GetFullPath(gameDir);
-        // Query both indexes and validate/extract the entire package before touching the live files.
+        
         print?.Invoke("GameServer_FetchingChannelSdk".GetLocalized());
         Task<SdkPackage?> sdkTask = GetChannelSdkPackageAsync(scheme, token);
         Task<List<string>> deprecatedTask = cleanLegacy
@@ -132,7 +132,7 @@ public sealed class GameChannelSdkService
                 throw new InvalidDataException("GameServer_ChannelSdkConflict".GetLocalized());
             }
 
-            // Bind the installed files to the official package hash, not just their own version manifest.
+            
             string manifestMd5 = await HashUtility.Md5FileAsync(Path.Combine(stagingDir, SdkVersionFileName), token)
                 .ConfigureAwait(false);
             var installedState = new InstalledSdkState(scheme.GameId, (int)scheme.Channel, (int)scheme.SubChannel,
@@ -166,7 +166,7 @@ public sealed class GameChannelSdkService
         token.ThrowIfCancellationRequested();
         await GameServerOperation.EnsureGameClosedAsync().ConfigureAwait(false);
         token.ThrowIfCancellationRequested();
-        // Commit is deliberately non-cancellable; interruption here must not leave half a channel installed.
+        
         try
         {
             if (cleanLegacy && !sdkCurrent)

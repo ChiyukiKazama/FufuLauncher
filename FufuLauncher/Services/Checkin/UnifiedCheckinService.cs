@@ -274,7 +274,8 @@ public class UnifiedCheckinService : IUnifiedCheckinService
             }
 
             gameSw.Stop();
-            DebugLog.Info("UnifiedCheckinService", $"[UnifiedCheckin] Game check-in took {gameSw.ElapsedMilliseconds}ms");
+            DebugLog.Info("UnifiedCheckinService",
+                $"[UnifiedCheckin] Game check-in took {gameSw.ElapsedMilliseconds}ms");
         }
 
 
@@ -349,7 +350,8 @@ public class UnifiedCheckinService : IUnifiedCheckinService
             }
 
             communitySw.Stop();
-            DebugLog.Info("UnifiedCheckinService", $"[UnifiedCheckin] Community check-in took {communitySw.ElapsedMilliseconds}ms");
+            DebugLog.Info("UnifiedCheckinService",
+                $"[UnifiedCheckin] Community check-in took {communitySw.ElapsedMilliseconds}ms");
         }
 
 
@@ -430,7 +432,8 @@ public class UnifiedCheckinService : IUnifiedCheckinService
             }
 
             cloudSw.Stop();
-            DebugLog.Info("UnifiedCheckinService", $"[UnifiedCheckin] Cloud game check-in took {cloudSw.ElapsedMilliseconds}ms");
+            DebugLog.Info("UnifiedCheckinService",
+                $"[UnifiedCheckin] Cloud game check-in took {cloudSw.ElapsedMilliseconds}ms");
         }
 
         return result;

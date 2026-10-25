@@ -150,7 +150,8 @@ public partial class SettingsViewModel
         }
 
         var randomBackgroundEnabledJson = await _localSettingsService.ReadSettingAsync("IsRandomBackgroundEnabled");
-        IsRandomBackgroundEnabled = randomBackgroundEnabledJson != null && Convert.ToBoolean(randomBackgroundEnabledJson);
+        IsRandomBackgroundEnabled =
+            randomBackgroundEnabledJson != null && Convert.ToBoolean(randomBackgroundEnabledJson);
 
         var randomBackgroundTypeJson = await _localSettingsService.ReadSettingAsync("RandomBackgroundType");
         RandomBackgroundType = RandomBackgroundService.ParseType(randomBackgroundTypeJson?.ToString());
@@ -236,7 +237,8 @@ public partial class SettingsViewModel
         }
         catch (Exception ex)
         {
-            DebugLog.Info("SettingsViewModel.Background", $"Failed to save background antialias enabled state: {ex.Message}");
+            DebugLog.Info("SettingsViewModel.Background",
+                $"Failed to save background antialias enabled state: {ex.Message}");
         }
 
         ScheduleBackgroundAntialiasRefresh();
@@ -271,7 +273,8 @@ public partial class SettingsViewModel
         }
         catch (Exception ex)
         {
-            DebugLog.Info("SettingsViewModel.Background", $"Failed to save background antialias strength: {ex.Message}");
+            DebugLog.Info("SettingsViewModel.Background",
+                $"Failed to save background antialias strength: {ex.Message}");
         }
 
         if (IsBackgroundImageAntialiasEnabled)

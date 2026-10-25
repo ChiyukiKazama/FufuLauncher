@@ -37,6 +37,7 @@ public sealed class McpAuditLog
 
     private const long MaxArchiveFileBytes = 2 * 1024 * 1024;
     private const string ArchiveFileName = "mcp-audit.log";
+
     private const string ArchiveHeader =
         "# timestamp | result | kind | action | remote | duration | detail";
 
@@ -227,6 +228,7 @@ public sealed class McpAuditLog
             ? string.Empty
             : entry.Detail.Replace('\r', ' ').Replace('\n', ' ');
 
-        return $"{time} | {result,-4} | {kind,-4} | {entry.Action,-20} | {entry.RemoteAddress,-15} | {duration,-8} | {detail}";
+        return
+            $"{time} | {result,-4} | {kind,-4} | {entry.Action,-20} | {entry.RemoteAddress,-15} | {duration,-8} | {detail}";
     }
 }

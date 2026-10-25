@@ -36,7 +36,10 @@ public sealed class McpAuditViewModel : ObservableObject
         _auditChangedHandler = (_, _) => DispatchRefresh();
     }
 
-    public ObservableCollection<McpAuditEntryView> Entries { get; } = new();
+    public ObservableCollection<McpAuditEntryView> Entries
+    {
+        get;
+    } = new();
 
     public string ArchiveDirectory => _host.Audit.ArchiveDirectory;
 

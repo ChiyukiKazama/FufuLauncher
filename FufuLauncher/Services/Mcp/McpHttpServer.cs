@@ -19,7 +19,11 @@ internal sealed class McpHttpServer
     private TcpListener? _listener;
     private CancellationTokenSource? _cts;
 
-    public int Port { get; private set; }
+    public int Port
+    {
+        get;
+        private set;
+    }
 
     public event Action<string>? Diagnostic;
 

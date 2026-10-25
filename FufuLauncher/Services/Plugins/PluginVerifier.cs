@@ -41,7 +41,8 @@ public static class PluginVerifier
     {
         if (string.IsNullOrWhiteSpace(expectedHash))
         {
-            DebugLog.Info("PluginVerifier", $"[PluginVerifier] No expected hash provided for {description}, skipping verification");
+            DebugLog.Info("PluginVerifier",
+                $"[PluginVerifier] No expected hash provided for {description}, skipping verification");
             return;
         }
 
@@ -174,14 +175,16 @@ public static class PluginVerifier
         const int maxScriptLength = 100_000;
         if (luaScript.Length > maxScriptLength)
         {
-            DebugLog.Info("PluginVerifier", $"[PluginVerifier] SECURITY BLOCK: Script too large ({luaScript.Length} bytes)");
+            DebugLog.Info("PluginVerifier",
+                $"[PluginVerifier] SECURITY BLOCK: Script too large ({luaScript.Length} bytes)");
             return SecurityValidationResult.Fail("PluginStoreSecurityScriptTooLarge".GetLocalized());
         }
 
         var base64Pattern = new System.Text.RegularExpressions.Regex(@"[A-Za-z0-9+/]{200,}={0,2}");
         if (base64Pattern.IsMatch(luaScript))
         {
-            DebugLog.Info("PluginVerifier", "[PluginVerifier] WARNING: Long base64-like string detected, possible obfuscation");
+            DebugLog.Info("PluginVerifier",
+                "[PluginVerifier] WARNING: Long base64-like string detected, possible obfuscation");
         }
 
         DebugLog.Info("PluginVerifier", "[PluginVerifier] Lua security scan PASSED");
