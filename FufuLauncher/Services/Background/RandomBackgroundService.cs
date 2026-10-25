@@ -1,4 +1,7 @@
 using System.Diagnostics;
+using System.Net;
+using System.Text;
+using System.Text.RegularExpressions;
 using FufuLauncher.Helpers;
 
 namespace FufuLauncher.Services.Background;
@@ -14,16 +17,29 @@ public static class RandomBackgroundService
 {
     private const string Endpoint = "https://image.fu1.fun/ba/";
     private const int MaxDownloadBytes = 20 * 1024 * 1024;
+    private const int MaxChallengeBytes = 8 * 1024;
+    private const string ChallengeCookieName = "acw_sc__v2";
+    private const string ChallengeKey = "3000176000856006061501533003690027800375";
     public const string PinnedSettingKey = "IsRandomBackgroundPinned";
+    private static readonly int[] ChallengeOrder =
+    {
+        0x0f, 0x23, 0x1d, 0x18, 0x21, 0x10, 0x01, 0x26, 0x0a, 0x09, 0x13, 0x1f, 0x28, 0x1b,
+        0x16, 0x17, 0x19, 0x0d, 0x06, 0x0b, 0x27, 0x12, 0x14, 0x08, 0x0e, 0x15, 0x20, 0x1a,
+        0x02, 0x1e, 0x07, 0x04, 0x11, 0x05, 0x03, 0x1c, 0x22, 0x25, 0x0c, 0x24
+    };
+    private static readonly Regex ChallengeArgPattern =
+        new(@"arg1\s*=\s*'([0-9A-Fa-f]{16,})'", RegexOptions.Compiled);
     private static readonly HttpClient Client;
     private static readonly object DisplayedImageLock = new();
     private static byte[]? _lastDisplayedBytes;
     private static string? _lastDisplayedPath;
+    private static volatile string? _challengeCookie;
     private static int _generation;
 
     static RandomBackgroundService()
     {
-        Client = new HttpClient { Timeout = TimeSpan.FromSeconds(30) };
+        var handler = new HttpClientHandler { AutomaticDecompression = DecompressionMethods.All };
+        Client = new HttpClient(handler) { Timeout = TimeSpan.FromSeconds(30) };
         Client.DefaultRequestHeaders.UserAgent.ParseAdd(
             "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/155.0.0.0 Safari/537.36");
         Client.DefaultRequestHeaders.Accept.ParseAdd("image/webp,image/*,*/*;q=0.8");
@@ -191,25 +207,79 @@ public static class RandomBackgroundService
     {
         try
         {
-            using var response = await Client.GetAsync(GetEndpoint(type), HttpCompletionOption.ResponseHeadersRead);
-            response.EnsureSuccessStatusCode();
+            var (bytes, challengeArg) = await RequestAsync(GetEndpoint(type));
+            if (bytes != null) return bytes;
+            if (challengeArg == null) return null;
 
-            var mediaType = response.Content.Headers.ContentType?.MediaType;
-            if (string.IsNullOrEmpty(mediaType) ||
-                !mediaType.StartsWith("image/", StringComparison.OrdinalIgnoreCase))
-                return null;
+            _challengeCookie = $"{ChallengeCookieName}={SolveChallengeCookie(challengeArg)}";
+            DebugLog.Info("RandomBackgroundService", "[RandomBackground] CDN challenge answered");
 
-            if (response.Content.Headers.ContentLength is > MaxDownloadBytes)
-                return null;
-
-            var bytes = await response.Content.ReadAsByteArrayAsync();
-            return bytes.Length is > 0 and <= MaxDownloadBytes ? bytes : null;
+            var (retryBytes, _) = await RequestAsync(GetEndpoint(type));
+            return retryBytes;
         }
         catch (Exception ex)
         {
             DebugLog.Info("RandomBackgroundService", $"[RandomBackground] Image download failed: {ex.Message}");
             return null;
         }
+    }
+
+    private static async Task<(byte[]? Bytes, string? ChallengeArg)> RequestAsync(string url)
+    {
+        using var request = new HttpRequestMessage(HttpMethod.Get, url);
+        var cookie = _challengeCookie;
+        if (!string.IsNullOrEmpty(cookie))
+            request.Headers.TryAddWithoutValidation("Cookie", cookie);
+
+        using var response = await Client.SendAsync(request, HttpCompletionOption.ResponseHeadersRead);
+        response.EnsureSuccessStatusCode();
+
+        if (response.Content.Headers.ContentLength is > MaxDownloadBytes)
+            return (null, null);
+
+        var bytes = await response.Content.ReadAsByteArrayAsync();
+        if (bytes.Length is 0 or > MaxDownloadBytes)
+            return (null, null);
+
+        var mediaType = response.Content.Headers.ContentType?.MediaType;
+        if (!string.IsNullOrEmpty(mediaType) &&
+            mediaType.StartsWith("image/", StringComparison.OrdinalIgnoreCase))
+            return (bytes, null);
+
+        return (null, ReadChallengeArg(bytes));
+    }
+
+    private static string? ReadChallengeArg(byte[] body)
+    {
+        var text = Encoding.UTF8.GetString(body, 0, Math.Min(body.Length, MaxChallengeBytes));
+        var match = ChallengeArgPattern.Match(text);
+        return match.Success ? match.Groups[1].Value : null;
+    }
+
+    private static string SolveChallengeCookie(string arg)
+    {
+        var reordered = new char[ChallengeOrder.Length];
+        for (var i = 0; i < arg.Length && i < ChallengeOrder.Length; i++)
+        {
+            var value = arg[i];
+            for (var j = 0; j < ChallengeOrder.Length; j++)
+            {
+                if (ChallengeOrder[j] != i + 1) continue;
+                reordered[j] = value;
+                break;
+            }
+        }
+
+        var text = new string(reordered);
+        var builder = new StringBuilder(text.Length);
+        for (var i = 0; i + 1 < text.Length && i + 1 < ChallengeKey.Length; i += 2)
+        {
+            var mixed = Convert.ToInt32(text.Substring(i, 2), 16) ^
+                        Convert.ToInt32(ChallengeKey.Substring(i, 2), 16);
+            builder.Append(mixed.ToString("x2"));
+        }
+
+        return builder.ToString();
     }
 
     private static async Task<BackgroundRenderResult?> CreateResultAsync(byte[]? bytes)
