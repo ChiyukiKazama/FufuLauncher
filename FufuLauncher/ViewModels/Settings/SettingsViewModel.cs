@@ -388,9 +388,9 @@ public partial class SettingsViewModel : ObservableRecipient
         ResetLaunchButtonOverlayColorCommand = new AsyncRelayCommand(ResetLaunchButtonOverlayColorAsync);
         ResetAppThemeColorCommand = new AsyncRelayCommand(ResetAppThemeColorAsync);
 
-        WeakReferenceMessenger.Default.Register<AutoThemeColorAppliedMessage>(this, (r, m) =>
+        WeakReferenceMessenger.Default.Register<TextStyleChangedMessage>(this, (r, m) =>
         {
-            _dispatcherQueue.TryEnqueue(() => ApplyAutoThemeColorPreview(m.ThemeColorHex));
+            _dispatcherQueue.TryEnqueue(ApplyAutoThemeColorPreview);
         });
 
         WeakReferenceMessenger.Default.Register<CloudCredentialUpdatedMessage>(this, (r, m) =>

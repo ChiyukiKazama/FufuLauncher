@@ -31,12 +31,6 @@ public sealed class AutoThemeColorService : IAutoThemeColorService
         private set;
     }
 
-    public string? LaunchButtonColorHex
-    {
-        get;
-        private set;
-    }
-
     public async Task<bool> IsEnabledAsync()
     {
         try
@@ -87,7 +81,6 @@ public sealed class AutoThemeColorService : IAutoThemeColorService
     {
         Interlocked.Increment(ref _applyVersion);
         ThemeColorHex = null;
-        LaunchButtonColorHex = null;
 
         string? storedThemeColor = null;
         try
@@ -114,24 +107,21 @@ public sealed class AutoThemeColorService : IAutoThemeColorService
     private bool ApplyPalette(BackgroundColorPalette palette, int version)
     {
         var themeHex = ThemeHelper.ToHexColor(palette.ThemeColor);
-        var launchHex = ThemeHelper.ToHexColor(palette.LaunchButtonColor);
 
         return TryRunOnUiThread(() =>
         {
             if (version != Volatile.Read(ref _applyVersion))
                 return;
 
-            if (string.Equals(ThemeColorHex, themeHex, StringComparison.OrdinalIgnoreCase) &&
-                string.Equals(LaunchButtonColorHex, launchHex, StringComparison.OrdinalIgnoreCase))
+            if (string.Equals(ThemeColorHex, themeHex, StringComparison.OrdinalIgnoreCase))
                 return;
 
             ThemeColorHex = themeHex;
-            LaunchButtonColorHex = launchHex;
             ThemeHelper.ApplyThemeColor(themeHex);
-            WeakReferenceMessenger.Default.Send(new AutoThemeColorAppliedMessage(themeHex, launchHex));
+            WeakReferenceMessenger.Default.Send(new TextStyleChangedMessage());
 
             DebugLog.Info("AutoThemeColorService",
-                $"Auto theme color applied: theme={themeHex}, launch={launchHex}, source={ThemeHelper.ToHexColor(palette.SourceColor)}, coverage={palette.Coverage:P0}, saturation={palette.Saturation:P0}, flatness={palette.Flatness:P0}, fill={palette.IsFillColor}");
+                $"Auto theme color applied: theme={themeHex}, source={ThemeHelper.ToHexColor(palette.SourceColor)}, coverage={palette.Coverage:P0}, saturation={palette.Saturation:P0}, flatness={palette.Flatness:P0}, fill={palette.IsFillColor}");
         });
     }
 

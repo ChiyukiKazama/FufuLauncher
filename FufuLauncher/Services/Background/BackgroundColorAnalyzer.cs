@@ -16,12 +16,6 @@ internal sealed class BackgroundColorPalette
         init;
     }
 
-    public Windows.UI.Color LaunchButtonColor
-    {
-        get;
-        init;
-    }
-
     public Windows.UI.Color SourceColor
     {
         get;
@@ -71,10 +65,6 @@ internal static class BackgroundColorAnalyzer
     private const double ThemeMaxSaturation = 0.82;
     private const double ThemeMinLightness = 0.38;
     private const double ThemeMaxLightness = 0.66;
-    private const double LaunchLightnessOffset = 0.12;
-    private const double LaunchMaxLightness = 0.86;
-    private const double LaunchAlreadyLightThreshold = 0.70;
-    private const double LaunchSaturationScale = 0.92;
 
     public static BackgroundColorPalette? Analyze(byte[] bgraPixels, int width, int height)
     {
@@ -141,24 +131,11 @@ internal static class BackgroundColorAnalyzer
         {
             SourceColor = chosen.Color,
             ThemeColor = themeColor,
-            LaunchButtonColor = ResolveLaunchButtonColor(themeColor),
             Coverage = chosen.Coverage,
             Flatness = chosen.Flatness,
             Saturation = chosen.Saturation,
             IsFillColor = chosen.IsFill
         };
-    }
-
-    public static Windows.UI.Color ResolveLaunchButtonColor(Windows.UI.Color themeColor)
-    {
-        RgbToHsl(themeColor.R, themeColor.G, themeColor.B, out var hue, out var saturation, out var lightness);
-
-        if (lightness >= LaunchAlreadyLightThreshold)
-            return Windows.UI.Color.FromArgb(255, themeColor.R, themeColor.G, themeColor.B);
-
-        var targetLightness = Math.Min(LaunchMaxLightness, lightness + LaunchLightnessOffset);
-        var targetSaturation = Math.Max(0.0, saturation * LaunchSaturationScale);
-        return HslToRgb(hue, targetSaturation, targetLightness);
     }
 
     private static void AddCandidate(HueBucket bucket, int totalSamples, List<ColorCandidate> candidates)

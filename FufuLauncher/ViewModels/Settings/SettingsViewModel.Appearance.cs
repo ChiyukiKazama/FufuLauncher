@@ -123,7 +123,7 @@ public partial class SettingsViewModel
         if (_isInitializing) return;
 
         _ = SaveAndApplyAutoThemeColorAsync(value);
-        ApplyAutoThemeColorPreview(null);
+        ApplyAutoThemeColorPreview();
     }
 
     private async Task SaveAndApplyAutoThemeColorAsync(bool isEnabled)
@@ -155,9 +155,9 @@ public partial class SettingsViewModel
         }
     }
 
-    private void ApplyAutoThemeColorPreview(string? themeHex)
+    private void ApplyAutoThemeColorPreview()
     {
-        var hex = themeHex ?? _autoThemeColorService.ThemeColorHex;
+        var hex = _autoThemeColorService.ThemeColorHex;
 
         if (!IsAutoThemeColorEnabled || string.IsNullOrWhiteSpace(hex) || !TryParseColor(hex, out var color))
         {

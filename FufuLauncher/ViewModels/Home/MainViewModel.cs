@@ -71,11 +71,6 @@ namespace FufuLauncher.ViewModels
                 await LoadTextStylesAsync();
             });
 
-            WeakReferenceMessenger.Default.Register<AutoThemeColorAppliedMessage>(this, (r, m) =>
-            {
-                _dispatcherQueue.TryEnqueue(() => ApplyAutoLaunchButtonColor(m.LaunchButtonColorHex));
-            });
-
             WeakReferenceMessenger.Default.Register<CardVisibilityChangedMessage>(this, async (r, m) =>
             {
                 await LoadCardVisibilityAsync();

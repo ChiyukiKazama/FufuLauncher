@@ -14,11 +14,6 @@ public interface IAutoThemeColorService
         get;
     }
 
-    string? LaunchButtonColorHex
-    {
-        get;
-    }
-
     Task<bool> IsEnabledAsync();
 
     Task<bool> ApplyForBackgroundAsync(ImageSource? backgroundImage);

@@ -34,7 +34,7 @@ public partial class SettingsViewModel
 
         var autoThemeColorJson = await _localSettingsService.ReadSettingAsync(AutoThemeColorService.SettingKey);
         IsAutoThemeColorEnabled = autoThemeColorJson != null && Convert.ToBoolean(autoThemeColorJson);
-        ApplyAutoThemeColorPreview(null);
+        ApplyAutoThemeColorPreview();
     }
 
     private async Task LoadHomeCardsSectionAsync()
