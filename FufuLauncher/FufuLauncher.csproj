@@ -32,9 +32,9 @@
 
         <PublishReadyToRun>true</PublishReadyToRun>
 
-        <Version>1.7.1.7</Version>
-        <AssemblyVersion>1.7.1.7</AssemblyVersion>
-        <FileVersion>1.7.1.7</FileVersion>
+        <Version>1.7.1.8</Version>
+        <AssemblyVersion>1.7.1.8</AssemblyVersion>
+        <FileVersion>1.7.1.8</FileVersion>
         <Copyright>Copyright © FufuLauncher Development Team</Copyright>
     </PropertyGroup>
 
