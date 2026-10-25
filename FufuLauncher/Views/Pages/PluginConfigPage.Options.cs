@@ -44,6 +44,8 @@ public sealed partial class PluginConfigPage
         _visibleOptions.Clear();
         _infoItems.Clear();
         ConfigMessageBar.IsOpen = false;
+        ConfigLoadErrorBar.IsOpen = false;
+        ConfigLoadErrorOverlay.Visibility = Visibility.Collapsed;
         SettingsSearchBox.IsEnabled = false;
         ReloadButton.IsEnabled = false;
         SaveStatusPanel.Visibility = Visibility.Collapsed;
@@ -56,7 +58,7 @@ public sealed partial class PluginConfigPage
         try
         {
             var path = _pluginItem?.ConfigFilePath;
-            if (string.IsNullOrWhiteSpace(path) || !File.Exists(path))
+            if (string.IsNullOrWhiteSpace(path) || !ConfigurationFileExists(path))
             {
                 throw new FileNotFoundException(string.Format(
                     CultureInfo.CurrentCulture, "PluginConfigPage_MissingFile".GetLocalized(), path));
@@ -102,11 +104,11 @@ public sealed partial class PluginConfigPage
             DebugLog.Info("PluginConfigPage.Options", $"[PluginConfig] Load failed: {ex}");
             if (!cancellation.IsCancellationRequested && _isActive)
             {
-                ShowError("PluginConfigPage_LoadFailed".GetLocalized(),
-                    string.Format(CultureInfo.CurrentCulture, "PluginConfigPage_LoadFailedMessage".GetLocalized(),
-                        ex.Message),
-                    LoadConfigAsync);
-                ShowEmptyState("PluginConfigPage_LoadFailed", "PluginConfigPage_LoadFailedHint", "\uE783", false);
+                var details = string.IsNullOrWhiteSpace(ex.Message) ? ex.GetType().Name : ex.Message;
+                var message = string.Format(CultureInfo.CurrentCulture,
+                    "PluginConfigPage_LoadFailedMessage".GetLocalized(), details);
+                message += Environment.NewLine + "PluginConfigPage_LoadFailedHint".GetLocalized();
+                ShowLoadError("PluginConfigPage_LoadFailed".GetLocalized(), message, LoadConfigAsync);
             }
         }
         finally
@@ -125,6 +127,23 @@ public sealed partial class PluginConfigPage
                 SettingsSearchBox.IsEnabled = _configuration?.Options.Count > 0;
                 ReloadButton.IsEnabled = true;
             }
+        }
+    }
+
+    private static bool ConfigurationFileExists(string path)
+    {
+        try
+        {
+            File.GetAttributes(path);
+            return true;
+        }
+        catch (FileNotFoundException)
+        {
+            return false;
+        }
+        catch (DirectoryNotFoundException)
+        {
+            return false;
         }
     }
 

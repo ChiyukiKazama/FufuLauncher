@@ -2093,6 +2093,15 @@
   <data name="LoginQR_RefreshQR" xml:space="preserve">
     <value>重新整理 QR Code</value>
   </data>
+  <data name="LoginQR_AutoRefreshHint" xml:space="preserve">
+    <value>二維碼每 60 秒自動重新整理一次</value>
+  </data>
+  <data name="LoginQR_AutoRefreshed" xml:space="preserve">
+    <value>二維碼已自動重新整理，請重新掃描</value>
+  </data>
+  <data name="LoginQR_AutoRefreshPaused" xml:space="preserve">
+    <value>自動重新整理已暫停，請點擊「重新整理 QR Code」</value>
+  </data>
   <data name="LoginQR_WebLoginWarning" xml:space="preserve">
     <value>注意：網頁通行證登入無法取得 Stoken，部分功能會無法使用</value>
   </data>

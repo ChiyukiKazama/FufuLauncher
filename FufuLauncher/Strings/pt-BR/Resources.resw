@@ -2093,6 +2093,15 @@ Ir para o site da Microsoft para baixar e instalar?</value>
   <data name="LoginQR_RefreshQR" xml:space="preserve">
     <value>Atualizar QR Code</value>
   </data>
+  <data name="LoginQR_AutoRefreshHint" xml:space="preserve">
+    <value>O QR Code é atualizado automaticamente a cada 60 segundos</value>
+  </data>
+  <data name="LoginQR_AutoRefreshed" xml:space="preserve">
+    <value>O QR Code foi atualizado automaticamente. Escaneie novamente.</value>
+  </data>
+  <data name="LoginQR_AutoRefreshPaused" xml:space="preserve">
+    <value>Atualização automática pausada. Clique em “Atualizar QR Code”.</value>
+  </data>
   <data name="LoginQR_WebLoginWarning" xml:space="preserve">
     <value>Nota: O login por passaporte web não pode obter um Stoken; alguns recursos estarão indisponíveis.</value>
   </data>

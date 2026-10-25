@@ -81,8 +81,9 @@ public sealed partial class PluginConfigPage
         {
             _pluginItem = item;
             UpdatePluginHeader();
-            await LoadConfigAsync();
         }
+
+        await LoadConfigAsync();
     }
 
     protected override void OnNavigatedFrom(NavigationEventArgs e)

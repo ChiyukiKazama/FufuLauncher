@@ -2093,6 +2093,15 @@ Voulez-vous accéder au site officiel de Microsoft pour la télécharger et l'in
   <data name="LoginQR_RefreshQR" xml:space="preserve">
     <value>Actualiser le QR code</value>
   </data>
+  <data name="LoginQR_AutoRefreshHint" xml:space="preserve">
+    <value>Le QR code est actualisé automatiquement toutes les 60 secondes</value>
+  </data>
+  <data name="LoginQR_AutoRefreshed" xml:space="preserve">
+    <value>Le QR code a été actualisé automatiquement. Veuillez le scanner à nouveau.</value>
+  </data>
+  <data name="LoginQR_AutoRefreshPaused" xml:space="preserve">
+    <value>Actualisation automatique en pause. Cliquez sur « Actualiser le QR code ».</value>
+  </data>
   <data name="LoginQR_WebLoginWarning" xml:space="preserve">
     <value>Attention : la connexion Web Passeport ne permet pas d'obtenir le Stoken, certaines fonctionnalités seront indisponibles.</value>
   </data>

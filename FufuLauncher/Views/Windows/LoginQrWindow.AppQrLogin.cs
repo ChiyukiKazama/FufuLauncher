@@ -17,20 +17,46 @@ public sealed partial class LoginQrWindow
 
     private async Task StartAppLoginFlowAsync(LoginSession session)
     {
+        if (session.FlowStarted) return;
+
+        session.FlowStarted = true;
         _isLoginCompleting = false;
-        UpdateStatus("正在创建APP登录二维码...", true);
 
-        var qrResult = await CreateAppQrCodeAsync(session);
-        if (!qrResult.Success)
+        for (int refreshCount = 0;; refreshCount++)
         {
-            UpdateStatus($"创建失败: {qrResult.Message}", false);
-            return;
+            if (!IsSessionActive(session)) return;
+
+            if (refreshCount == 0)
+                UpdateStatus("正在创建APP登录二维码...", true);
+
+            var qrResult = await CreateAppQrCodeAsync(session);
+            if (!qrResult.Success)
+            {
+                UpdateStatus($"创建失败: {qrResult.Message}", false);
+                return;
+            }
+
+            if (!IsSessionActive(session)) return;
+
+            session.QrCreatedAt = DateTimeOffset.UtcNow;
+            RenderQrCode(qrResult.Url);
+            UpdateStatus("请使用米游社APP扫描二维码", false, true);
+            SetQrHint(refreshCount == 0 ? "LoginQR_AutoRefreshHint" : "LoginQR_AutoRefreshed");
+
+            var outcome = await PollAppLoginStatusAsync(session);
+            if (outcome != QrPollOutcome.Refresh || !IsSessionActive(session)) return;
+
+            if (refreshCount >= MaxQrAutoRefreshCount)
+            {
+                DebugLog.Info("LoginQrWindow.AppQrLogin", "二维码自动刷新次数已达上限");
+                SetQrHint("LoginQR_AutoRefreshPaused");
+                UpdateStatus("二维码已过期且自动刷新次数已达上限，请点击刷新二维码", false);
+                return;
+            }
+
+            DebugLog.Info("LoginQrWindow.AppQrLogin",
+                $"二维码已过期，自动刷新 ({refreshCount + 1}/{MaxQrAutoRefreshCount})");
         }
-
-        RenderQrCode(qrResult.Url);
-        UpdateStatus("请使用米游社APP扫描二维码", false, true);
-
-        await PollAppLoginStatusAsync(session);
     }
 
     private async Task<(bool Success, string Url, string Message)> CreateAppQrCodeAsync(LoginSession session)
@@ -64,11 +90,12 @@ public sealed partial class LoginQrWindow
         }
     }
 
-    private async Task PollAppLoginStatusAsync(LoginSession session)
+    private async Task<QrPollOutcome> PollAppLoginStatusAsync(LoginSession session)
     {
         const int MaxConsecutiveErrors = 5;
         const int TimeoutSeconds = 180;
         int consecutiveErrors = 0;
+        bool scanned = false;
         using var timeoutCts = new CancellationTokenSource(TimeSpan.FromSeconds(TimeoutSeconds));
         using var linkedCts = CancellationTokenSource.CreateLinkedTokenSource(session.Cts.Token, timeoutCts.Token);
         CancellationToken ct = linkedCts.Token;
@@ -79,6 +106,12 @@ public sealed partial class LoginQrWindow
 
         while (!ct.IsCancellationRequested)
         {
+            if (!scanned && IsQrAutoRefreshDue(session))
+            {
+                DebugLog.Info("LoginQrWindow.AppQrLogin", "二维码已超过自动刷新周期，重新创建");
+                return QrPollOutcome.Refresh;
+            }
+
             var body = new JsonObject { ["ticket"] = session.Ticket };
             string bodyStr = body.ToJsonString(_jsonOptions);
 
@@ -96,9 +129,8 @@ public sealed partial class LoginQrWindow
 
                 if (retcode == -3501 || retcode == -106)
                 {
-                    if (!_isLoginCompleting)
-                        UpdateStatus("二维码已失效或过期", false);
-                    return;
+                    DebugLog.Info("LoginQrWindow.AppQrLogin", $"二维码已失效或过期: {retcode}");
+                    return _isLoginCompleting ? QrPollOutcome.Stopped : QrPollOutcome.Refresh;
                 }
 
                 if (retcode == 0)
@@ -114,6 +146,7 @@ public sealed partial class LoginQrWindow
 
                     if (status?.ToLower() == "scanned")
                     {
+                        scanned = true;
                         UpdateStatus("已扫码，请在手机端确认登录...", true);
                     }
 
@@ -127,9 +160,7 @@ public sealed partial class LoginQrWindow
             }
             catch (OperationCanceledException)
             {
-                if (timeoutCts.IsCancellationRequested)
-                    UpdateStatus("登录超时，请重新获取二维码", false);
-                return;
+                return timeoutCts.IsCancellationRequested ? QrPollOutcome.Refresh : QrPollOutcome.Stopped;
             }
             catch (Exception ex)
             {
@@ -140,7 +171,7 @@ public sealed partial class LoginQrWindow
             if (consecutiveErrors >= MaxConsecutiveErrors)
             {
                 UpdateStatus("网络异常次数过多，请检查网络后重试", false);
-                return;
+                return QrPollOutcome.Stopped;
             }
 
             try
@@ -149,16 +180,17 @@ public sealed partial class LoginQrWindow
             }
             catch (OperationCanceledException)
             {
-                if (timeoutCts.IsCancellationRequested)
-                    UpdateStatus("登录超时，请重新获取二维码", false);
-                return;
+                return timeoutCts.IsCancellationRequested ? QrPollOutcome.Refresh : QrPollOutcome.Stopped;
             }
         }
 
         if (confirmedData != null)
         {
             await ProcessAndExchangeV2TokensAsync(confirmedData);
+            return QrPollOutcome.Confirmed;
         }
+
+        return timeoutCts.IsCancellationRequested ? QrPollOutcome.Refresh : QrPollOutcome.Stopped;
     }
 
     #endregion

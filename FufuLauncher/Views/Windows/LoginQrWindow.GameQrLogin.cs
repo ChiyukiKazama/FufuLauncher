@@ -17,20 +17,46 @@ public sealed partial class LoginQrWindow
 
     private async Task StartGameLoginFlowAsync(LoginSession session)
     {
+        if (session.FlowStarted) return;
+
+        session.FlowStarted = true;
         _isLoginCompleting = false;
-        UpdateStatus("正在创建游戏扫码二维码...", true);
 
-        var qrResult = await CreateGameQrCodeAsync(session);
-        if (!qrResult.Success)
+        for (int refreshCount = 0;; refreshCount++)
         {
-            UpdateStatus($"创建失败: {qrResult.Message}", false);
-            return;
+            if (!IsSessionActive(session)) return;
+
+            if (refreshCount == 0)
+                UpdateStatus("正在创建游戏扫码二维码...", true);
+
+            var qrResult = await CreateGameQrCodeAsync(session);
+            if (!qrResult.Success)
+            {
+                UpdateStatus($"创建失败: {qrResult.Message}", false);
+                return;
+            }
+
+            if (!IsSessionActive(session)) return;
+
+            session.QrCreatedAt = DateTimeOffset.UtcNow;
+            RenderQrCode(qrResult.Url);
+            UpdateStatus("请使用米游社或对应游戏内扫描二维码", false, true);
+            SetQrHint(refreshCount == 0 ? "LoginQR_AutoRefreshHint" : "LoginQR_AutoRefreshed");
+
+            var outcome = await PollGameLoginStatusAsync(session);
+            if (outcome != QrPollOutcome.Refresh || !IsSessionActive(session)) return;
+
+            if (refreshCount >= MaxQrAutoRefreshCount)
+            {
+                DebugLog.Info("LoginQrWindow.GameQrLogin", "二维码自动刷新次数已达上限");
+                SetQrHint("LoginQR_AutoRefreshPaused");
+                UpdateStatus("二维码已过期且自动刷新次数已达上限，请点击刷新二维码", false);
+                return;
+            }
+
+            DebugLog.Info("LoginQrWindow.GameQrLogin",
+                $"二维码已过期，自动刷新 ({refreshCount + 1}/{MaxQrAutoRefreshCount})");
         }
-
-        RenderQrCode(qrResult.Url);
-        UpdateStatus("请使用米游社或对应游戏内扫描二维码", false, true);
-
-        await PollGameLoginStatusAsync(session);
     }
 
     private async Task<(bool Success, string Url, string Message)> CreateGameQrCodeAsync(LoginSession session)
@@ -70,12 +96,13 @@ public sealed partial class LoginQrWindow
         }
     }
 
-    private async Task PollGameLoginStatusAsync(LoginSession session)
+    private async Task<QrPollOutcome> PollGameLoginStatusAsync(LoginSession session)
     {
         const int MaxConsecutiveErrors = 5;
         const int TimeoutSeconds = 180;
         int consecutiveErrors = 0;
-        var timeoutCts = new CancellationTokenSource(TimeSpan.FromSeconds(TimeoutSeconds));
+        bool scanned = false;
+        using var timeoutCts = new CancellationTokenSource(TimeSpan.FromSeconds(TimeoutSeconds));
         using var linkedCts = CancellationTokenSource.CreateLinkedTokenSource(session.Cts.Token, timeoutCts.Token);
         CancellationToken ct = linkedCts.Token;
 
@@ -84,6 +111,12 @@ public sealed partial class LoginQrWindow
 
         while (!ct.IsCancellationRequested)
         {
+            if (!scanned && IsQrAutoRefreshDue(session))
+            {
+                DebugLog.Info("LoginQrWindow.GameQrLogin", "二维码已超过自动刷新周期，重新创建");
+                return QrPollOutcome.Refresh;
+            }
+
             var requestBody = new JsonObject
             {
                 ["app_id"] = int.Parse(session.GameAppId),
@@ -112,21 +145,32 @@ public sealed partial class LoginQrWindow
                         _isLoginCompleting = true;
                         UpdateStatus("扫码成功，正在换取SToken...", true);
                         string raw = result["data"]["payload"]?["raw"]?.GetValue<string>();
-                        if (!string.IsNullOrEmpty(raw))
+                        if (string.IsNullOrEmpty(raw))
                         {
-                            var rawNode = JsonNode.Parse(raw);
-                            string uid = rawNode["uid"]?.GetValue<string>();
-                            string token = rawNode["token"]?.GetValue<string>();
-                            await GetSTokenByGameTokenAsync(uid, token);
-                            return;
+                            UpdateStatus("扫码响应缺少凭证，请点击刷新二维码后重试", false);
+                            return QrPollOutcome.Stopped;
                         }
+
+                        var rawNode = JsonNode.Parse(raw);
+                        string uid = rawNode["uid"]?.GetValue<string>();
+                        string token = rawNode["token"]?.GetValue<string>();
+                        return await GetSTokenByGameTokenAsync(uid, token)
+                            ? QrPollOutcome.Confirmed
+                            : QrPollOutcome.Stopped;
                     }
-                    else if (stat == "Scanned")
+
+                    if (stat == "Scanned")
                     {
+                        scanned = true;
                         UpdateStatus("已扫码，请在手机端确认登录...", true);
                     }
 
                     consecutiveErrors = 0;
+                }
+                else if (retcode == -106 || retcode == -3501)
+                {
+                    DebugLog.Info("LoginQrWindow.GameQrLogin", $"二维码已失效或过期: {retcode}");
+                    return _isLoginCompleting ? QrPollOutcome.Stopped : QrPollOutcome.Refresh;
                 }
                 else
                 {
@@ -136,9 +180,7 @@ public sealed partial class LoginQrWindow
             }
             catch (OperationCanceledException)
             {
-                if (timeoutCts.IsCancellationRequested)
-                    UpdateStatus("登录超时，请重新获取二维码", false);
-                return;
+                return timeoutCts.IsCancellationRequested ? QrPollOutcome.Refresh : QrPollOutcome.Stopped;
             }
             catch (Exception ex)
             {
@@ -149,14 +191,23 @@ public sealed partial class LoginQrWindow
             if (consecutiveErrors >= MaxConsecutiveErrors)
             {
                 UpdateStatus("网络异常次数过多，请检查网络后重试", false);
-                return;
+                return QrPollOutcome.Stopped;
             }
 
-            await Task.Delay(pollInterval, ct);
+            try
+            {
+                await Task.Delay(pollInterval, ct);
+            }
+            catch (OperationCanceledException)
+            {
+                return timeoutCts.IsCancellationRequested ? QrPollOutcome.Refresh : QrPollOutcome.Stopped;
+            }
         }
+
+        return timeoutCts.IsCancellationRequested ? QrPollOutcome.Refresh : QrPollOutcome.Stopped;
     }
 
-    private async Task GetSTokenByGameTokenAsync(string accountId, string gameToken)
+    private async Task<bool> GetSTokenByGameTokenAsync(string accountId, string gameToken)
     {
         string url = ApiEndpoints.GetTokenByGameTokenUrl;
         var requestBody = new JsonObject
@@ -194,12 +245,10 @@ public sealed partial class LoginQrWindow
                 if (!string.IsNullOrEmpty(stoken) && !string.IsNullOrEmpty(mid))
                 {
                     var cookies = await ExchangeV2TokensAsync(stoken, mid, accountId);
-                    if (cookies != null)
-                    {
-                        OnLoginSuccess(cookies, "cn");
-                    }
+                    if (cookies == null) return false;
 
-                    return;
+                    OnLoginSuccess(cookies, "cn");
+                    return true;
                 }
             }
 
@@ -209,6 +258,8 @@ public sealed partial class LoginQrWindow
         {
             UpdateStatus($"SToken换取异常: {ex.Message}", false);
         }
+
+        return false;
     }
 
     private void AddGameHeaders(HttpRequestMessage request, string body, string query)

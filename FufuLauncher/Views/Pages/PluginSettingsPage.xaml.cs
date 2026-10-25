@@ -193,7 +193,7 @@ public sealed partial class PluginSettingsPage : Page
     {
         if (IsLoaded)
         {
-            ViewModel.LoadConfiguration();
+            ViewModel.RetryConfigurationLoad();
         }
     }
 

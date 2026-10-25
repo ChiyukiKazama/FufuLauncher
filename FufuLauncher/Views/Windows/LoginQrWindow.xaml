@@ -64,8 +64,18 @@
                                Stretch="Uniform"
                                Opacity="0" />
                     </Border>
-                    <Button x:Name="RefreshButton" Content="{helpers:Loc Key=LoginQR_RefreshQR}"
-                            Click="RefreshButton_Click" HorizontalAlignment="Center" />
+                    <StackPanel Spacing="8">
+                        <TextBlock x:Name="QrRefreshHintTextBlock"
+                                   Text="{helpers:Loc Key=LoginQR_AutoRefreshHint}"
+                                   Style="{ThemeResource CaptionTextBlockStyle}"
+                                   Foreground="{ThemeResource TextFillColorSecondaryBrush}"
+                                   HorizontalAlignment="Center"
+                                   TextAlignment="Center"
+                                   MaxWidth="260"
+                                   TextWrapping="Wrap" />
+                        <Button x:Name="RefreshButton" Content="{helpers:Loc Key=LoginQR_RefreshQR}"
+                                Click="RefreshButton_Click" HorizontalAlignment="Center" />
+                    </StackPanel>
                 </StackPanel>
 
                 <Grid x:Name="PassportWebViewBorder" Visibility="Collapsed" HorizontalAlignment="Stretch"

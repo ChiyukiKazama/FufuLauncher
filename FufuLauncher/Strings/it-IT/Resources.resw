@@ -2870,6 +2870,15 @@ File cercati:
   <data name="LoginQR_RefreshQR" xml:space="preserve">
     <value>Aggiorna QR Code</value>
   </data>
+  <data name="LoginQR_AutoRefreshHint" xml:space="preserve">
+    <value>Il codice QR si aggiorna automaticamente ogni 60 secondi</value>
+  </data>
+  <data name="LoginQR_AutoRefreshed" xml:space="preserve">
+    <value>Il codice QR è stato aggiornato automaticamente. Esegui di nuovo la scansione.</value>
+  </data>
+  <data name="LoginQR_AutoRefreshPaused" xml:space="preserve">
+    <value>Aggiornamento automatico in pausa. Fai clic su «Aggiorna QR Code».</value>
+  </data>
   <data name="LoginQR_Title" xml:space="preserve">
     <value>Accesso QR Code</value>
   </data>

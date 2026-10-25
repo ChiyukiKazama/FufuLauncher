@@ -2149,6 +2149,15 @@
   <data name="LoginQR_RefreshQR" xml:space="preserve">
     <value>刷新二维码</value>
   </data>
+  <data name="LoginQR_AutoRefreshHint" xml:space="preserve">
+    <value>二维码每 60 秒自动刷新一次</value>
+  </data>
+  <data name="LoginQR_AutoRefreshed" xml:space="preserve">
+    <value>二维码已自动刷新，请重新扫描</value>
+  </data>
+  <data name="LoginQR_AutoRefreshPaused" xml:space="preserve">
+    <value>自动刷新已暂停，请点击“刷新二维码”</value>
+  </data>
   <data name="LoginQR_WebLoginWarning" xml:space="preserve">
     <value>注意：网页通行证登录无法获取到Stoken，部分功能会无法使用</value>
   </data>

@@ -2008,6 +2008,15 @@
   <data name="LoginQR_RefreshQR" xml:space="preserve">
     <value>QR कोड रीफ़्रेश करें</value>
   </data>
+  <data name="LoginQR_AutoRefreshHint" xml:space="preserve">
+    <value>QR कोड हर 60 सेकंड में अपने आप रीफ़्रेश होता है</value>
+  </data>
+  <data name="LoginQR_AutoRefreshed" xml:space="preserve">
+    <value>QR कोड अपने आप रीफ़्रेश हो गया है। कृपया दोबारा स्कैन करें।</value>
+  </data>
+  <data name="LoginQR_AutoRefreshPaused" xml:space="preserve">
+    <value>ऑटो रीफ़्रेश रोका गया है। कृपया "QR कोड रीफ़्रेश करें" पर क्लिक करें।</value>
+  </data>
   <data name="LoginQR_WebLoginWarning" xml:space="preserve">
     <value>नोट: वेब पासपोर्ट लॉगिन Stoken प्राप्त नहीं कर सकता; कुछ सुविधाएँ अनुपलब्ध रहेंगी।</value>
   </data>

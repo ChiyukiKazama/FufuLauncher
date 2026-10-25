@@ -580,7 +580,6 @@
         <Grid x:Name="SettingsBodyViewport" Grid.Row="1">
             <Grid.RowDefinitions>
                 <RowDefinition Height="Auto" />
-                <RowDefinition Height="Auto" />
                 <RowDefinition Height="*" />
             </Grid.RowDefinitions>
 
@@ -592,16 +591,7 @@
                            AutomationProperties.LiveSetting="Polite" />
             </StackPanel>
 
-            <InfoBar Grid.Row="1" IsOpen="{x:Bind ViewModel.HasConfigurationLoadError, Mode=TwoWay}"
-                     Title="{helpers:Loc Key=Settings_ConfigReadFailed}"
-                     Message="{x:Bind ViewModel.ConfigurationLoadError, Mode=OneWay}"
-                     Severity="Error" Margin="0,0,0,16">
-                <InfoBar.ActionButton>
-                    <Button Content="{helpers:Loc Key=PluginStoreRetry}" Click="OnRetryConfigurationClick" />
-                </InfoBar.ActionButton>
-            </InfoBar>
-
-            <Grid x:Name="SettingsViewport" Grid.Row="2">
+            <Grid x:Name="SettingsViewport" Grid.Row="1">
                 <ContentControl x:Name="SettingsContent"
                                 IsEnabled="{x:Bind ViewModel.IsSettingsInteractable, Mode=OneWay}"
                                 HorizontalContentAlignment="Stretch"
@@ -815,6 +805,20 @@
             </Grid>
         </Grid>
 
+        <Grid x:Name="ConfigurationErrorOverlay" Grid.RowSpan="2"
+              Visibility="{x:Bind ViewModel.HasConfigurationLoadError, Mode=OneWay, Converter={StaticResource BoolToVisibilityConverter}}">
+            <InfoBar IsOpen="{x:Bind ViewModel.HasConfigurationLoadError, Mode=OneWay}"
+                     Title="{helpers:Loc Key=Settings_ConfigReadFailed}"
+                     Message="{x:Bind ViewModel.ConfigurationLoadError, Mode=OneWay}"
+                     Severity="Error" IsClosable="False"
+                     MaxWidth="600" Margin="24"
+                     HorizontalAlignment="Center" VerticalAlignment="Center"
+                     AutomationProperties.LiveSetting="Assertive">
+                <InfoBar.ActionButton>
+                    <Button Content="{helpers:Loc Key=PluginStoreRetry}" Click="OnRetryConfigurationClick" />
+                </InfoBar.ActionButton>
+            </InfoBar>
+        </Grid>
 
     </Grid>
 </Page>

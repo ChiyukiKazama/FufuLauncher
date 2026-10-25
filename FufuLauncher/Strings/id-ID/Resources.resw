@@ -2093,6 +2093,15 @@ Buka situs web Microsoft untuk mengunduh dan menginstalnya?</value>
   <data name="LoginQR_RefreshQR" xml:space="preserve">
     <value>Segarkan QR Code</value>
   </data>
+  <data name="LoginQR_AutoRefreshHint" xml:space="preserve">
+    <value>Kode QR diperbarui otomatis setiap 60 detik</value>
+  </data>
+  <data name="LoginQR_AutoRefreshed" xml:space="preserve">
+    <value>Kode QR telah diperbarui otomatis. Pindai ulang.</value>
+  </data>
+  <data name="LoginQR_AutoRefreshPaused" xml:space="preserve">
+    <value>Pembaruan otomatis dijeda. Klik "Segarkan QR Code".</value>
+  </data>
   <data name="LoginQR_WebLoginWarning" xml:space="preserve">
     <value>Catatan: Login web passport tidak dapat memperoleh Stoken; beberapa fitur tidak akan tersedia.</value>
   </data>

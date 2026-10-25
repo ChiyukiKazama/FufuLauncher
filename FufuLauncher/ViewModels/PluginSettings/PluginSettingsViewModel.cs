@@ -98,10 +98,24 @@ public partial class PluginSettingsViewModel : ObservableObject
 
     partial void OnSelectedPluginIndexChanged(int value)
     {
-        CheckPluginStates();
-        UpdatePaths();
-        LoadConfiguration();
-        RefreshUIState();
+        ReloadConfigurationForCurrentTarget("switching target");
+    }
+
+    private void ReloadConfigurationForCurrentTarget(string reason)
+    {
+        try
+        {
+            CheckPluginStates();
+            UpdatePaths();
+            LoadConfiguration();
+            RefreshUIState();
+        }
+        catch (Exception ex)
+        {
+            DebugLog.Info("PluginSettingsViewModel",
+                $"[PluginSettings] Failed to reload configuration after {reason}: {ex}");
+            ReportConfigurationLoadError(ex);
+        }
     }
 
 
@@ -246,10 +260,7 @@ public partial class PluginSettingsViewModel : ObservableObject
         OnPropertyChanged(nameof(PluginToggleLabel));
         OnPropertyChanged(nameof(SelectedPluginComboLabel));
 
-        CheckPluginStates();
-        UpdatePaths();
-        LoadConfiguration();
-        RefreshUIState();
+        ReloadConfigurationForCurrentTarget("switching install mode");
     }
 
     public void ToggleSettingPin(PluginSettingItem? item)

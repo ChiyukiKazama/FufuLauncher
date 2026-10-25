@@ -2093,6 +2093,15 @@ Jetzt zur Microsoft-Website gehen und herunterladen?</value>
   <data name="LoginQR_RefreshQR" xml:space="preserve">
     <value>QR-Code aktualisieren</value>
   </data>
+  <data name="LoginQR_AutoRefreshHint" xml:space="preserve">
+    <value>Der QR-Code wird alle 60 Sekunden automatisch aktualisiert</value>
+  </data>
+  <data name="LoginQR_AutoRefreshed" xml:space="preserve">
+    <value>Der QR-Code wurde automatisch aktualisiert. Bitte erneut scannen.</value>
+  </data>
+  <data name="LoginQR_AutoRefreshPaused" xml:space="preserve">
+    <value>Automatische Aktualisierung pausiert. Bitte auf „QR-Code aktualisieren“ klicken.</value>
+  </data>
   <data name="LoginQR_WebLoginWarning" xml:space="preserve">
     <value>Hinweis: Der Web-Passport-Login kann keinen Stoken abrufen, einige Funktionen stehen daher nicht zur Verfügung.</value>
   </data>

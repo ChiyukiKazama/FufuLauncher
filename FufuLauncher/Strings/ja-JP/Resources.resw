@@ -2093,6 +2093,15 @@ MicrosoftのWebサイトからダウンロードしてインストールしま�
   <data name="LoginQR_RefreshQR" xml:space="preserve">
     <value>QRコードを更新</value>
   </data>
+  <data name="LoginQR_AutoRefreshHint" xml:space="preserve">
+    <value>QRコードは60秒ごとに自動更新されます</value>
+  </data>
+  <data name="LoginQR_AutoRefreshed" xml:space="preserve">
+    <value>QRコードを自動更新しました。もう一度スキャンしてください</value>
+  </data>
+  <data name="LoginQR_AutoRefreshPaused" xml:space="preserve">
+    <value>自動更新を停止しました。「QRコードを更新」をクリックしてください</value>
+  </data>
   <data name="LoginQR_WebLoginWarning" xml:space="preserve">
     <value>注意: WebパスポートログインではStokenを取得できません。一部機能が利用不可になります。</value>
   </data>

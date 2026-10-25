@@ -36,6 +36,18 @@ internal class LoginSession
         set;
     }
 
+    public DateTimeOffset QrCreatedAt
+    {
+        get;
+        set;
+    }
+
+    public bool FlowStarted
+    {
+        get;
+        set;
+    }
+
     public void Cancel() => Cts.Cancel();
 }
 
@@ -44,4 +56,11 @@ internal enum LoginType
     AppQr,
     GameQr,
     WebPassport
+}
+
+internal enum QrPollOutcome
+{
+    Confirmed,
+    Refresh,
+    Stopped
 }

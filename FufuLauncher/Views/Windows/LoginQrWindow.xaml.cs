@@ -7,6 +7,7 @@ using System.Security.Cryptography;
 using System.Text;
 using System.Text.Json;
 using System.Text.Json.Serialization.Metadata;
+using FufuLauncher.Helpers;
 using Microsoft.UI.Dispatching;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
@@ -124,13 +125,25 @@ public sealed partial class LoginQrWindow : Window
 
     private async Task StartLoginFlowAsync(bool isGameLogin = false)
     {
+        var session = _currentSession;
+        if (session == null)
+        {
+            session = new LoginSession
+            {
+                Type = isGameLogin ? LoginType.GameQr : LoginType.AppQr,
+                GameAppId = _gameAppId,
+                GameDevice = Guid.NewGuid().ToString("N")
+            };
+            _currentSession = session;
+        }
+
         if (isGameLogin)
         {
-            await StartGameLoginFlowAsync(_currentSession ?? new LoginSession { Type = LoginType.GameQr });
+            await StartGameLoginFlowAsync(session);
         }
         else if (LoginMethodComboBox.SelectedIndex == 0)
         {
-            await StartAppLoginFlowAsync(_currentSession ?? new LoginSession { Type = LoginType.AppQr });
+            await StartAppLoginFlowAsync(session);
         }
     }
 
@@ -371,6 +384,30 @@ public sealed partial class LoginQrWindow : Window
                     QrCodeFadeInStoryboard.Begin();
                 }
             }
+        });
+    }
+
+    #endregion
+
+
+    #region 二维码自动刷新
+
+    private static readonly TimeSpan QrAutoRefreshInterval = TimeSpan.FromSeconds(60);
+    private const int MaxQrAutoRefreshCount = 5;
+
+    private bool IsSessionActive(LoginSession session)
+        => ReferenceEquals(_currentSession, session) && !session.Cts.IsCancellationRequested;
+
+    private bool IsQrAutoRefreshDue(LoginSession session)
+        => session.QrCreatedAt != default
+           && DateTimeOffset.UtcNow - session.QrCreatedAt >= QrAutoRefreshInterval;
+
+    private void SetQrHint(string resourceKey)
+    {
+        DispatcherQueue.TryEnqueue(() =>
+        {
+            if (QrRefreshHintTextBlock == null) return;
+            QrRefreshHintTextBlock.Text = resourceKey.GetLocalized();
         });
     }
 

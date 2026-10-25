@@ -340,5 +340,17 @@
                 </StackPanel>
             </Grid>
         </Grid>
+
+        <Grid x:Name="ConfigLoadErrorOverlay" Grid.RowSpan="2" Visibility="Collapsed">
+            <InfoBar x:Name="ConfigLoadErrorBar" IsOpen="False" Severity="Error" IsClosable="False"
+                     Title="{helpers:Loc Key=PluginConfigPage_LoadFailed}"
+                     MaxWidth="600" Margin="24"
+                     HorizontalAlignment="Center" VerticalAlignment="Center"
+                     AutomationProperties.LiveSetting="Assertive">
+                <InfoBar.ActionButton>
+                    <Button Content="{helpers:Loc Key=PluginStoreRetry}" Click="OnRetryClick" />
+                </InfoBar.ActionButton>
+            </InfoBar>
+        </Grid>
     </Grid>
 </Page>

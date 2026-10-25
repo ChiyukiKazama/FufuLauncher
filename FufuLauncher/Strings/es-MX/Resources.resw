@@ -2093,6 +2093,15 @@ Por favor, confirma que seleccionaste el directorio de instalación que contiene
   <data name="LoginQR_RefreshQR" xml:space="preserve">
     <value>Actualizar código QR</value>
   </data>
+  <data name="LoginQR_AutoRefreshHint" xml:space="preserve">
+    <value>El código QR se actualiza automáticamente cada 60 segundos</value>
+  </data>
+  <data name="LoginQR_AutoRefreshed" xml:space="preserve">
+    <value>El código QR se actualizó automáticamente. Vuelve a escanearlo.</value>
+  </data>
+  <data name="LoginQR_AutoRefreshPaused" xml:space="preserve">
+    <value>Actualización automática en pausa. Haz clic en «Actualizar código QR».</value>
+  </data>
   <data name="LoginQR_WebLoginWarning" xml:space="preserve">
     <value>Nota: El inicio de sesión con pasaporte web no puede obtener un Stoken; algunas funciones no estarán disponibles.</value>
   </data>

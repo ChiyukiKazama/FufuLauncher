@@ -2093,6 +2093,15 @@
   <data name="LoginQR_RefreshQR" xml:space="preserve">
     <value>Обновить QR</value>
   </data>
+  <data name="LoginQR_AutoRefreshHint" xml:space="preserve">
+    <value>QR-код автоматически обновляется каждые 60 секунд</value>
+  </data>
+  <data name="LoginQR_AutoRefreshed" xml:space="preserve">
+    <value>QR-код обновлён автоматически. Отсканируйте его заново.</value>
+  </data>
+  <data name="LoginQR_AutoRefreshPaused" xml:space="preserve">
+    <value>Автообновление приостановлено. Нажмите «Обновить QR».</value>
+  </data>
   <data name="LoginQR_WebLoginWarning" xml:space="preserve">
     <value>Примечание: вход через веб не даёт Stoken, часть функций недоступна.</value>
   </data>

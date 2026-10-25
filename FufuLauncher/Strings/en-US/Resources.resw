@@ -2041,6 +2041,15 @@ Go to the Microsoft website to download and install it?</value>
   <data name="LoginQR_RefreshQR" xml:space="preserve">
     <value>Refresh QR Code</value>
   </data>
+  <data name="LoginQR_AutoRefreshHint" xml:space="preserve">
+    <value>The QR code refreshes automatically every 60 seconds</value>
+  </data>
+  <data name="LoginQR_AutoRefreshed" xml:space="preserve">
+    <value>The QR code was refreshed automatically. Please scan it again.</value>
+  </data>
+  <data name="LoginQR_AutoRefreshPaused" xml:space="preserve">
+    <value>Auto refresh paused. Click "Refresh QR Code".</value>
+  </data>
   <data name="LoginQR_WebLoginWarning" xml:space="preserve">
     <value>Note: Web passport login cannot obtain an Stoken; some features will be unavailable.</value>
   </data>
