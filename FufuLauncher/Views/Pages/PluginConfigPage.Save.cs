@@ -137,6 +137,11 @@ public sealed partial class PluginConfigPage
         ConfigLoadErrorBar.Title = title;
         ConfigLoadErrorBar.Message = message;
         ConfigLoadErrorBar.IsOpen = true;
+
+        var lockProcesses = FileLockHelper.DescribeFileUsers(_pluginItem?.ConfigFilePath);
+        ConfigLockInfoBar.Message = lockProcesses ?? string.Empty;
+        ConfigLockInfoBar.IsOpen = lockProcesses != null;
+
         ConfigLoadErrorOverlay.Visibility = Visibility.Visible;
         ConfigMessageBar.IsOpen = false;
     }

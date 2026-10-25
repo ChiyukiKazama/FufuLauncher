@@ -45,6 +45,7 @@ public sealed partial class PluginConfigPage
         _infoItems.Clear();
         ConfigMessageBar.IsOpen = false;
         ConfigLoadErrorBar.IsOpen = false;
+        ConfigLockInfoBar.IsOpen = false;
         ConfigLoadErrorOverlay.Visibility = Visibility.Collapsed;
         SettingsSearchBox.IsEnabled = false;
         ReloadButton.IsEnabled = false;

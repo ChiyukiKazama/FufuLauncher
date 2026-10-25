@@ -44,6 +44,10 @@ public partial class PluginSettingsViewModel
 
     [ObservableProperty] private bool hasConfigurationLoadError;
 
+    [ObservableProperty] private string configurationFileLockProcesses = string.Empty;
+
+    [ObservableProperty] private bool hasConfigurationFileLockProcesses;
+
     public ObservableCollection<PluginSettingsGroup> SettingGroups
     {
         get;
@@ -143,6 +147,8 @@ public partial class PluginSettingsViewModel
         TotalSettingCount = 0;
         ConfigurationLoadError = string.Empty;
         HasConfigurationLoadError = false;
+        ConfigurationFileLockProcesses = string.Empty;
+        HasConfigurationFileLockProcesses = false;
         Settings.Clear();
         PinnedSettings.Clear();
         _settingOrder.Clear();
@@ -379,6 +385,10 @@ public partial class PluginSettingsViewModel
         _settingOrder.Clear();
         _settingOrderIndexes.Clear();
         NotifySelectionChanged();
+
+        var lockProcesses = FileLockHelper.DescribeFileUsers(_iniPath);
+        ConfigurationFileLockProcesses = lockProcesses ?? string.Empty;
+        HasConfigurationFileLockProcesses = lockProcesses != null;
 
         ConfigurationLoadError = message;
         HasConfigurationLoadError = true;

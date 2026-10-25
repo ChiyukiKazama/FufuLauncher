@@ -807,17 +807,23 @@
 
         <Grid x:Name="ConfigurationErrorOverlay" Grid.RowSpan="2"
               Visibility="{x:Bind ViewModel.HasConfigurationLoadError, Mode=OneWay, Converter={StaticResource BoolToVisibilityConverter}}">
-            <InfoBar IsOpen="{x:Bind ViewModel.HasConfigurationLoadError, Mode=OneWay}"
-                     Title="{helpers:Loc Key=Settings_ConfigReadFailed}"
-                     Message="{x:Bind ViewModel.ConfigurationLoadError, Mode=OneWay}"
-                     Severity="Error" IsClosable="False"
-                     MaxWidth="600" Margin="24"
-                     HorizontalAlignment="Center" VerticalAlignment="Center"
-                     AutomationProperties.LiveSetting="Assertive">
-                <InfoBar.ActionButton>
-                    <Button Content="{helpers:Loc Key=PluginStoreRetry}" Click="OnRetryConfigurationClick" />
-                </InfoBar.ActionButton>
-            </InfoBar>
+            <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center"
+                        MaxWidth="600" Margin="24" Spacing="12">
+                <InfoBar IsOpen="{x:Bind ViewModel.HasConfigurationLoadError, Mode=OneWay}"
+                         Title="{helpers:Loc Key=Settings_ConfigReadFailed}"
+                         Message="{x:Bind ViewModel.ConfigurationLoadError, Mode=OneWay}"
+                         Severity="Error" IsClosable="False"
+                         AutomationProperties.LiveSetting="Assertive">
+                    <InfoBar.ActionButton>
+                        <Button Content="{helpers:Loc Key=PluginStoreRetry}" Click="OnRetryConfigurationClick" />
+                    </InfoBar.ActionButton>
+                </InfoBar>
+                <InfoBar IsOpen="{x:Bind ViewModel.HasConfigurationFileLockProcesses, Mode=OneWay}"
+                         Title="{helpers:Loc Key=Plugin_FileLocked_Title}"
+                         Message="{x:Bind ViewModel.ConfigurationFileLockProcesses, Mode=OneWay}"
+                         Severity="Informational" IsClosable="False"
+                         AutomationProperties.LiveSetting="Polite" />
+            </StackPanel>
         </Grid>
 
     </Grid>
