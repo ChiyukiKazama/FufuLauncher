@@ -9,6 +9,7 @@ using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Media.Animation;
 using Microsoft.UI.Xaml.Media.Imaging;
 using FufuLauncher.Helpers;
+using FufuLauncher.Services.EasterEgg;
 using Windows.Media.Core;
 using Windows.Media.Editing;
 using Windows.Media.Playback;
@@ -19,8 +20,6 @@ namespace FufuLauncher.Views;
 
 public sealed partial class EasterEggPage : Page
 {
-    private const string VideoFileName = "BgVideo.mp4";
-    private const string MusicFileName = "BgMusic.wav";
     private const string HardcodedName = "■■■■■";
 
     private readonly List<string> _welcomeLines = new()
@@ -88,55 +87,108 @@ public sealed partial class EasterEggPage : Page
 
     private void InitializeMedia()
     {
+        _ = InitializeVideoAsync();
+        _ = InitializeMusicAsync();
+    }
+
+    private async Task InitializeVideoAsync()
+    {
         try
         {
-            string baseDir = AppContext.BaseDirectory;
-            string assetsDir = Path.Combine(baseDir, "Assets");
-
-            string videoPath = Path.Combine(assetsDir, VideoFileName);
-            if (File.Exists(videoPath))
+            string? videoPath = await EasterEggMediaCache.GetVideoAsync();
+            if (videoPath == null || _cleaned)
             {
-                _videoPlayer = new MediaPlayer();
-                MediaPlayerHelper.DisableSystemMediaControls(_videoPlayer);
-                _videoPlayer.Source = MediaSource.CreateFromUri(new Uri(videoPath));
-                _videoPlayer.IsLoopingEnabled = true;
-                BgVideoPlayer.SetMediaPlayer(_videoPlayer);
-
-                _mediaOpenedHandler = (_, _) =>
-                {
-                    DispatcherQueue.TryEnqueue(() =>
-                    {
-                        if (!_cleaned && _videoPlayer != null)
-                        {
-                            _videoPlayer.Play();
-                        }
-                    });
-                };
-                _videoPlayer.MediaOpened += _mediaOpenedHandler;
-
-                _mediaFailedHandler = (_, args) =>
-                {
-                    DebugLog.Info("EasterEggPage", $"Video playback failed: {args.ErrorMessage}");
-                    DispatcherQueue.TryEnqueue(() => ShowVideoFallbackFrame(videoPath));
-                };
-                _videoPlayer.MediaFailed += _mediaFailedHandler;
-
-                _videoPlayer.Play();
+                return;
             }
 
-            string musicPath = Path.Combine(assetsDir, MusicFileName);
-            if (File.Exists(musicPath))
+            DispatcherQueue.TryEnqueue(() =>
             {
-                _musicPlayer = new MediaPlayer();
-                MediaPlayerHelper.DisableSystemMediaControls(_musicPlayer);
-                _musicPlayer.Source = MediaSource.CreateFromUri(new Uri(musicPath));
-                _musicPlayer.IsLoopingEnabled = true;
-                _musicPlayer.Play();
-            }
+                if (!_cleaned)
+                {
+                    CreateVideoPlayer(videoPath);
+                }
+            });
         }
         catch (Exception ex)
         {
-            DebugLog.Info("EasterEggPage", $"Media load failed: {ex.Message}");
+            DebugLog.Info("EasterEggPage", $"Video load failed: {ex.Message}");
+        }
+    }
+
+    private async Task InitializeMusicAsync()
+    {
+        try
+        {
+            string? musicPath = await EasterEggMediaCache.GetMusicAsync();
+            if (musicPath == null || _cleaned)
+            {
+                return;
+            }
+
+            DispatcherQueue.TryEnqueue(() =>
+            {
+                if (!_cleaned)
+                {
+                    CreateMusicPlayer(musicPath);
+                }
+            });
+        }
+        catch (Exception ex)
+        {
+            DebugLog.Info("EasterEggPage", $"Music load failed: {ex.Message}");
+        }
+    }
+
+    private void CreateVideoPlayer(string videoPath)
+    {
+        try
+        {
+            _videoPlayer = new MediaPlayer();
+            MediaPlayerHelper.DisableSystemMediaControls(_videoPlayer);
+            _videoPlayer.Source = MediaSource.CreateFromUri(new Uri(videoPath));
+            _videoPlayer.IsLoopingEnabled = true;
+            BgVideoPlayer.SetMediaPlayer(_videoPlayer);
+
+            _mediaOpenedHandler = (_, _) =>
+            {
+                DispatcherQueue.TryEnqueue(() =>
+                {
+                    if (!_cleaned && _videoPlayer != null)
+                    {
+                        _videoPlayer.Play();
+                    }
+                });
+            };
+            _videoPlayer.MediaOpened += _mediaOpenedHandler;
+
+            _mediaFailedHandler = (_, args) =>
+            {
+                DebugLog.Info("EasterEggPage", $"Video playback failed: {args.ErrorMessage}");
+                DispatcherQueue.TryEnqueue(() => ShowVideoFallbackFrame(videoPath));
+            };
+            _videoPlayer.MediaFailed += _mediaFailedHandler;
+
+            _videoPlayer.Play();
+        }
+        catch (Exception ex)
+        {
+            DebugLog.Info("EasterEggPage", $"Video player creation failed: {ex.Message}");
+        }
+    }
+
+    private void CreateMusicPlayer(string musicPath)
+    {
+        try
+        {
+            _musicPlayer = new MediaPlayer();
+            MediaPlayerHelper.DisableSystemMediaControls(_musicPlayer);
+            _musicPlayer.Source = MediaSource.CreateFromUri(new Uri(musicPath));
+            _musicPlayer.IsLoopingEnabled = true;
+            _musicPlayer.Play();
+        }
+        catch (Exception ex)
+        {
+            DebugLog.Info("EasterEggPage", $"Music player creation failed: {ex.Message}");
         }
     }
 
@@ -221,6 +273,11 @@ public sealed partial class EasterEggPage : Page
 
     private async void ShowVideoFallbackFrame(string videoPath)
     {
+        if (_cleaned)
+        {
+            return;
+        }
+
         try
         {
             var file = await StorageFile.GetFileFromPathAsync(videoPath);
