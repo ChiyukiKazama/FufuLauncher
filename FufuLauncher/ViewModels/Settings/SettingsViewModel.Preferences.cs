@@ -31,6 +31,10 @@ public partial class SettingsViewModel
 
         var launchOverlayColorJson = await _localSettingsService.ReadSettingAsync("LaunchButtonOverlayColor");
         LaunchButtonOverlayColor = launchOverlayColorJson?.ToString() ?? "#0078D7";
+
+        var autoThemeColorJson = await _localSettingsService.ReadSettingAsync(AutoThemeColorService.SettingKey);
+        IsAutoThemeColorEnabled = autoThemeColorJson != null && Convert.ToBoolean(autoThemeColorJson);
+        ApplyAutoThemeColorPreview(null);
     }
 
     private async Task LoadHomeCardsSectionAsync()

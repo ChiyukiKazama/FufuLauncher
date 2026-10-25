@@ -46,6 +46,7 @@ public partial class App
 
                 services.AddSingleton<ILocalSettingsService, LocalSettingsService>();
                 services.AddSingleton<IThemeSelectorService, ThemeSelectorService>();
+                services.AddSingleton<IAutoThemeColorService, AutoThemeColorService>();
 
                 services.AddSingleton<IHoyoverseBackgroundService, HoyoverseBackgroundService>();
                 services.AddSingleton<IHoyoverseContentService, HoyoverseContentService>();

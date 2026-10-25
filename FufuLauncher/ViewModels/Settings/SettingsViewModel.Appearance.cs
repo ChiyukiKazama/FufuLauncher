@@ -6,6 +6,9 @@ Licensed under the MIT License.
 using CommunityToolkit.Mvvm.Messaging;
 using FufuLauncher.Helpers;
 using FufuLauncher.Messages;
+using FufuLauncher.Services;
+using Microsoft.UI.Xaml;
+using Microsoft.UI.Xaml.Media;
 
 namespace FufuLauncher.ViewModels;
 
@@ -37,18 +40,7 @@ public partial class SettingsViewModel
         await _localSettingsService.SaveSettingAsync("AppThemeColor", string.Empty);
     }
 
-    private static Windows.UI.Color GetSystemAccentColor()
-    {
-        try
-        {
-            var uiSettings = new Windows.UI.ViewManagement.UISettings();
-            return uiSettings.GetColorValue(Windows.UI.ViewManagement.UIColorType.Accent);
-        }
-        catch
-        {
-            return Windows.UI.Color.FromArgb(255, 0, 120, 215);
-        }
-    }
+    private static Windows.UI.Color GetSystemAccentColor() => ThemeHelper.GetSystemAccentColor();
 
     partial void OnLaunchButtonOverlayColorChanged(string value)
     {
@@ -111,6 +103,8 @@ public partial class SettingsViewModel
             OnPropertyChanged(nameof(AppThemeColorObj));
         }
 
+        if (_isInitializing || IsAutoThemeColorEnabled) return;
+
         WeakReferenceMessenger.Default.Send(new AcrylicSettingChangedMessage(true));
         ThemeHelper.ApplyThemeColor(value);
     }
@@ -122,6 +116,59 @@ public partial class SettingsViewModel
         {
             AppThemeColor = hex;
         }
+    }
+
+    partial void OnIsAutoThemeColorEnabledChanged(bool value)
+    {
+        if (_isInitializing) return;
+
+        _ = SaveAndApplyAutoThemeColorAsync(value);
+        ApplyAutoThemeColorPreview(null);
+    }
+
+    private async Task SaveAndApplyAutoThemeColorAsync(bool isEnabled)
+    {
+        await _localSettingsService.SaveSettingAsync(AutoThemeColorService.SettingKey, isEnabled);
+
+        if (!isEnabled)
+        {
+            await _autoThemeColorService.RestoreManualColorsAsync();
+            return;
+        }
+
+        await ApplyAutoThemeColorFromCurrentBackgroundAsync();
+    }
+
+    private async Task ApplyAutoThemeColorFromCurrentBackgroundAsync()
+    {
+        try
+        {
+            var applied = await _autoThemeColorService.ApplyForCurrentBackgroundAsync();
+            if (!applied)
+            {
+                DebugLog.Info("SettingsViewModel", "Auto theme color could not be derived from the current background");
+            }
+        }
+        catch (Exception ex)
+        {
+            DebugLog.Info("SettingsViewModel", $"Auto theme color apply failed: {ex.Message}");
+        }
+    }
+
+    private void ApplyAutoThemeColorPreview(string? themeHex)
+    {
+        var hex = themeHex ?? _autoThemeColorService.ThemeColorHex;
+
+        if (!IsAutoThemeColorEnabled || string.IsNullOrWhiteSpace(hex) || !TryParseColor(hex, out var color))
+        {
+            AutoThemeColorPreviewText = string.Empty;
+            AutoThemeColorPreviewVisibility = Visibility.Collapsed;
+            return;
+        }
+
+        AutoThemeColorPreviewBrush = new SolidColorBrush(color);
+        AutoThemeColorPreviewText = ToHexColor(color);
+        AutoThemeColorPreviewVisibility = Visibility.Visible;
     }
 
     partial void OnGlobalBackgroundImageOpacityChanged(double value)
@@ -263,12 +310,7 @@ public partial class SettingsViewModel
         }
     }
 
-    private static string ToHexColor(Windows.UI.Color color)
-    {
-        return color.A == 255
-            ? $"#{color.R:X2}{color.G:X2}{color.B:X2}"
-            : $"#{color.A:X2}{color.R:X2}{color.G:X2}{color.B:X2}";
-    }
+    private static string ToHexColor(Windows.UI.Color color) => ThemeHelper.ToHexColor(color);
 
     #endregion
 }

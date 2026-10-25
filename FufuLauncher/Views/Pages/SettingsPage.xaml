@@ -517,12 +517,49 @@
                                                 Margin="16,0,0,0" Spacing="8">
                                         <controls:ColorPickerButton HorizontalAlignment="Right"
                                                                     VerticalAlignment="Center"
+                                                                    IsEnabled="{x:Bind ViewModel.IsManualThemeColorEnabled, Mode=OneWay}"
                                                                     Color="{x:Bind ViewModel.AppThemeColorObj, Mode=TwoWay}"
                                                                     Header="{helpers:Loc Key=CustomThemeColorTitle}" />
                                         <Button Style="{StaticResource PresetButtonStyle}"
                                                 VerticalAlignment="Center"
+                                                IsEnabled="{x:Bind ViewModel.IsManualThemeColorEnabled, Mode=OneWay}"
                                                 Content="{helpers:Loc Key=RestoreDefault}"
                                                 Command="{x:Bind ViewModel.ResetAppThemeColorCommand}" />
+                                    </StackPanel>
+                                </Grid>
+
+                                <Rectangle Style="{StaticResource RowDividerStyle}" />
+
+                                <Grid Style="{StaticResource SettingsRowStyle}">
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="Auto" />
+                                        <ColumnDefinition Width="*" />
+                                        <ColumnDefinition Width="Auto" />
+                                    </Grid.ColumnDefinitions>
+                                    <FontIcon Style="{StaticResource RowIconStyle}" Glyph="&#xE790;" />
+                                    <StackPanel Grid.Column="1" Style="{StaticResource RowTextStyle}">
+                                        <TextBlock Style="{StaticResource RowTitleStyle}"
+                                                   Text="{helpers:Loc Key=AutoThemeColorTitle}" />
+                                        <TextBlock Style="{StaticResource RowCaptionStyle}"
+                                                   Text="{helpers:Loc Key=AutoThemeColorCaption}" />
+                                    </StackPanel>
+                                    <StackPanel Grid.Column="2" Style="{StaticResource RowSubRowStyle}">
+                                        <Border Width="18"
+                                                Height="18"
+                                                CornerRadius="9"
+                                                BorderThickness="1"
+                                                BorderBrush="{ThemeResource SafeBorderBrush}"
+                                                Background="{x:Bind ViewModel.AutoThemeColorPreviewBrush, Mode=OneWay}"
+                                                Visibility="{x:Bind ViewModel.AutoThemeColorPreviewVisibility, Mode=OneWay}" />
+                                        <TextBlock FontSize="12"
+                                                   VerticalAlignment="Center"
+                                                   Opacity="0.7"
+                                                   FontFamily="{StaticResource AppGlobalFont}"
+                                                   Text="{x:Bind ViewModel.AutoThemeColorPreviewText, Mode=OneWay}"
+                                                   Visibility="{x:Bind ViewModel.AutoThemeColorPreviewVisibility, Mode=OneWay}" />
+                                        <ToggleSwitch Style="{StaticResource RowToggleStyle}"
+                                                      AutomationProperties.Name="{helpers:Loc Key=AutoThemeColorTitle}"
+                                                      IsOn="{x:Bind ViewModel.IsAutoThemeColorEnabled, Mode=TwoWay}" />
                                     </StackPanel>
                                 </Grid>
 
@@ -545,10 +582,12 @@
                                                 Margin="16,0,0,0" Spacing="8">
                                         <controls:ColorPickerButton HorizontalAlignment="Right"
                                                                     VerticalAlignment="Center"
+                                                                    IsEnabled="{x:Bind ViewModel.IsManualThemeColorEnabled, Mode=OneWay}"
                                                                     Color="{x:Bind ViewModel.LaunchButtonOverlayColorObj, Mode=TwoWay}"
                                                                     Header="{helpers:Loc Key=LaunchButtonBgColorTitle}" />
                                         <Button Style="{StaticResource PresetButtonStyle}"
                                                 VerticalAlignment="Center"
+                                                IsEnabled="{x:Bind ViewModel.IsManualThemeColorEnabled, Mode=OneWay}"
                                                 Content="{helpers:Loc Key=RestoreDefault}"
                                                 Command="{x:Bind ViewModel.ResetLaunchButtonOverlayColorCommand}" />
                                     </StackPanel>

@@ -17,6 +17,7 @@ using FufuLauncher.Services;
 using FufuLauncher.Services.Background;
 using Microsoft.UI.Dispatching;
 using Microsoft.UI.Xaml;
+using Microsoft.UI.Xaml.Media;
 
 namespace FufuLauncher.ViewModels;
 
@@ -54,6 +55,7 @@ public partial class SettingsViewModel : ObservableRecipient
     #region 服务、字段与命令
 
     private readonly IThemeSelectorService _themeSelectorService;
+    private readonly IAutoThemeColorService _autoThemeColorService;
     private readonly IBackgroundRenderer _backgroundRenderer;
     private readonly IDevBuildDetectionService _devBuildDetectionService;
     private readonly ILocalSettingsService _localSettingsService;
@@ -86,7 +88,16 @@ public partial class SettingsViewModel : ObservableRecipient
 
     [ObservableProperty] private string _appThemeColor = "";
     [ObservableProperty] private Windows.UI.Color _appThemeColorObj = Windows.UI.Color.FromArgb(255, 0, 120, 215);
+    [ObservableProperty] private SolidColorBrush _autoThemeColorPreviewBrush = new(Microsoft.UI.Colors.Transparent);
+    [ObservableProperty] private string _autoThemeColorPreviewText = string.Empty;
+    [ObservableProperty] private Visibility _autoThemeColorPreviewVisibility = Visibility.Collapsed;
     private Windows.UI.Color _launchButtonOverlayColorObj = Windows.UI.Color.FromArgb(255, 0, 120, 215);
+
+    [ObservableProperty]
+    [NotifyPropertyChangedFor(nameof(IsManualThemeColorEnabled))]
+    private bool _isAutoThemeColorEnabled;
+
+    public bool IsManualThemeColorEnabled => !IsAutoThemeColorEnabled;
 
     public Windows.UI.Color LaunchButtonOverlayColorObj
     {
@@ -335,6 +346,7 @@ public partial class SettingsViewModel : ObservableRecipient
 
     public SettingsViewModel(
         IThemeSelectorService themeSelectorService,
+        IAutoThemeColorService autoThemeColorService,
         IBackgroundRenderer backgroundRenderer,
         IDevBuildDetectionService devBuildDetectionService,
         ILocalSettingsService localSettingsService,
@@ -346,6 +358,7 @@ public partial class SettingsViewModel : ObservableRecipient
         LaunchConfigurationViewModel launchConfiguration)
     {
         _themeSelectorService = themeSelectorService;
+        _autoThemeColorService = autoThemeColorService;
         _backgroundRenderer = backgroundRenderer;
         _devBuildDetectionService = devBuildDetectionService;
         _localSettingsService = localSettingsService;
@@ -374,6 +387,11 @@ public partial class SettingsViewModel : ObservableRecipient
 
         ResetLaunchButtonOverlayColorCommand = new AsyncRelayCommand(ResetLaunchButtonOverlayColorAsync);
         ResetAppThemeColorCommand = new AsyncRelayCommand(ResetAppThemeColorAsync);
+
+        WeakReferenceMessenger.Default.Register<AutoThemeColorAppliedMessage>(this, (r, m) =>
+        {
+            _dispatcherQueue.TryEnqueue(() => ApplyAutoThemeColorPreview(m.ThemeColorHex));
+        });
 
         WeakReferenceMessenger.Default.Register<CloudCredentialUpdatedMessage>(this, (r, m) =>
         {

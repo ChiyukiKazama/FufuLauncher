@@ -198,6 +198,12 @@
   <data name="CustomThemeColorCaption" xml:space="preserve">
     <value>选择或输入Hex颜色代码。留空并重启应用可恢复默认颜色</value>
   </data>
+  <data name="AutoThemeColorTitle" xml:space="preserve">
+    <value>自动取色</value>
+  </data>
+  <data name="AutoThemeColorCaption" xml:space="preserve">
+    <value>自动取色。</value>
+  </data>
   <data name="HomeCardDisplayTitle" xml:space="preserve">
     <value>主页卡片显示</value>
   </data>

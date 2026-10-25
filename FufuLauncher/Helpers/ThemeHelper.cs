@@ -52,6 +52,26 @@ namespace FufuLauncher.Helpers
             }
         }
 
+        public static Color GetSystemAccentColor()
+        {
+            try
+            {
+                var uiSettings = new Windows.UI.ViewManagement.UISettings();
+                return uiSettings.GetColorValue(Windows.UI.ViewManagement.UIColorType.Accent);
+            }
+            catch
+            {
+                return Color.FromArgb(255, 0, 120, 215);
+            }
+        }
+
+        public static string ToHexColor(Color color)
+        {
+            return color.A == 255
+                ? $"#{color.R:X2}{color.G:X2}{color.B:X2}"
+                : $"#{color.A:X2}{color.R:X2}{color.G:X2}{color.B:X2}";
+        }
+
         private static Color ParseColor(string hex)
         {
             hex = hex.Replace("#", "");

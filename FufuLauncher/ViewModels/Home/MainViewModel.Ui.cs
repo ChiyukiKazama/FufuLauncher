@@ -246,7 +246,16 @@ public partial class MainViewModel
 
         var launchOverlayColor = await _localSettingsService.ReadSettingAsync("LaunchButtonOverlayColor") as string ??
                                  "#0078D7";
+        var autoLaunchOverlayColor = App.GetService<IAutoThemeColorService>().LaunchButtonColorHex;
+        if (!string.IsNullOrWhiteSpace(autoLaunchOverlayColor))
+            launchOverlayColor = autoLaunchOverlayColor;
         LaunchButtonOverlayBrush = CreateBrush(launchOverlayColor, 0.4);
+    }
+
+    private void ApplyAutoLaunchButtonColor(string? hex)
+    {
+        if (string.IsNullOrWhiteSpace(hex)) return;
+        LaunchButtonOverlayBrush = CreateBrush(hex, 0.4);
     }
 
     private SolidColorBrush CreateBrush(string hex, double opacity)

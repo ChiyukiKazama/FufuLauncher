@@ -103,6 +103,18 @@ public sealed partial class MainWindow
 
     private bool _isFirstBackgroundLoad = true;
 
+    private async Task ApplyAutoThemeColorAsync(ImageSource? backgroundImage)
+    {
+        try
+        {
+            await _autoThemeColorService.ApplyForBackgroundAsync(backgroundImage);
+        }
+        catch (Exception ex)
+        {
+            DebugLog.Info("MainWindow.Background", $"Auto theme color apply failed: {ex.Message}");
+        }
+    }
+
     private async Task LoadGlobalBackgroundAsync()
     {
         var version = Interlocked.Increment(ref _backgroundLoadVersion);
@@ -662,6 +674,9 @@ public sealed partial class MainWindow
             }
 
             UpdateBackgroundOverlayTheme();
+
+            if (!result.IsVideo)
+                _ = ApplyAutoThemeColorAsync(result.ImageSource);
         });
 
         DebugLog.Info("MainWindow.Background", "Bg.UICompleted", $"{Environment.TickCount64 - applyStarted}ms");

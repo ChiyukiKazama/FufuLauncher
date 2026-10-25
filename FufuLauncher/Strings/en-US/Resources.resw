@@ -198,6 +198,12 @@
   <data name="CustomThemeColorCaption" xml:space="preserve">
     <value>Enter a hex color code. Leave blank and restart to restore the default.</value>
   </data>
+  <data name="AutoThemeColorTitle" xml:space="preserve">
+    <value>Auto Color from Background</value>
+  </data>
+  <data name="AutoThemeColorCaption" xml:space="preserve">
+    <value>Auto Color from Background.</value>
+  </data>
   <data name="HomeCardDisplayTitle" xml:space="preserve">
     <value>Home Card Display</value>
   </data>

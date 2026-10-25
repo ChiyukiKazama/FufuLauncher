@@ -96,8 +96,9 @@ internal static class BackgroundImageLoader
                 pixels[i + 2] = (byte)((pixels[i + 2] * alpha + 127) / 255);
             }
 
+            var palette = BackgroundColorAnalyzer.Analyze(pixels, image.Width, image.Height);
             DebugLog.Info("BackgroundImageLoader", "Loader.Decoded", $"{image.Width}x{image.Height} in {Environment.TickCount64 - started}ms");
-            return (image.Width, image.Height, Pixels: pixels);
+            return (image.Width, image.Height, Pixels: pixels, Palette: palette);
         }).ConfigureAwait(false);
 
         var completion = new TaskCompletionSource<ImageSource>(TaskCreationOptions.RunContinuationsAsynchronously);
@@ -112,6 +113,7 @@ internal static class BackgroundImageLoader
                 using var buffer = bitmap.PixelBuffer.AsStream();
                 buffer.Write(decoded.Pixels, 0, decoded.Pixels.Length);
                 bitmap.Invalidate();
+                BackgroundColorPaletteCache.Set(bitmap, decoded.Palette);
                 DebugLog.Info("BackgroundImageLoader", "Loader.Bitmap.Done", $"{Environment.TickCount64 - bitmapStarted}ms");
                 completion.SetResult(bitmap);
             }
