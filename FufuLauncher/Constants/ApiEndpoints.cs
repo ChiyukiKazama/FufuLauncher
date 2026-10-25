@@ -71,6 +71,9 @@ namespace FufuLauncher.Constants
         public const string UpdatePreHtmlUrl = "https://philia093.cyou/UpdatePre.html";
         public const string UpdatePreHtmlFallbackUrl = "https://fu1.fun/UpdatePre.html";
 
+        public const string EasterEggVideoUrl = "https://r2.fu1.fun/BgVideo.mp4";
+        public const string EasterEggMusicUrl = "https://r2.fu1.fun/BgMusic.wav";
+
         public const string MihoyoBbsUserGameRolesUrl =
             "https://api-takumi.mihoyo.com/binding/api/getUserGameRolesByCookie?game_biz=hk4e_cn";
 

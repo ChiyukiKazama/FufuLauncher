@@ -12,7 +12,7 @@ public enum RandomBackgroundType
 
 public static class RandomBackgroundService
 {
-    private const string Endpoint = "https://img.catcdn.cn/ba/";
+    private const string Endpoint = "https://image.fu1.fun/ba/";
     private const int MaxDownloadBytes = 20 * 1024 * 1024;
     public const string PinnedSettingKey = "IsRandomBackgroundPinned";
     private static readonly HttpClient Client;
