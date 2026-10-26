@@ -786,7 +786,7 @@ public sealed partial class MainWindow
         {
             "MainViewModel", "PluginSettingsViewModel", "ControlPanelViewModel", "ControlPanelModel",
             "GameSettingsViewModel", "BlankViewModel", "AccountViewModel", "OtherViewModel",
-            "PluginViewModel", "HelpViewModel",
+            "PluginViewModel", "PluginStoreViewModel", "HelpViewModel",
             "SettingsViewModel"
         };
 

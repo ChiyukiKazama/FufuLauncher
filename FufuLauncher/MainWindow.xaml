@@ -162,7 +162,7 @@
                     </NavigationViewItem.Icon>
                 </NavigationViewItem>
 
-                <NavigationViewItem Content="{helpers:Loc Key=NavControlPanel}"
+                <NavigationViewItem Content="{helpers:Loc Key=Panel_Toolbox}"
                                     Tag="FufuLauncher.ViewModels.ControlPanelViewModel">
                     <NavigationViewItem.Icon>
                         <FontIcon Glyph="&#xE80A;" FontFamily="{StaticResource ActionIconFont}" FontSize="24" />

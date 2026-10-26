@@ -31,7 +31,7 @@ public partial class SettingsViewModel
             },
             new()
             {
-                ViewModelKey = "FufuLauncher.ViewModels.ControlPanelViewModel", DisplayNameKey = "NavControlPanel",
+                ViewModelKey = "FufuLauncher.ViewModels.ControlPanelViewModel", DisplayNameKey = "Panel_Toolbox",
                 IconGlyph = "\uE80A"
             },
             new()
@@ -54,6 +54,11 @@ public partial class SettingsViewModel
             {
                 ViewModelKey = "FufuLauncher.ViewModels.PluginViewModel", DisplayNameKey = "PluginMgmtTitle",
                 IconGlyph = "\uE7B5"
+            },
+            new()
+            {
+                ViewModelKey = "FufuLauncher.ViewModels.PluginStoreViewModel", DisplayNameKey = "PluginStoreTitle",
+                IconGlyph = "\uE90F"
             },
             new()
             {
