@@ -6402,10 +6402,7 @@ Click the button below to open your browser and download manually.</value>
     <value>Selecciona una cuenta a continuación para configurar sus opciones de check-in</value>
   </data>
   <data name="Checkin_AccountListCaption" xml:space="preserve">
-    <value>Marca las cuentas que participarán en el check-in por lotes, selecciona una cuenta para editar sus opciones y arrástrala para cambiar el orden</value>
-  </data>
-  <data name="Checkin_DragToReorder" xml:space="preserve">
-    <value>Arrastra para cambiar el orden del check-in</value>
+    <value>Marca las cuentas que participarán en el check-in por lotes, selecciona una cuenta para editar sus opciones</value>
   </data>
   <data name="Label_ShortcutName" xml:space="preserve">
     <value>Nombre del acceso directo</value>

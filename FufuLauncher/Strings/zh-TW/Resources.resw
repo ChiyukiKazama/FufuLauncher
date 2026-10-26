@@ -6402,10 +6402,7 @@ UIGF v4.x/3.0/2.x</value>
     <value>請選擇下方帳號以設定簽到選項</value>
   </data>
   <data name="Checkin_AccountListCaption" xml:space="preserve">
-    <value>勾選參與批次簽到的帳號，點擊帳號編輯選項；拖曳帳號可調整簽到順序</value>
-  </data>
-  <data name="Checkin_DragToReorder" xml:space="preserve">
-    <value>拖曳調整簽到順序</value>
+    <value>勾選參與批次簽到的帳號，點擊帳號編輯選項</value>
   </data>
   <data name="Label_ShortcutName" xml:space="preserve">
     <value>捷徑名稱</value>

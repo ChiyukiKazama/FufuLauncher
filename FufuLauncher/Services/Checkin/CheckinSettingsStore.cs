@@ -50,8 +50,8 @@ public sealed class CheckinSettingsStore(ILocalSettingsService settings)
     public async Task<List<string>> LoadOrderAsync() =>
         await ReadJsonAsync<List<string>>(AccountOrderKey) ?? new();
 
-    public Task SaveOrderAsync(IEnumerable<string> accountIds) =>
-        settings.SaveSettingAsync(AccountOrderKey, JsonSerializer.Serialize(accountIds.ToList()));
+    public Task<bool> SaveOrderAsync(IEnumerable<string> accountIds) =>
+        settings.TrySaveSettingAsync(AccountOrderKey, JsonSerializer.Serialize(accountIds.ToList()));
 
     public static List<T> ApplyOrder<T>(IEnumerable<T> accounts, IReadOnlyList<string> order, Func<T, string> getId)
     {

@@ -1983,9 +1983,6 @@
                                             <ListView ItemsSource="{x:Bind ViewModel.CheckinAccounts, Mode=OneWay}"
                                                       SelectedItem="{x:Bind ViewModel.SelectedCheckinAccount, Mode=TwoWay}"
                                                       SelectionMode="Single" Height="180"
-                                                      CanDragItems="True" CanReorderItems="True" AllowDrop="True"
-                                                      DragItemsStarting="OnCheckinAccountDragItemsStarting"
-                                                      DragItemsCompleted="OnCheckinAccountDragItemsCompleted"
                                                       ScrollViewer.HorizontalScrollBarVisibility="Disabled"
                                                       HorizontalContentAlignment="Stretch"
                                                       Background="Transparent">
@@ -1993,57 +1990,45 @@
                                                     <DataTemplate x:DataType="models:CheckinAccountItem">
                                                         <Grid Padding="0,4" ColumnSpacing="12">
                                                             <Grid.ColumnDefinitions>
-                                                                <ColumnDefinition Width="42" />
                                                                 <ColumnDefinition Width="Auto" />
                                                                 <ColumnDefinition Width="*" />
                                                                 <ColumnDefinition Width="Auto" />
                                                             </Grid.ColumnDefinitions>
-                                                            <Grid Width="18" Height="24" Opacity="0.8"
-                                                                  HorizontalAlignment="Left" VerticalAlignment="Center"
-                                                                  Background="Transparent"
-                                                                  ToolTipService.ToolTip="{helpers:Loc Key=Checkin_DragToReorder}"
-                                                                  AutomationProperties.Name="{helpers:Loc Key=Checkin_DragToReorder}">
-                                                                <Grid.ColumnDefinitions>
-                                                                    <ColumnDefinition Width="*" />
-                                                                    <ColumnDefinition Width="*" />
-                                                                </Grid.ColumnDefinitions>
-                                                                <Grid.RowDefinitions>
-                                                                    <RowDefinition Height="*" />
-                                                                    <RowDefinition Height="*" />
-                                                                    <RowDefinition Height="*" />
-                                                                </Grid.RowDefinitions>
-                                                                <Ellipse Width="4" Height="4"
-                                                                         Fill="{ThemeResource TextFillColorPrimaryBrush}" />
-                                                                <Ellipse Grid.Column="1" Width="4" Height="4"
-                                                                         Fill="{ThemeResource TextFillColorPrimaryBrush}" />
-                                                                <Ellipse Grid.Row="1" Width="4" Height="4"
-                                                                         Fill="{ThemeResource TextFillColorPrimaryBrush}" />
-                                                                <Ellipse Grid.Row="1" Grid.Column="1" Width="4"
-                                                                         Height="4"
-                                                                         Fill="{ThemeResource TextFillColorPrimaryBrush}" />
-                                                                <Ellipse Grid.Row="2" Width="4" Height="4"
-                                                                         Fill="{ThemeResource TextFillColorPrimaryBrush}" />
-                                                                <Ellipse Grid.Row="2" Grid.Column="1" Width="4"
-                                                                         Height="4"
-                                                                         Fill="{ThemeResource TextFillColorPrimaryBrush}" />
-                                                            </Grid>
-                                                            <CheckBox Grid.Column="1"
+                                                            <CheckBox
                                                                       IsChecked="{Binding IsSelected, Mode=TwoWay}"
                                                                       IsEnabled="{Binding DataContext.IsBatchCheckinEnabled, ElementName=SettingsPageRoot, Mode=OneWay}"
                                                                       MinWidth="0"
                                                                       VerticalAlignment="Center" />
-                                                            <StackPanel Grid.Column="2" VerticalAlignment="Center">
+                                                            <StackPanel Grid.Column="1" VerticalAlignment="Center">
                                                                 <TextBlock Text="{Binding Nickname}" FontSize="14"
                                                                            TextTrimming="CharacterEllipsis"
                                                                            ToolTipService.ToolTip="{Binding Nickname}" />
                                                                 <TextBlock Text="{Binding Uid}" FontSize="12"
                                                                            Opacity="0.7" />
                                                             </StackPanel>
-                                                            <StackPanel Grid.Column="3" Orientation="Horizontal"
-                                                                        Spacing="4">
+                                                            <StackPanel Grid.Column="2" Orientation="Horizontal"
+                                                                        Spacing="4" VerticalAlignment="Center">
+                                                                <Button
+                                                                        Click="OnCheckinAccountMoveUpClick"
+                                                                        Tag="{Binding}"
+                                                                        IsEnabled="{Binding CanMoveUp, Mode=OneWay}"
+                                                                        Width="32" Height="32" Padding="0"
+                                                                        AutomationProperties.Name="&#x2191;">
+                                                                    <FontIcon Glyph="&#xE70E;" FontSize="14" />
+                                                                </Button>
+                                                                <Button
+                                                                        Click="OnCheckinAccountMoveDownClick"
+                                                                        Tag="{Binding}"
+                                                                        IsEnabled="{Binding CanMoveDown, Mode=OneWay}"
+                                                                        Width="32" Height="32" Padding="0"
+                                                                        AutomationProperties.Name="&#x2193;">
+                                                                    <FontIcon Glyph="&#xE70D;" FontSize="14" />
+                                                                </Button>
                                                                 <Button Click="OnCloudCredentialClick"
                                                                         Tag="{Binding Uid}"
-                                                                        Padding="8" CornerRadius="6"
+                                                                        Margin="16,0,0,0"
+                                                                        Width="32" Height="32"
+                                                                        Padding="0" CornerRadius="6"
                                                                         Background="Transparent"
                                                                         BorderThickness="0">
                                                                     <ToolTipService.ToolTip>
@@ -2059,19 +2044,22 @@
                                                                                 Visibility="{Binding HasCloudCredential, Mode=OneWay, Converter={StaticResource BoolToVisibilityConverter}}" />
                                                                     </Grid>
                                                                 </Button>
-                                                                <Button Click="OnRemoveCloudCredentialClick"
-                                                                        Tag="{Binding Uid}"
-                                                                        Padding="8" CornerRadius="6"
-                                                                        Background="Transparent"
-                                                                        BorderThickness="0"
-                                                                        Visibility="{Binding HasCloudCredential, Mode=OneWay, Converter={StaticResource BoolToVisibilityConverter}}">
-                                                                    <ToolTipService.ToolTip>
-                                                                        <ToolTip
-                                                                            Content="{helpers:Loc Key=RemoveCloudCredentialTooltip}" />
-                                                                    </ToolTipService.ToolTip>
-                                                                    <FontIcon Glyph="&#xE74D;" FontSize="14"
-                                                                              Foreground="{ThemeResource SystemFillColorCriticalBrush}" />
-                                                                </Button>
+                                                                <Grid Width="32" Height="32">
+                                                                    <Button Click="OnRemoveCloudCredentialClick"
+                                                                            Tag="{Binding Uid}"
+                                                                            Width="32" Height="32"
+                                                                            Padding="0" CornerRadius="6"
+                                                                            Background="Transparent"
+                                                                            BorderThickness="0"
+                                                                            Visibility="{Binding HasCloudCredential, Mode=OneWay, Converter={StaticResource BoolToVisibilityConverter}}">
+                                                                        <ToolTipService.ToolTip>
+                                                                            <ToolTip
+                                                                                Content="{helpers:Loc Key=RemoveCloudCredentialTooltip}" />
+                                                                        </ToolTipService.ToolTip>
+                                                                        <FontIcon Glyph="&#xE74D;" FontSize="14"
+                                                                                  Foreground="{ThemeResource SystemFillColorCriticalBrush}" />
+                                                                    </Button>
+                                                                </Grid>
                                                             </StackPanel>
                                                         </Grid>
                                                     </DataTemplate>

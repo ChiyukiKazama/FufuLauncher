@@ -4,20 +4,22 @@ Licensed under the MIT License.
 */
 
 using Microsoft.UI.Xaml.Controls;
-using Windows.ApplicationModel.DataTransfer;
+using Microsoft.UI.Xaml;
+using FufuLauncher.Models;
 
 namespace FufuLauncher.Views;
 
 public sealed partial class SettingsPage
 {
-    private void OnCheckinAccountDragItemsStarting(object sender, DragItemsStartingEventArgs e)
+    private async void OnCheckinAccountMoveUpClick(object sender, RoutedEventArgs e)
     {
-        e.Data.RequestedOperation = DataPackageOperation.Move;
+        if (sender is Button { Tag: CheckinAccountItem account })
+            await ViewModel.MoveCheckinAccountAsync(account, -1);
     }
 
-    private async void OnCheckinAccountDragItemsCompleted(ListViewBase sender, DragItemsCompletedEventArgs e)
+    private async void OnCheckinAccountMoveDownClick(object sender, RoutedEventArgs e)
     {
-        if (e.DropResult == DataPackageOperation.Move)
-            await ViewModel.SaveCheckinAccountOrderAsync();
+        if (sender is Button { Tag: CheckinAccountItem account })
+            await ViewModel.MoveCheckinAccountAsync(account, 1);
     }
 }

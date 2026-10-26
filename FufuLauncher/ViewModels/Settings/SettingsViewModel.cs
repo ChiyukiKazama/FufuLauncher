@@ -394,14 +394,7 @@ public partial class SettingsViewModel : ObservableRecipient
 
         WeakReferenceMessenger.Default.Register<CloudCredentialUpdatedMessage>(this, (r, m) =>
         {
-            if (CheckinAccounts != null)
-            {
-                var account = CheckinAccounts.FirstOrDefault(a => a.Uid == m.Value);
-                if (account != null)
-                {
-                    account.HasCloudCredential = true;
-                }
-            }
+            _dispatcherQueue.TryEnqueue(() => ApplyCloudCredentialState(m));
         });
 
         SwitchThemeCommand = new RelayCommand<ElementTheme>(async (param) =>

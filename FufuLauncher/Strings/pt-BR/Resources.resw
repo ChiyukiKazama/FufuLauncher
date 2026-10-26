@@ -6402,10 +6402,7 @@ Click the button below to open your browser and download manually.</value>
     <value>Selecione uma conta abaixo para configurar suas opções de check-in</value>
   </data>
   <data name="Checkin_AccountListCaption" xml:space="preserve">
-    <value>Marque as contas para incluir no check-in em lote, clique na conta para editar suas opções e arraste para alterar a ordem</value>
-  </data>
-  <data name="Checkin_DragToReorder" xml:space="preserve">
-    <value>Arraste para alterar a ordem do check-in</value>
+    <value>Marque as contas para incluir no check-in em lote, clique na conta para editar suas opções</value>
   </data>
   <data name="Label_ShortcutName" xml:space="preserve">
     <value>Nome do atalho</value>
