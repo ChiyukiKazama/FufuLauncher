@@ -6402,10 +6402,7 @@ Click the button below to open your browser and download manually.</value>
     <value>以下のアカウントを選択してチェックインオプションを設定してください</value>
   </data>
   <data name="Checkin_AccountListCaption" xml:space="preserve">
-    <value>一括チェックインに含めるアカウントにチェックを入れ、アカウントを選択して設定を編集します。ドラッグで順序を変更できます</value>
-  </data>
-  <data name="Checkin_DragToReorder" xml:space="preserve">
-    <value>ドラッグしてチェックイン順序を変更</value>
+    <value>一括チェックインに含めるアカウントにチェックを入れ、アカウントを選択して設定を編集します</value>
   </data>
   <data name="Label_ShortcutName" xml:space="preserve">
     <value>ショートカット名</value>

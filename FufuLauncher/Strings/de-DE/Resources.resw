@@ -6402,10 +6402,7 @@ Click the button below to open your browser and download manually.</value>
     <value>Bitte wähle unten ein Konto aus, um dessen Check-in-Optionen zu konfigurieren</value>
   </data>
   <data name="Checkin_AccountListCaption" xml:space="preserve">
-    <value>Wähle die Konten für den Batch-Check-in aus, klicke auf ein Konto zum Bearbeiten der Optionen und ziehe es, um die Reihenfolge anzupassen</value>
-  </data>
-  <data name="Checkin_DragToReorder" xml:space="preserve">
-    <value>Ziehen, um die Check-in-Reihenfolge zu ändern</value>
+    <value>Wähle die Konten für den Batch-Check-in aus, klicke auf ein Konto zum Bearbeiten der Optionen</value>
   </data>
   <data name="Label_ShortcutName" xml:space="preserve">
     <value>Name der Verknüpfung</value>

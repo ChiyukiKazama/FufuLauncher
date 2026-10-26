@@ -6408,10 +6408,7 @@ Click the button below to open your browser and download manually.</value>
     <value>Seleziona un account sottostante per configurarne le opzioni di check-in</value>
   </data>
   <data name="Checkin_AccountListCaption" xml:space="preserve">
-    <value>Seleziona gli account da includere nel check-in collettivo, fai clic su un account per modificarne le opzioni e trascina per cambiarne l'ordine</value>
-  </data>
-  <data name="Checkin_DragToReorder" xml:space="preserve">
-    <value>Trascina per modificare l'ordine di check-in</value>
+    <value>Seleziona gli account da includere nel check-in collettivo, fai clic su un account per modificarne le opzioni</value>
   </data>
   <data name="Label_ShortcutName" xml:space="preserve">
     <value>Nome del collegamento</value>

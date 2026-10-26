@@ -21,6 +21,7 @@ public partial class SettingsViewModel
 
     private CheckinOptions _defaultCheckinOptions = new();
     private bool _isApplyingCheckinOptions;
+    private bool _isMovingCheckinAccount;
 
     public bool CanEditCheckinOptions => !IsBatchCheckinEnabled || SelectedCheckinAccount != null;
     public bool CanEditCheckinGames => CanEditCheckinOptions && IsGameCheckinEnabled;
@@ -220,6 +221,7 @@ public partial class SettingsViewModel
                 CheckinSettingsStore.ApplyOrder(accounts, await store.LoadOrderAsync(), a => a.AccountId));
             SelectedCheckinAccount = CheckinAccounts.FirstOrDefault(a => a.AccountId == selectedId)
                                      ?? CheckinAccounts.FirstOrDefault();
+            UpdateCheckinAccountMoveAvailability();
 
             foreach (var account in CheckinAccounts)
             {
@@ -240,22 +242,72 @@ public partial class SettingsViewModel
         }
     }
 
-    public Task SaveCheckinAccountOrderAsync() => new CheckinSettingsStore(_localSettingsService)
-        .SaveOrderAsync(CheckinAccounts.Select(a => a.AccountId));
-
-    public static async Task SaveCloudCredentialAsync(string uid, string credential)
+    public async Task MoveCheckinAccountAsync(CheckinAccountItem account, int offset)
     {
+        if (_isMovingCheckinAccount || offset is not (-1 or 1)) return;
+        var accounts = CheckinAccounts;
+        var oldIndex = accounts.IndexOf(account);
+        var newIndex = oldIndex + offset;
+        if (oldIndex < 0 || newIndex < 0 || newIndex >= accounts.Count) return;
+
+        var selectedAccount = SelectedCheckinAccount;
+        _isMovingCheckinAccount = true;
+        UpdateCheckinAccountMoveAvailability();
+        accounts.Move(oldIndex, newIndex);
+        SelectedCheckinAccount = selectedAccount;
+        try
+        {
+            var store = new CheckinSettingsStore(_localSettingsService);
+            if (!await store.SaveOrderAsync(accounts.Select(a => a.AccountId)))
+                accounts.Move(newIndex, oldIndex);
+        }
+        catch (Exception ex)
+        {
+            accounts.Move(newIndex, oldIndex);
+            DebugLog.Info("SettingsViewModel.Checkin", $"Failed to save check-in account order: {ex.Message}");
+            WeakReferenceMessenger.Default.Send(new NotificationMessage("Checkin_MoveFailed".GetLocalized(),
+                "Checkin_MoveFailedMessage".GetLocalized(), NotificationType.Error, 5000));
+        }
+        finally
+        {
+            if (ReferenceEquals(CheckinAccounts, accounts)) SelectedCheckinAccount = selectedAccount;
+            _isMovingCheckinAccount = false;
+            UpdateCheckinAccountMoveAvailability();
+        }
+    }
+
+    private void UpdateCheckinAccountMoveAvailability()
+    {
+        for (var i = 0; i < CheckinAccounts.Count; i++)
+        {
+            CheckinAccounts[i].CanMoveUp = !_isMovingCheckinAccount && i > 0;
+            CheckinAccounts[i].CanMoveDown = !_isMovingCheckinAccount && i < CheckinAccounts.Count - 1;
+        }
+    }
+
+    private void ApplyCloudCredentialState(CloudCredentialUpdatedMessage message)
+    {
+        foreach (var account in CheckinAccounts.Where(a => a.Uid == message.Value))
+            account.HasCloudCredential = message.HasCredential;
+    }
+
+    public static async Task<bool> SaveCloudCredentialAsync(string uid, string credential, string credentialUid)
+    {
+        if (string.IsNullOrWhiteSpace(uid) || string.IsNullOrWhiteSpace(credential) ||
+            !string.Equals(uid, credentialUid, StringComparison.Ordinal)) return false;
         try
         {
             var localSettings = App.GetService<ILocalSettingsService>();
             string key = $"CloudComboToken_{uid}";
-            await localSettings.SaveSettingAsync(key, credential);
+            if (!await localSettings.TrySaveSettingAsync(key, credential)) return false;
 
-            WeakReferenceMessenger.Default.Send(new CloudCredentialUpdatedMessage(uid));
+            WeakReferenceMessenger.Default.Send(new CloudCredentialUpdatedMessage(uid, true));
+            return true;
         }
         catch (Exception ex)
         {
             DebugLog.Info("SettingsViewModel.Checkin", $"Failed to save cloud gaming credentials: {ex.Message}");
+            return false;
         }
     }
 
@@ -266,17 +318,17 @@ public partial class SettingsViewModel
             string key = $"CloudComboToken_{uid}";
             await _localSettingsService.RemoveSettingAsync(key);
 
-            var account = CheckinAccounts?.FirstOrDefault(a => a.Uid == uid);
-            if (account != null)
-            {
-                account.HasCloudCredential = false;
-            }
+            var remaining = await _localSettingsService.ReadSettingAsync(key);
+            if (!string.IsNullOrEmpty(remaining?.ToString()))
+                throw new InvalidOperationException("The cloud credential is still present after deletion.");
 
-            WeakReferenceMessenger.Default.Send(new CloudCredentialUpdatedMessage(uid));
+            WeakReferenceMessenger.Default.Send(new CloudCredentialUpdatedMessage(uid, false));
         }
         catch (Exception ex)
         {
             DebugLog.Info("SettingsViewModel.Checkin", $"Failed to remove cloud gaming credentials: {ex.Message}");
+            WeakReferenceMessenger.Default.Send(new NotificationMessage("CloudCredential_Title".GetLocalized(),
+                "CloudCredential_RemoveFailed".GetLocalized(), NotificationType.Error, 5000));
         }
     }
 

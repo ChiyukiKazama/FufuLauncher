@@ -6401,10 +6401,7 @@ Click the button below to open your browser and download manually.</value>
     <value>Sélectionnez un compte ci-dessous pour configurer ses options de check-in</value>
   </data>
   <data name="Checkin_AccountListCaption" xml:space="preserve">
-    <value>Cochez les comptes à inclure dans le check-in groupé, sélectionnez un compte pour modifier ses options, et faites glisser pour réorganiser</value>
-  </data>
-  <data name="Checkin_DragToReorder" xml:space="preserve">
-    <value>Faites glisser pour modifier l'ordre de check-in</value>
+    <value>Cochez les comptes à inclure dans le check-in groupé, sélectionnez un compte pour modifier ses options</value>
   </data>
   <data name="Label_ShortcutName" xml:space="preserve">
     <value>Nom du raccourci</value>

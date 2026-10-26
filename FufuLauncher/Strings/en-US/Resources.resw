@@ -724,10 +724,7 @@
     <value>Select an account below to configure its check-in options</value>
   </data>
   <data name="Checkin_AccountListCaption" xml:space="preserve">
-    <value>Check accounts to include in batch check-in, select an account to edit its options, and drag to change the order</value>
-  </data>
-  <data name="Checkin_DragToReorder" xml:space="preserve">
-    <value>Drag to change the check-in order</value>
+    <value>Check accounts to include in batch check-in, select an account to edit its options</value>
   </data>
   <data name="AccountListTitle" xml:space="preserve">
     <value>Account List</value>
@@ -9418,5 +9415,26 @@ Details: {0}</value>
   </data>
   <data name="GameServer_ClientConversionRequired" xml:space="preserve">
     <value>The target server requires a different client. Use the Chinese/global client conversion feature.</value>
+  </data>
+  <data name="CloudCredential_InitFailed" xml:space="preserve">
+    <value>Unable to open the credential sign-in page. Close this window and try again.</value>
+  </data>
+  <data name="CloudCredential_IdentityUnavailable" xml:space="preserve">
+    <value>Unable to confirm the signed-in account. Sign out on the page, then sign in to the selected account and try again.</value>
+  </data>
+  <data name="CloudCredential_AccountMismatch" xml:space="preserve">
+    <value>The signed-in account ({0}) does not match the selected account ({1}). Sign out on the page and sign in to the selected account. The credential has not been saved.</value>
+  </data>
+  <data name="CloudCredential_SaveFailed" xml:space="preserve">
+    <value>Unable to save the credential. Please try again.</value>
+  </data>
+  <data name="CloudCredential_RemoveFailed" xml:space="preserve">
+    <value>Unable to remove the credential. Please try again.</value>
+  </data>
+  <data name="Checkin_MoveFailed" xml:space="preserve">
+    <value>Unable to save check-in order</value>
+  </data>
+  <data name="Checkin_MoveFailedMessage" xml:space="preserve">
+    <value>The new check-in order could not be saved. The previous order has been restored.</value>
   </data>
 </root>

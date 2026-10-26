@@ -25,4 +25,6 @@ public partial class CheckinAccountItem : ObservableObject
     [ObservableProperty] private string _nickname = string.Empty;
     [ObservableProperty] private bool _isSelected = true;
     [ObservableProperty] private bool _hasCloudCredential;
+    [ObservableProperty] private bool _canMoveUp;
+    [ObservableProperty] private bool _canMoveDown;
 }

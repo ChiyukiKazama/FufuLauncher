@@ -6402,10 +6402,7 @@ Click the button below to open your browser and download manually.</value>
     <value>Выберите аккаунт ниже для настройки параметров отметки</value>
   </data>
   <data name="Checkin_AccountListCaption" xml:space="preserve">
-    <value>Отметьте аккаунты для пакетной отметки, выберите аккаунт для редактирования параметров или перетащите для изменения порядка</value>
-  </data>
-  <data name="Checkin_DragToReorder" xml:space="preserve">
-    <value>Перетащите, чтобы изменить порядок отметки</value>
+    <value>Отметьте аккаунты для пакетной отметки, выберите аккаунт для редактирования параметров</value>
   </data>
   <data name="Label_ShortcutName" xml:space="preserve">
     <value>Название ярлыка</value>

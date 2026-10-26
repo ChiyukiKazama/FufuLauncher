@@ -721,10 +721,7 @@
     <value>请选择下方账号以配置签到选项</value>
   </data>
   <data name="Checkin_AccountListCaption" xml:space="preserve">
-    <value>勾选参与批量签到的账号，点击账号编辑选项；拖动账号可调整签到顺序</value>
-  </data>
-  <data name="Checkin_DragToReorder" xml:space="preserve">
-    <value>拖动调整签到顺序</value>
+    <value>勾选参与批量签到的账号，点击账号编辑选项</value>
   </data>
   <data name="AccountListTitle" xml:space="preserve">
     <value>账号列表</value>
@@ -9413,5 +9410,26 @@ UIGF v4.x/3.0/2.x</value>
   </data>
   <data name="GameServer_ClientConversionRequired" xml:space="preserve">
     <value>当前客户端与目标服务器不兼容，请使用国服/国际服转换功能。</value>
+  </data>
+  <data name="CloudCredential_InitFailed" xml:space="preserve">
+    <value>无法打开凭证登录页面，请关闭窗口后重试。</value>
+  </data>
+  <data name="CloudCredential_IdentityUnavailable" xml:space="preserve">
+    <value>无法确认当前登录账号，请在网页中退出并重新登录所选账号后再试。</value>
+  </data>
+  <data name="CloudCredential_AccountMismatch" xml:space="preserve">
+    <value>当前登录账号（{0}）与所选账号（{1}）不一致。请在网页中退出后登录所选账号，凭证尚未保存。</value>
+  </data>
+  <data name="CloudCredential_SaveFailed" xml:space="preserve">
+    <value>凭证未能保存，请重试。</value>
+  </data>
+  <data name="CloudCredential_RemoveFailed" xml:space="preserve">
+    <value>凭证未能删除，请重试。</value>
+  </data>
+  <data name="Checkin_MoveFailed" xml:space="preserve">
+    <value>签到顺序保存失败</value>
+  </data>
+  <data name="Checkin_MoveFailedMessage" xml:space="preserve">
+    <value>无法保存新的签到顺序，已恢复原顺序。</value>
   </data>
 </root>
