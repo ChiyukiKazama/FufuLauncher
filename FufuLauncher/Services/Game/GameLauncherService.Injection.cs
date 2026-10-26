@@ -1,30 +1,29 @@
 using System.ComponentModel;
 using System.Diagnostics;
-using System.Text;
 using FufuLauncher.Helpers;
 
 namespace FufuLauncher.Services;
 
 public partial class GameLauncherService
 {
-    private LaunchResult? BlockInjectionForPluginDllConflicts(StringBuilder logBuilder)
+    private LaunchResult? BlockInjectionForPluginDllConflicts(LaunchFlowLog logBuilder)
     {
         foreach (var quarantined in PluginInjectionGuard.QuarantineRootStrayFiles())
         {
-            logBuilder.AppendLine($"[启动流程] 已重命名插件根目录残留文件: {Path.GetFileName(quarantined)}");
+            logBuilder.AppendLine($"[LaunchFlow] Quarantined stray file in plugin root: '{Path.GetFileName(quarantined)}'");
         }
 
         var conflicts = PluginInjectionGuard.FindDuplicateDllNames(PluginConflictSettings.Read());
         if (conflicts.Count == 0) return null;
 
-        logBuilder.AppendLine($"[启动流程] 发现 {conflicts.Count} 组同名插件 DLL，注入已终止");
+        logBuilder.AppendLine($"[LaunchFlow] Found {conflicts.Count} duplicate plugin DLL group(s), injection aborted");
         foreach (var conflict in conflicts)
         {
-            logBuilder.AppendLine($"[启动流程]   {conflict.DllName}");
+            logBuilder.AppendLine($"[LaunchFlow] Duplicate plugin DLL name: {conflict.DllName}");
             foreach (var candidate in conflict.Candidates)
             {
                 logBuilder.AppendLine(
-                    $"[启动流程]     {candidate.FilePath} ({candidate.LastWriteTime:yyyy-MM-dd HH:mm:ss})");
+                    $"[LaunchFlow] Candidate DLL: '{candidate.FilePath}' (modified: {candidate.LastWriteTime:yyyy-MM-dd HH:mm:ss})");
             }
         }
 
@@ -33,11 +32,11 @@ public partial class GameLauncherService
             try
             {
                 _registrySnapshot.RestoreSnapshot();
-                logBuilder.AppendLine("[启动流程] 已恢复注册表快照");
+                logBuilder.AppendLine("[LaunchFlow] Registry snapshot restored");
             }
             catch (Exception ex)
             {
-                logBuilder.AppendLine($"[启动流程] 恢复注册表快照失败: {ex.Message}");
+                logBuilder.AppendLine($"[LaunchFlow] Registry snapshot restore failed: {ex.Message}");
             }
         }
 
@@ -50,21 +49,21 @@ public partial class GameLauncherService
         };
     }
 
-    private async Task<bool> LaunchViaExeModuleAsync(string gameExePath, string arguments, StringBuilder log)
+    private async Task<bool> LaunchViaExeModuleAsync(string gameExePath, string arguments, LaunchFlowLog log)
     {
         try
         {
             var launcher2Path = Path.Combine(AppContext.BaseDirectory, "Launcher_2.exe");
             if (!File.Exists(launcher2Path))
             {
-                log.AppendLine($"[EXE注入] 错误: Launcher_2.exe 不存在于: {launcher2Path}");
+                log.AppendLine($"[LaunchFlow] EXE injection failed: Launcher_2.exe not found at '{launcher2Path}'");
                 return false;
             }
 
-            log.AppendLine($"[EXE注入] 使用 Launcher_2.exe 注入模式");
-            log.AppendLine($"[EXE注入] 路径: {launcher2Path}");
-            log.AppendLine($"[EXE注入] 游戏: {gameExePath}");
-            log.AppendLine($"[EXE注入] 启动参数: {arguments}");
+            log.AppendLine("[LaunchFlow] Launching via EXE injection module");
+            log.AppendLine($"[LaunchFlow] EXE injection launcher path: '{launcher2Path}'");
+            log.AppendLine($"[LaunchFlow] EXE injection game path: '{gameExePath}'");
+            log.AppendLine($"[LaunchFlow] EXE injection arguments: {arguments}");
 
             var launchArgs = QuoteArgument(gameExePath);
             if (!string.IsNullOrWhiteSpace(arguments))
@@ -82,30 +81,30 @@ public partial class GameLauncherService
             };
 
             Process.Start(psi);
-            log.AppendLine("[EXE注入] Launcher_2.exe 已启动");
+            log.AppendLine("[LaunchFlow] Launcher_2.exe started");
             return true;
         }
         catch (Win32Exception ex) when (ex.NativeErrorCode == 1223)
         {
-            log.AppendLine("[EXE注入] 管理员授权被用户取消");
+            log.AppendLine("[LaunchFlow] EXE injection failed: elevation cancelled by user");
             return false;
         }
         catch (Exception ex)
         {
-            log.AppendLine($"[EXE注入] 异常: {ex.Message}");
+            log.AppendLine($"[LaunchFlow] EXE injection failed: {ex.Message}");
             return false;
         }
     }
 
     private async Task<(bool Started, string? Failure)> LaunchViaElevatedProcessAsync(string gameExePath,
-        string dllPath, int configMask, string arguments, StringBuilder log, CancellationToken cancellationToken)
+        string dllPath, int configMask, string arguments, LaunchFlowLog log, CancellationToken cancellationToken)
     {
         try
         {
             var currentExe = Process.GetCurrentProcess().MainModule?.FileName ?? Environment.ProcessPath;
             if (string.IsNullOrEmpty(currentExe))
             {
-                log.AppendLine("[启动流程] ? 无法定位启动器可执行文件");
+                log.AppendLine("[LaunchFlow] Error: launcher executable path unavailable");
                 return (false, null);
             }
 
@@ -118,14 +117,14 @@ public partial class GameLauncherService
                 WorkingDirectory = Path.GetDirectoryName(currentExe)
             };
 
-            log.AppendLine("[启动流程] 以管理员权限启动注入进程...");
+            log.AppendLine("[LaunchFlow] Starting elevated injection process");
 
             ElevatedInjectionResultFile.Clear();
 
             using var process = Process.Start(psi);
             if (process == null)
             {
-                log.AppendLine("[启动流程] ? 管理员注入进程启动失败");
+                log.AppendLine("[LaunchFlow] Error: failed to start elevated injection process");
                 return (false, null);
             }
 
@@ -135,7 +134,7 @@ public partial class GameLauncherService
             }
             catch (OperationCanceledException)
             {
-                log.AppendLine("[启动流程] 用户取消启动，终止管理员注入进程...");
+                log.AppendLine("[LaunchFlow] Launch cancelled by user, terminating elevated injection process");
                 try
                 {
                     if (!process.HasExited)
@@ -145,13 +144,13 @@ public partial class GameLauncherService
                 }
                 catch (Exception killEx)
                 {
-                    log.AppendLine($"[启动流程] 终止管理员注入进程失败: {killEx.Message}");
+                    log.AppendLine($"[LaunchFlow] Failed to terminate elevated injection process: {killEx.Message}");
                 }
 
                 return (false, null);
             }
 
-            log.AppendLine($"[启动流程] 管理员注入进程退出，代码: {process.ExitCode}");
+            log.AppendLine($"[LaunchFlow] Elevated injection process exited (code: {process.ExitCode})");
 
             if (process.ExitCode == 0)
             {
@@ -161,19 +160,19 @@ public partial class GameLauncherService
             var failureMessage = ElevatedInjectionResultFile.Consume();
             if (!string.IsNullOrWhiteSpace(failureMessage))
             {
-                log.AppendLine($"[启动流程] 注入失败提示: {failureMessage}");
+                log.AppendLine($"[LaunchFlow] Injection failure: {failureMessage}");
             }
 
             return (false, failureMessage);
         }
         catch (Win32Exception ex) when (ex.NativeErrorCode == 1223)
         {
-            log.AppendLine("[启动流程] 管理员授权被用户取消");
+            log.AppendLine("[LaunchFlow] Elevation cancelled by user");
             return (false, null);
         }
         catch (Exception ex)
         {
-            log.AppendLine($"[启动流程] ? 管理员注入进程异常: {ex.Message}");
+            log.AppendLine($"[LaunchFlow] Elevated injection process failed: {ex.Message}");
             return (false, null);
         }
     }

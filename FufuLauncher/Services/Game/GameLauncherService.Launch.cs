@@ -8,25 +8,27 @@ namespace FufuLauncher.Services;
 
 public partial class GameLauncherService
 {
+    private const string LaunchLogModule = "GameLauncherService.Launch";
+
     public async Task<LaunchResult> LaunchGameAsync(CancellationToken cancellationToken = default)
     {
         var result = new LaunchResult
             { Success = false, ErrorMessage = "LaunchErr_UnknownError".GetLocalized(), DetailLog = "" };
-        var logBuilder = new StringBuilder();
+        var logBuilder = new LaunchFlowLog();
         string gamePath = null;
         List<string> processNames = null;
 
         try
         {
-            logBuilder.AppendLine("[启动流程] 开始启动游戏");
+            logBuilder.AppendLine("[LaunchFlow] Starting game");
 
             gamePath = GetGamePath();
-            logBuilder.AppendLine($"[启动流程] 游戏路径: {gamePath}");
+            logBuilder.AppendLine($"[LaunchFlow] Game path: '{gamePath}'");
 
             if (string.IsNullOrEmpty(gamePath) || !Directory.Exists(gamePath))
             {
                 result.ErrorMessage = "LaunchErr_InvalidGamePath".GetLocalized();
-                logBuilder.AppendLine($"[启动流程] ? 错误: {result.ErrorMessage}");
+                logBuilder.AppendLine($"[LaunchFlow] Error: invalid game path '{gamePath}'");
                 result.DetailLog = logBuilder.ToString();
                 return result;
             }
@@ -39,7 +41,7 @@ public partial class GameLauncherService
             {
                 result.ErrorMessage =
                     string.Format("LaunchErr_ExeNotFound".GetLocalized(), string.Join("\n", exeNames));
-                logBuilder.AppendLine($"[启动流程] 错误: {result.ErrorMessage}");
+                logBuilder.AppendLine($"[LaunchFlow] Error: no game executable found in '{gamePath}' (expected: {string.Join(", ", exeNames)})");
                 result.DetailLog = logBuilder.ToString();
                 return result;
             }
@@ -47,19 +49,19 @@ public partial class GameLauncherService
             if (foundExes.Count > 1 && exeNames.Count > 1)
             {
                 result.ErrorMessage = "LaunchErr_MultipleExeFound".GetLocalized();
-                logBuilder.AppendLine($"[启动流程] 错误: {result.ErrorMessage}");
+                logBuilder.AppendLine($"[LaunchFlow] Error: multiple game executables found: {string.Join(", ", foundExes)}");
                 result.DetailLog = logBuilder.ToString();
                 return result;
             }
 
             var gameExePath = Path.Combine(gamePath, foundExes.First());
-            logBuilder.AppendLine($"[启动流程] 找到游戏程序: {gameExePath}");
+            logBuilder.AppendLine($"[LaunchFlow] Game executable: '{gameExePath}'");
 
             var config = await _gameConfigService.LoadGameConfigAsync(gamePath);
             if (config == null)
             {
                 result.ErrorMessage = "LaunchErr_CannotLoadConfig".GetLocalized();
-                logBuilder.AppendLine($"[启动流程] ? 错误: {result.ErrorMessage}");
+                logBuilder.AppendLine("[LaunchFlow] Error: failed to load game config");
                 result.DetailLog = logBuilder.ToString();
                 return result;
             }
@@ -75,7 +77,7 @@ public partial class GameLauncherService
             bool usingHoyolabAccount = await GetUsingHoyolabAccountAsync();
             if (usingHoyolabAccount)
             {
-                logBuilder.AppendLine("[启动流程] 已启用米游社/HoyoLAB账户启动");
+                logBuilder.AppendLine("[LaunchFlow] Miyoushe/HoyoLAB account launch enabled");
                 var activeAccountId = _accountManager.ActiveAccountId;
                 if (!string.IsNullOrEmpty(activeAccountId))
                 {
@@ -100,11 +102,11 @@ public partial class GameLauncherService
 
                     if (isBilibili)
                     {
-                        logBuilder.AppendLine("[启动流程] 跳过");
+                        logBuilder.AppendLine("[LaunchFlow] Bilibili channel, skipping AuthTicket");
                     }
                     else if (isOversea && !isGameOversea)
                     {
-                        logBuilder.AppendLine("[启动流程] 国际服跳过AuthTicket");
+                        logBuilder.AppendLine("[LaunchFlow] Overseas account with CN game, skipping AuthTicket");
                         WeakReferenceMessenger.Default.Send(new NotificationMessage(
                             "HoyolabAccount_ServerMismatch_Title".GetLocalized(),
                             "HoyolabAccount_ServerMismatch_OverseaMsg".GetLocalized(),
@@ -113,7 +115,7 @@ public partial class GameLauncherService
                     }
                     else if (!isOversea && isGameOversea)
                     {
-                        logBuilder.AppendLine("[启动流程] 国服账户不能用于国际服游戏，跳过AuthTicket");
+                        logBuilder.AppendLine("[LaunchFlow] CN account with overseas game, skipping AuthTicket");
                         WeakReferenceMessenger.Default.Send(new NotificationMessage(
                             "HoyolabAccount_ServerMismatch_Title".GetLocalized(),
                             "HoyolabAccount_ServerMismatch_CnMsg".GetLocalized(),
@@ -123,17 +125,17 @@ public partial class GameLauncherService
                     else
                     {
                         _registrySnapshot.TakeSnapshot(isOversea);
-                        logBuilder.AppendLine("[启动流程] 已保存注册表快照");
+                        logBuilder.AppendLine("[LaunchFlow] Registry snapshot saved");
 
                         var ticketResult = await _authTicketService.CreateAuthTicketAsync(activeAccountId);
                         if (ticketResult.Success)
                         {
                             authTicket = ticketResult.Ticket;
-                            logBuilder.AppendLine($"[启动流程] 成功获取AuthTicket (长度: {authTicket.Length})");
+                            logBuilder.AppendLine($"[LaunchFlow] AuthTicket acquired (length: {authTicket.Length})");
                         }
                         else
                         {
-                            logBuilder.AppendLine($"[启动流程] 获取AuthTicket失败: {ticketResult.ErrorMessage}");
+                            logBuilder.AppendLine($"[LaunchFlow] AuthTicket creation failed: {ticketResult.ErrorMessage}");
                             WeakReferenceMessenger.Default.Send(new NotificationMessage(
                                 "HoyolabAccount_EnableFailed_Title".GetLocalized(),
                                 "HoyolabAccount_EnableFailed_Message".GetLocalized(),
@@ -144,7 +146,7 @@ public partial class GameLauncherService
                 }
                 else
                 {
-                    logBuilder.AppendLine("[启动流程] 未选择米游社/HoyoLAB 账户，跳过 AuthTicket");
+                    logBuilder.AppendLine("[LaunchFlow] No Miyoushe/HoyoLAB account selected, skipping AuthTicket");
                 }
             }
 
@@ -154,30 +156,29 @@ public partial class GameLauncherService
             }
 
             var arguments = BuildLaunchArguments(config, authTicket).ToString();
-            logBuilder.AppendLine($"[启动流程] 启动参数: {arguments}");
+            logBuilder.AppendLine($"[LaunchFlow] Launch arguments: {arguments}");
 
             _constraintService.TriggerBackgroundRefresh();
 
             if (_constraintService.IsRestricted)
             {
                 LightweightPluginService.DisableMainPluginIfPresent();
-                logBuilder.AppendLine("[启动流程] 策略限制生效，已静默禁用主插件");
+                logBuilder.AppendLine("[LaunchFlow] Policy restriction active, main plugin disabled");
             }
 
             if (_lightweightPluginService.EnforceModeAtLaunch(_lightweightPluginService.IsLightweightMode))
             {
-                logBuilder.AppendLine("[启动流程] 已按当前模式同步主插件/轻量插件启用状态");
+                logBuilder.AppendLine("[LaunchFlow] Main/lightweight plugin state synchronized for current mode");
             }
 
             var useInjection = await GetUseInjectionAsync();
-            logBuilder.AppendLine($"[启动流程] 注入模式: {(useInjection ? "启用" : "禁用")}");
+            logBuilder.AppendLine($"[LaunchFlow] Injection mode: {(useInjection ? "enabled" : "disabled")}");
 
             if (useInjection)
             {
                 var conflictResult = BlockInjectionForPluginDllConflicts(logBuilder);
                 if (conflictResult != null)
                 {
-                    DebugLog.Info("GameLauncherService.Launch", conflictResult.DetailLog);
                     return conflictResult;
                 }
             }
@@ -187,7 +188,7 @@ public partial class GameLauncherService
                 return BuildCancelledResult(logBuilder);
             }
 
-            logBuilder.AppendLine("[启动流程] 正在启动附加程序...");
+            logBuilder.AppendLine("[LaunchFlow] Starting additional program");
             await LaunchAdditionalProgramAsync();
 
             var gameStarted = false;
@@ -196,7 +197,7 @@ public partial class GameLauncherService
             {
                 var injectionModuleObj = await _localSettingsService.ReadSettingAsync("InjectionModule");
                 var injectionModule = injectionModuleObj?.ToString() ?? "DLL";
-                logBuilder.AppendLine($"[启动流程] 注入模块: {injectionModule}");
+                logBuilder.AppendLine($"[LaunchFlow] Injection module: {injectionModule}");
 
                 if (injectionModule == "EXE")
                 {
@@ -206,7 +207,7 @@ public partial class GameLauncherService
                 {
                     int configMask = 0;
 
-                    logBuilder.AppendLine($"[启动流程] 配置掩码: {configMask}");
+                    logBuilder.AppendLine($"[LaunchFlow] Config mask: {configMask}");
 
                     string targetDllPath = null;
                     var defaultDllPath = _launcherService.GetDefaultDllPath();
@@ -215,12 +216,12 @@ public partial class GameLauncherService
                         File.Exists(LightweightPluginService.LitePluginDllPath))
                     {
                         targetDllPath = LightweightPluginService.LitePluginDllPath;
-                        logBuilder.AppendLine($"[启动流程] 轻量模式已启用，使用轻量插件DLL: {targetDllPath}");
+                        logBuilder.AppendLine($"[LaunchFlow] Lightweight mode enabled, using lightweight plugin DLL: '{targetDllPath}'");
                     }
                     else if (!string.IsNullOrEmpty(defaultDllPath) && File.Exists(defaultDllPath))
                     {
                         targetDllPath = defaultDllPath;
-                        logBuilder.AppendLine($"[启动流程] 发现默认DLL: {targetDllPath}");
+                        logBuilder.AppendLine($"[LaunchFlow] Using default plugin DLL: '{targetDllPath}'");
                     }
                     else
                     {
@@ -229,7 +230,7 @@ public partial class GameLauncherService
                             var pluginsDir = Path.Combine(AppContext.BaseDirectory, "Plugins");
                             if (Directory.Exists(pluginsDir))
                             {
-                                logBuilder.AppendLine($"[启动流程] 在扫描插件目录: {pluginsDir}");
+                                logBuilder.AppendLine($"[LaunchFlow] Scanning plugin directory: '{pluginsDir}'");
 
                                 var pluginDll = Directory.GetFiles(pluginsDir, "*.dll", SearchOption.AllDirectories)
                                     .FirstOrDefault(f =>
@@ -238,21 +239,21 @@ public partial class GameLauncherService
                                 if (!string.IsNullOrEmpty(pluginDll))
                                 {
                                     targetDllPath = pluginDll;
-                                    logBuilder.AppendLine($"[启动流程] 扫描到可用插件DLL，将使用: {targetDllPath}");
+                                    logBuilder.AppendLine($"[LaunchFlow] Plugin DLL found: '{targetDllPath}'");
                                 }
                                 else
                                 {
-                                    logBuilder.AppendLine($"[启动流程] 插件目录中未发现有效DLL");
+                                    logBuilder.AppendLine("[LaunchFlow] No valid plugin DLL found in plugin directory");
                                 }
                             }
                             else
                             {
-                                logBuilder.AppendLine($"[启动流程] 插件目录不存在");
+                                logBuilder.AppendLine($"[LaunchFlow] Plugin directory does not exist: '{pluginsDir}'");
                             }
                         }
                         catch (Exception ex)
                         {
-                            logBuilder.AppendLine($"[启动流程] 扫描插件目录时发生异常: {ex.Message}");
+                            logBuilder.AppendLine($"[LaunchFlow] Plugin directory scan failed: {ex.Message}");
                         }
                     }
 
@@ -263,7 +264,7 @@ public partial class GameLauncherService
                             var fileInfo = new FileInfo(targetDllPath);
                             if (fileInfo.Length < 10 * 1024)
                             {
-                                logBuilder.AppendLine($"[启动流程] ! 警告: 插件文件({fileInfo.Length} bytes)大小异常，可能已经损坏");
+                                logBuilder.AppendLine($"[LaunchFlow] Warning: plugin DLL may be corrupted (size: {fileInfo.Length} bytes)");
                                 WeakReferenceMessenger.Default.Send(new NotificationMessage(
                                     "LaunchErr_PluginDamagedTitle".GetLocalized(),
                                     "LaunchErr_PluginDamagedMsg".GetLocalized(),
@@ -273,19 +274,19 @@ public partial class GameLauncherService
                         }
                         catch (Exception ex)
                         {
-                            logBuilder.AppendLine($"[启动流程] 检查插件大小失败: {ex.Message}");
+                            logBuilder.AppendLine($"[LaunchFlow] Plugin DLL size check failed: {ex.Message}");
                         }
 
                         try
                         {
                             var trustDecision = _modTrustGate.EvaluateForLoading(targetDllPath);
                             logBuilder.AppendLine(trustDecision.Mode == CodeSigning.ModTrustEnforcement.Off
-                                ? "[启动流程] 插件签名校验已关闭，跳过校验"
-                                : $"[启动流程] 签名信任判定：{trustDecision.Result.Status} - {trustDecision.Reason}");
+                                ? "[LaunchFlow] Plugin signature verification disabled, skipping trust check"
+                                : $"[LaunchFlow] Signature trust decision: {trustDecision.Result.Status} - {trustDecision.Reason}");
 
                             if (!trustDecision.Allowed)
                             {
-                                logBuilder.AppendLine("[启动流程] 严格信任模式已拦截该 DLL，取消注入");
+                                logBuilder.AppendLine("[LaunchFlow] Strict trust mode blocked the DLL, injection cancelled");
                                 WeakReferenceMessenger.Default.Send(new NotificationMessage(
                                     "ModTrust_BlockedTitle".GetLocalized(),
                                     string.Format("ModTrust_BlockedMsg".GetLocalized(), trustDecision.Reason),
@@ -300,7 +301,7 @@ public partial class GameLauncherService
                                     }
                                     catch (Exception ex)
                                     {
-                                        logBuilder.AppendLine($"[启动流程] 恢复注册表快照失败: {ex.Message}");
+                                        logBuilder.AppendLine($"[LaunchFlow] Registry snapshot restore failed: {ex.Message}");
                                     }
                                 }
 
@@ -313,7 +314,6 @@ public partial class GameLauncherService
                                     ErrorMessage = blockedMessage,
                                     DetailLog = logBuilder.ToString()
                                 };
-                                DebugLog.Info("GameLauncherService.Launch", blockedResult.DetailLog);
                                 return blockedResult;
                             }
 
@@ -328,10 +328,10 @@ public partial class GameLauncherService
                         }
                         catch (Exception ex)
                         {
-                            logBuilder.AppendLine($"[启动流程] 签名信任校验异常（不影响启动）: {ex.Message}");
+                            logBuilder.AppendLine($"[LaunchFlow] Signature trust check failed (launch continues): {ex.Message}");
                         }
 
-                        logBuilder.AppendLine($"[启动流程] 准备注入 DLL: {targetDllPath}");
+                        logBuilder.AppendLine($"[LaunchFlow] Preparing DLL injection: '{targetDllPath}'");
                         var elevatedResult = await LaunchViaElevatedProcessAsync(gameExePath, targetDllPath,
                             configMask, arguments, logBuilder, cancellationToken);
                         gameStarted = elevatedResult.Started;
@@ -342,7 +342,7 @@ public partial class GameLauncherService
                     }
                     else
                     {
-                        logBuilder.AppendLine($"[启动流程] 未找到任何可用的注入DLL (默认路径无效且无插件)，降级为普通启动");
+                        logBuilder.AppendLine("[LaunchFlow] No usable injection DLL (default path invalid, no plugin), falling back to normal launch");
                         gameStarted = StartGameNormally(gameExePath, arguments, gamePath, logBuilder);
                     }
                 }
@@ -356,17 +356,17 @@ public partial class GameLauncherService
             {
                 if (cancellationToken.IsCancellationRequested)
                 {
-                    logBuilder.AppendLine("[启动流程] 用户取消启动，清理已启动的游戏进程...");
+                    logBuilder.AppendLine("[LaunchFlow] Launch cancelled by user, cleaning up game processes");
                     KillGameProcesses(processNames, gamePath);
                     return BuildCancelledResult(logBuilder);
                 }
 
-                logBuilder.AppendLine("[启动流程] 游戏进程已启动，正在捕获目标PID...");
+                logBuilder.AppendLine("[LaunchFlow] Game process started, waiting for target PID");
                 int gamePid = await WaitGenshinStartAsync(cancellationToken);
 
                 if (cancellationToken.IsCancellationRequested)
                 {
-                    logBuilder.AppendLine("[启动流程] 用户取消启动，清理已启动的游戏进程...");
+                    logBuilder.AppendLine("[LaunchFlow] Launch cancelled by user, cleaning up game processes");
                     KillGameProcesses(processNames, gamePath);
                     return BuildCancelledResult(logBuilder);
                 }
@@ -409,14 +409,13 @@ public partial class GameLauncherService
             }
 
             result.DetailLog = logBuilder.ToString();
-            DebugLog.Info("GameLauncherService.Launch", result.DetailLog);
             return result;
         }
         catch (OperationCanceledException) when (cancellationToken.IsCancellationRequested)
         {
             if (processNames != null && !string.IsNullOrEmpty(gamePath))
             {
-                logBuilder.AppendLine("[启动流程] 用户取消启动，清理已启动的游戏进程...");
+                logBuilder.AppendLine("[LaunchFlow] Launch cancelled by user, cleaning up game processes");
                 KillGameProcesses(processNames, gamePath);
             }
 
@@ -425,26 +424,26 @@ public partial class GameLauncherService
         catch (Exception ex)
         {
             result.ErrorMessage = string.Format("LaunchErr_FatalError".GetLocalized(), ex.Message);
-            result.DetailLog = $"[启动流程] ?? 未处理异常: {ex}\n{ex.StackTrace}";
-            DebugLog.Info("GameLauncherService.Launch", result.DetailLog);
+            result.DetailLog = $"[LaunchFlow] Unhandled exception: {ex}";
+            DebugLog.Error(LaunchLogModule, "[LaunchFlow] Unhandled exception", ex);
             return result;
         }
     }
 
-    private LaunchResult BuildCancelledResult(StringBuilder logBuilder)
+    private LaunchResult BuildCancelledResult(LaunchFlowLog logBuilder)
     {
-        logBuilder.AppendLine("[启动流程] 用户取消启动，启动流程已终止");
+        logBuilder.AppendLine("[LaunchFlow] Launch cancelled by user, launch flow terminated");
 
         if (_registrySnapshot.HasSnapshot)
         {
             try
             {
                 _registrySnapshot.RestoreSnapshot();
-                logBuilder.AppendLine("[启动流程] 已恢复注册表快照");
+                logBuilder.AppendLine("[LaunchFlow] Registry snapshot restored");
             }
             catch (Exception ex)
             {
-                logBuilder.AppendLine($"[启动流程] 恢复注册表快照失败: {ex.Message}");
+                logBuilder.AppendLine($"[LaunchFlow] Registry snapshot restore failed: {ex.Message}");
             }
         }
 
@@ -455,7 +454,19 @@ public partial class GameLauncherService
             ErrorMessage = string.Empty,
             DetailLog = logBuilder.ToString()
         };
-        DebugLog.Info("GameLauncherService.Launch", result.DetailLog);
         return result;
+    }
+
+    private sealed class LaunchFlowLog
+    {
+        private readonly StringBuilder _detail = new();
+
+        public void AppendLine(string line)
+        {
+            _detail.AppendLine(line);
+            DebugLog.Info(LaunchLogModule, line);
+        }
+
+        public override string ToString() => _detail.ToString();
     }
 }

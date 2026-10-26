@@ -2,7 +2,6 @@ using System.ComponentModel;
 using System.Diagnostics;
 using System.Runtime.InteropServices;
 using System.Security.Principal;
-using System.Text;
 using FufuLauncher.Helpers;
 
 namespace FufuLauncher.Services;
@@ -117,7 +116,7 @@ public partial class GameLauncherService
 
                     process.Kill();
                     DebugLog.Info("GameLauncherService.Processes",
-                        $"[LaunchFlow] Game process terminated: {process.ProcessName} (PID:{process.Id})");
+                        $"[LaunchFlow] Game process terminated: {process.ProcessName} (PID: {process.Id})");
                 }
                 catch
                 {
@@ -131,13 +130,13 @@ public partial class GameLauncherService
         }
     }
 
-    private bool StartGameNormally(string exePath, string args, string workingDir, StringBuilder log)
+    private bool StartGameNormally(string exePath, string args, string workingDir, LaunchFlowLog log)
     {
         try
         {
-            log.AppendLine($"[普通启动] 程序: {exePath}");
-            log.AppendLine($"[普通启动] 参数: {args}");
-            log.AppendLine($"[普通启动] 工作目录: {workingDir}");
+            log.AppendLine($"[LaunchFlow] Normal launch executable: '{exePath}'");
+            log.AppendLine($"[LaunchFlow] Normal launch arguments: {args}");
+            log.AppendLine($"[LaunchFlow] Normal launch working directory: '{workingDir}'");
 
             Process.Start(new ProcessStartInfo
             {
@@ -147,12 +146,12 @@ public partial class GameLauncherService
                 UseShellExecute = true
             });
 
-            log.AppendLine("[普通启动] 进程已创建");
+            log.AppendLine("[LaunchFlow] Normal launch process created");
             return true;
         }
         catch (Exception ex)
         {
-            log.AppendLine($"[普通启动] ? 异常: {ex.Message}");
+            log.AppendLine($"[LaunchFlow] Normal launch failed: {ex.Message}");
             return false;
         }
     }

@@ -110,19 +110,19 @@ public partial class GameLauncherService
             $"[LaunchService] Saved Miyoushe account launch option: {value}");
     }
 
-    private async Task ApplyGenshinHDRConfigAsync(StringBuilder logBuilder)
+    private async Task ApplyGenshinHDRConfigAsync(LaunchFlowLog logBuilder)
     {
         try
         {
             var obj = await _localSettingsService.ReadSettingAsync(GenshinHDRConfigKey);
             bool isEnabled = obj != null && Convert.ToBoolean(obj);
 
-            logBuilder.AppendLine($"[启动流程] 强制设置HDR状态: {(isEnabled ? "开启 (1)" : "关闭 (0)")}");
+            logBuilder.AppendLine($"[LaunchFlow] Forcing HDR state: {(isEnabled ? "enabled (1)" : "disabled (0)")}");
             GameSettingService.SetGenshinHDRState(isEnabled);
         }
         catch (Exception ex)
         {
-            logBuilder.AppendLine($"[启动流程] ? 设置HDR异常: {ex.Message}");
+            logBuilder.AppendLine($"[LaunchFlow] Failed to apply HDR state: {ex.Message}");
         }
     }
 

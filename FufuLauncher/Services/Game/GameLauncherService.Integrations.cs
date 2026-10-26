@@ -1,12 +1,11 @@
 using System.Diagnostics;
-using System.Text;
 using FufuLauncher.Helpers;
 
 namespace FufuLauncher.Services;
 
 public partial class GameLauncherService
 {
-    private async Task CheckAndLaunchFpsOverlayAsync(StringBuilder logBuilder, int gamePid)
+    private async Task CheckAndLaunchFpsOverlayAsync(LaunchFlowLog logBuilder, int gamePid)
     {
         try
         {
@@ -15,43 +14,43 @@ public partial class GameLauncherService
             {
                 if (!IsAdministrator())
                 {
-                    logBuilder.AppendLine("[启动流程] 检查到系统未以管理员权限运行，不允许启用帧数监控，已自动重置该设置");
+                    logBuilder.AppendLine("[LaunchFlow] FPS overlay: administrator privileges required, setting reset to disabled");
                     await _localSettingsService.SaveSettingAsync("IsFpsOverlayEnabled", false);
                     return;
                 }
 
                 if (gamePid > 0)
                 {
-                    logBuilder.AppendLine($"[启动流程] 权限校验通过，正在为进程(PID:{gamePid})启动系统性能监控遮罩");
+                    logBuilder.AppendLine($"[LaunchFlow] FPS overlay: starting for PID {gamePid}");
                     FpsOverlayService.Instance.StartOverlay(gamePid);
                 }
                 else
                 {
-                    logBuilder.AppendLine("[启动流程] 无法获取游戏进程PID，帧数监控启动中止");
+                    logBuilder.AppendLine("[LaunchFlow] FPS overlay: game PID unavailable, aborting");
                 }
             }
         }
         catch (Exception ex)
         {
-            logBuilder.AppendLine($"[启动流程] 帧数监控遮罩启动异常: {ex.Message}");
+            logBuilder.AppendLine($"[LaunchFlow] FPS overlay failed to start: {ex.Message}");
         }
     }
 
-    private async Task CheckAndLaunchScreenshotServiceAsync(StringBuilder logBuilder, int gamePid)
+    private async Task CheckAndLaunchScreenshotServiceAsync(LaunchFlowLog logBuilder, int gamePid)
     {
         try
         {
             var isEnabled = await _localSettingsService.ReadSettingAsync("IsScreenshotEnabled");
             if (isEnabled != null && Convert.ToBoolean(isEnabled))
             {
-                logBuilder.AppendLine($"[启动流程] 正在为进程(PID:{gamePid})启动截图服务");
+                logBuilder.AppendLine($"[LaunchFlow] Screenshot service: starting for PID {gamePid}");
                 await _screenshotService.StartAsync(gamePid);
-                logBuilder.AppendLine("[启动流程] 截图服务已启动");
+                logBuilder.AppendLine("[LaunchFlow] Screenshot service started");
             }
         }
         catch (Exception ex)
         {
-            logBuilder.AppendLine($"[启动流程] 截图服务启动异常: {ex.Message}");
+            logBuilder.AppendLine($"[LaunchFlow] Screenshot service failed to start: {ex.Message}");
         }
     }
 
