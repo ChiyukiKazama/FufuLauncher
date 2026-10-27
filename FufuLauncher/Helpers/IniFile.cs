@@ -58,7 +58,7 @@ public class IniFile
     {
         if (!File.Exists(_path))
         {
-            throw new FileNotFoundException($"�޷��������ã�δ�ҵ�Ŀ���ļ�: {_path}");
+            throw new FileNotFoundException($"{_path}");
         }
 
         var lines = new List<string>(File.ReadAllLines(_path, Encoding.UTF8));
