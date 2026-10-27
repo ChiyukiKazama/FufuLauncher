@@ -7,7 +7,7 @@ namespace Updater;
 
 public static class ApiEndpoints
 {
-    public const string UpdateJsonUrl = "https://philia093.cyou/Update.json";
+    public const string UpdateJsonUrl = "https://fufu.skin/Update.json";
     public const string UpdateJsonFallbackUrl = "https://fu1.fun/Update.json";
 
     public const string GithubApiBase = "https://api.github.com";
@@ -17,7 +17,7 @@ public static class ApiEndpoints
 
     public const string NodeBaseUrl = "https://fufu.668851.xyz";
     public const string NodeStatusUrl = NodeBaseUrl + "/api/status";
-    public const string R2BaseUrl = "https://r2.philia093.cyou";
+    public const string R2BaseUrl = "https://r2.fu1.fun";
 
     public const string TestFileUrl = "https://raw.githubusercontent.com/moodlehq/moodle-exttests/master/test.html";
     public const string DownloadPageUrl = "https://wwaoi.lanzn.com/b00wnb99ef";

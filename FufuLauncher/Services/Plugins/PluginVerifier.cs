@@ -160,7 +160,7 @@ public static class PluginVerifier
             if (url.StartsWith("http://localhost") ||
                 url.StartsWith("https://localhost") ||
                 url.Contains("fu1.fun") ||
-                url.Contains("philia093.cyou") ||
+                url.Contains("fufu.skin") ||
                 url.Contains("github.com/codecubist"))
             {
                 continue;

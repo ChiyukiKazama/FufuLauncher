@@ -19,7 +19,7 @@ namespace FufuLauncher.Constants
         public const string AccountSecurityUrl =
             "https://user.mihoyo.com/passport/index.html?legacy_env=production#/home/security";
 
-        public const string AgreementUrl = "https://philia093.cyou/";
+        public const string AgreementUrl = "https://fufu.skin/";
         public const string AgreementFallbackUrl = "https://fu1.fun/";
         public const string IconTroubleshootUrl = "https://wwaoi.lanzouu.com/ig75f3hedlaj";
         public const string RoleAvgUrl = "https://api.lelaer.com/ys/getRoleAvg.php?star=all&lang=zh-Hans";
@@ -62,17 +62,17 @@ namespace FufuLauncher.Constants
         public const string PluginRawUrl =
             "https://github.com/CodeCubist/FufuLauncher--Plugins/blob/main/FuFuPlugin.zip?raw=true";
 
-        public const string AnnouncementUrl = "https://philia093.cyou/announcement.json";
+        public const string AnnouncementUrl = "https://fufu.skin/announcement.json";
         public const string AnnouncementFallbackUrl = "https://fu1.fun/announcement.json";
-        public const string UpdateJsonUrl = "https://philia093.cyou/Update.json";
+        public const string UpdateJsonUrl = "https://fufu.skin/Update.json";
         public const string UpdateJsonFallbackUrl = "https://fu1.fun/Update.json";
-        public const string UpdateHtmlUrl = "https://philia093.cyou/Update.html";
+        public const string UpdateHtmlUrl = "https://fufu.skin/Update.html";
         public const string UpdateHtmlFallbackUrl = "https://fu1.fun/Update.html";
-        public const string UpdatePreHtmlUrl = "https://philia093.cyou/UpdatePre.html";
+        public const string UpdatePreHtmlUrl = "https://fufu.skin/UpdatePre.html";
         public const string UpdatePreHtmlFallbackUrl = "https://fu1.fun/UpdatePre.html";
 
-        public const string EasterEggVideoUrl = "https://r2.philia093.cyou/BgVideo.mp4";
-        public const string EasterEggMusicUrl = "https://r2.philia093.cyou/BgMusic.wav";
+        public const string EasterEggVideoUrl = "https://r2.fu1.fun/BgVideo.mp4";
+        public const string EasterEggMusicUrl = "https://r2.fu1.fun/BgMusic.wav";
 
         public const string MihoyoBbsUserGameRolesUrl =
             "https://api-takumi.mihoyo.com/binding/api/getUserGameRolesByCookie?game_biz=hk4e_cn";
