@@ -47,6 +47,7 @@
                 <ContentControl Content="{x:Bind}" ContentTemplate="{StaticResource OptionHeaderTemplate}"
                                 HorizontalContentAlignment="Stretch" IsTabStop="False" />
                 <ToggleSwitch IsOn="{x:Bind BooleanValue, Mode=TwoWay}"
+                              IsEnabled="{x:Bind IsEnabled, Mode=OneWay}"
                               OnContent="{helpers:Loc Key=OnLabel}" OffContent="{helpers:Loc Key=OffLabel}"
                               MinWidth="0" Margin="0"
                               AutomationProperties.Name="{x:Bind DisplayName}" />

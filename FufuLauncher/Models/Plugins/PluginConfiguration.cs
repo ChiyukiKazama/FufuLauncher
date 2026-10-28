@@ -38,9 +38,10 @@ public sealed class PluginConfigOption : ObservableObject
     private GamepadFamilies _gamepadFamilies;
     private bool _refreshingChoices;
     private bool _useKeyListInput = true;
+    private bool _forcedOn;
 
     internal PluginConfigOption(string sectionName, string name, string type, string description, string value,
-        string optionsSource = "", string optionsJson = "")
+        string optionsSource = "", string optionsJson = "", string forcedOnBy = "")
     {
         SectionName = sectionName;
         DisplayName = string.IsNullOrWhiteSpace(name) ? sectionName : name;
@@ -55,6 +56,8 @@ public sealed class PluginConfigOption : ObservableObject
             _ => PluginConfigValueKind.Text
         };
         _value = value;
+        ForcedOnBy = forcedOnBy.Split('|', StringSplitOptions.TrimEntries | StringSplitOptions.RemoveEmptyEntries)
+            .Distinct(StringComparer.OrdinalIgnoreCase).ToArray();
         UsesGamepadChoices = Kind == PluginConfigValueKind.Enumeration &&
                              optionsSource.Trim().Equals("gamepad", StringComparison.OrdinalIgnoreCase);
         if (Kind == PluginConfigValueKind.Enumeration && !UsesGamepadChoices)
@@ -90,6 +93,17 @@ public sealed class PluginConfigOption : ObservableObject
     }
 
     public bool HasDescription => !string.IsNullOrWhiteSpace(Description);
+    public bool IsEnabled => !_forcedOn;
+    internal IReadOnlyList<string> ForcedOnBy { get; }
+    internal bool OwnBooleanValue => Value.Trim().ToLowerInvariant() is "1" or "true" or "yes" or "on";
+
+    internal void SetForcedOn(bool value)
+    {
+        if (_forcedOn == value) return;
+        _forcedOn = value;
+        OnPropertyChanged(nameof(IsEnabled));
+        OnPropertyChanged(nameof(BooleanValue));
+    }
 
     public bool UsesGamepadChoices
     {
@@ -197,6 +211,7 @@ public sealed class PluginConfigOption : ObservableObject
         get => _value;
         set
         {
+            if (_forcedOn) return;
             if (SetProperty(ref _value, value))
             {
                 OnPropertyChanged(nameof(BooleanValue));
@@ -215,10 +230,10 @@ public sealed class PluginConfigOption : ObservableObject
 
     public bool BooleanValue
     {
-        get => Value.Trim().ToLowerInvariant() is "1" or "true" or "yes" or "on";
+        get => _forcedOn || OwnBooleanValue;
         set
         {
-            if (value != BooleanValue)
+            if (IsEnabled && value != BooleanValue)
             {
                 Value = value ? "1" : "0";
             }
@@ -265,6 +280,7 @@ public sealed class PluginConfiguration
     private readonly SemaphoreSlim _saveLock = new(1, 1);
     private long _version;
     private long _savedVersion;
+    private readonly Dictionary<PluginConfigOption, PluginConfigOption[]> _overrideParents;
 
     private PluginConfiguration(string text, Encoding encoding)
     {
@@ -315,6 +331,8 @@ public sealed class PluginConfiguration
         GeneralInfo = general;
         _sources = sources;
         Options = sources.Select(source => source.Option).ToArray();
+        _overrideParents = BuildOverrideParents();
+        UpdateOverrides();
 
         foreach (var option in Options)
         {
@@ -373,8 +391,41 @@ public sealed class PluginConfiguration
     {
         if (e.PropertyName == nameof(PluginConfigOption.Value))
         {
+            UpdateOverrides();
             _version++;
         }
+    }
+
+    private Dictionary<PluginConfigOption, PluginConfigOption[]> BuildOverrideParents()
+    {
+        var options = Options.Where(option => option.Kind == PluginConfigValueKind.Boolean)
+            .GroupBy(option => option.SectionName, StringComparer.OrdinalIgnoreCase)
+            .ToDictionary(group => group.Key, group => group.First(), StringComparer.OrdinalIgnoreCase);
+        var declared = Options.ToDictionary(option => option, option => option.Kind == PluginConfigValueKind.Boolean
+            ? option.ForcedOnBy.Where(options.ContainsKey).Select(key => options[key]).ToArray()
+            : Array.Empty<PluginConfigOption>());
+        bool Reaches(PluginConfigOption source, PluginConfigOption target, HashSet<PluginConfigOption> visited)
+        {
+            if (ReferenceEquals(source, target)) return true;
+            return visited.Add(source) && declared[source].Any(parent => Reaches(parent, target, visited));
+        }
+        // Ignore missing/non-boolean references and cycle edges. A malformed
+        // plugin configuration must not permanently lock its own controls.
+        return declared.ToDictionary(pair => pair.Key, pair => pair.Value
+            .Where(parent => !Reaches(parent, pair.Key, new HashSet<PluginConfigOption>())).ToArray());
+    }
+
+    private void UpdateOverrides()
+    {
+        var active = Options.Where(option => option.Kind == PluginConfigValueKind.Boolean && option.OwnBooleanValue).ToHashSet();
+        bool changed;
+        do
+        {
+            changed = false;
+            foreach (var pair in _overrideParents)
+                if (pair.Value.Any(active.Contains)) changed |= active.Add(pair.Key);
+        } while (changed);
+        foreach (var pair in _overrideParents) pair.Key.SetForcedOn(pair.Value.Any(active.Contains));
     }
 
     private string BuildContent()
@@ -451,7 +502,8 @@ public sealed class PluginConfiguration
             section.Items.GetValueOrDefault("Description", string.Empty),
             value,
             section.Items.GetValueOrDefault("OptionsSource", string.Empty),
-            section.Items.GetValueOrDefault("Options", string.Empty));
+            section.Items.GetValueOrDefault("Options", string.Empty),
+            section.Items.GetValueOrDefault("ForcedOnBy", string.Empty));
         sources.Add(new OptionSource(option, section.HeaderLine, section.ValueLines, value));
     }
 
