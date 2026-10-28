@@ -1,4 +1,4 @@
-﻿/*
+/*
 Copyright (c) FufuLauncher Dev Team. All rights reserved.
 Licensed under the MIT License.
 */
@@ -23,6 +23,7 @@ public class AnnouncementService : IAnnouncementService
         _localSettingsService = localSettingsService;
         _httpClient = new HttpClient();
         _httpClient.Timeout = TimeSpan.FromSeconds(10);
+        _httpClient.DefaultRequestHeaders.UserAgent.ParseAdd("FufuLauncher");
     }
 
     public async Task<string?> GetCurrentAnnouncementUrlAsync()
